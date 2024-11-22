@@ -15,20 +15,21 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Header from "./components/header";
+import { LoginPage } from "./pages/loginPage";
 
 
 function App() {
   return (
     <Router>
       {/* Header */}
-      <Header />
+      {window.location.pathname !== '/login' && <Header />}
 
       {/* Nội dung chính */}
-      <main className="container mx-auto p-4">
+      {/* <main className="container mx-auto p-4"> */}
         <Routes>
-          
+          <Route path="/login" element={<LoginPage/>}/>
         </Routes>
-      </main>
+      {/* </main> */}
     </Router>
   );
 }
