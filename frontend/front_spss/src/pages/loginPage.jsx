@@ -1,5 +1,6 @@
 export const LoginPage = () => {
     return <>
+    
         <section class="min-h-screen flex flex-col items-center justify-center bg-[#65c2f5]">
         <h1 class="text-center text-3xl font-bold">HCMUT SSPS</h1>
         <div class="flex bg-[#b0d6f5] rounded-xl p-5 px-12 mt-4">
