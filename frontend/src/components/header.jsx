@@ -5,7 +5,7 @@ const Header = () => {
 
     const navigate = useNavigate();
     return (
-        <header class="flex items-center justify-between px-5 py-3 w-full bg-blue-2 text-blue-900 font-bold">
+        <header class="flex items-center justify-between px-5 py-3 w-full h-[10vh] bg-blue-2 text-blue-900 font-bold">
         {/* Logo */}
         <div class="flex items-center gap-3.5 px-4 py-2 text-xs text-blue-900 bg-white rounded-2xl max-md:px-5">
           <img
@@ -25,9 +25,6 @@ const Header = () => {
                   onClick={() => navigate("/login")}
           >
             Đăng nhập
-          </button>
-          <button class="px-5 py-3 bg-gray-200 text-blue-900 rounded-lg hover:bg-gray-300 transition duration-200">
-            Đăng ký
           </button>
         </div>
       </header>
