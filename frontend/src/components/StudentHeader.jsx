@@ -31,13 +31,13 @@ export const StudentHeader = () => {
 
         <div class="hidden md:flex flex-row w-full h-full text-xl ml-4           ">
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/student/homepage")}
           >
             Trang chủ
           </button>
 
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/student/printDoc")}
           >
             In tài liệu
           </button>
@@ -72,7 +72,7 @@ export const StudentHeader = () => {
 
             <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                navigate("/"); setMenuOpen(false);
+                navigate("/student/homepage"); setMenuOpen(false);
               }}
             >
               Trang chủ
@@ -80,7 +80,7 @@ export const StudentHeader = () => {
 
             <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
               onClick={() => {
-                navigate("/");
+                navigate("/student/printDoc");
                 setMenuOpen(false);
               }}
 
