@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { StudentHeader } from "../../components/StudentHeader";
 import { Footer } from "../../components/footer";
-import { ConfirmPrint } from "./ConfirmPrint";
+import { Confirm } from "./Confirm";
 import { AddSuccess } from "./AddSuccess";
 import { AlertAddFile } from "./AlertAddFile";
 import axios from 'axios';
@@ -61,13 +61,13 @@ export const PrintDocument = () => {
         else {
             // setCanSubmit(true);
             setConfirmPopup(true);
-            
+
         }
     }
 
     const turnOffConfirm = () => {
         setConfirmPopup(false);
-        
+
     }
 
     const sendForm = () => {
@@ -118,7 +118,7 @@ export const PrintDocument = () => {
                             <label className="text-white text-2xl mr-6">Tài liệu cần in</label>
                             <input type="file"
                                 accept=".docx, .pdf, .png"
-                                onChange={handleFileChange}                                
+                                onChange={handleFileChange}
                                 className="hidden"
                                 id="fileUpload"
                             />
@@ -228,15 +228,23 @@ export const PrintDocument = () => {
             </div>
 
             {confirmPopup && (
-                <ConfirmPrint onClose={turnOffConfirm} onConfirm={sendForm} numPage={numCopy} size={pageSize} />
+                <Confirm onClose={turnOffConfirm}
+                    onConfirm={sendForm}
+                    message={
+                        <>
+                            <p>Yêu cầu này cần sử dụng {numCopy} tờ {pageSize}.</p>
+                            <p>Bạn có chắc chắn yêu cầu này không?</p>
+                        </>
+                    }
+                />
             )}
 
             {successPopup && (
-                <AddSuccess onClose={turnOffAddSuccess} />
+                <AddSuccess onClose={turnOffAddSuccess} message={"Bạn đã yêu cầu in thành công"} />
             )}
 
             {alertPopup && (
-                <AlertAddFile onClose={turnOffAlertAddFile}/>
+                <AlertAddFile onClose={turnOffAlertAddFile} message={"Bạn hãy chọn tài liệu muốn in!"} />
             )}
 
 
