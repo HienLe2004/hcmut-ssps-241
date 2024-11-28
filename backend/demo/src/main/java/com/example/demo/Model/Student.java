@@ -2,31 +2,36 @@ package com.example.demo.Model;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Table(name = "Student")
+@Table(name = "student")
 public class Student {
     @Id
+    @Column(name ="student_id")
     private long id; //Mã số sinh viên (Ex 2210371), khóa chính
 
-    @Column(name = "FullName")
+    @Column(name = "full_name")
     private String name;
 
-    @Column(name ="Balance")
+    @Column(name ="balance")
     private int balance;
 
-    @Column(name = "PhoneNumber")
+    @Column(name = "phone_number")
     private String phoneNum;
 
-    @Column(name= "DateOfBirth")
+    @Column(name= "date_of_birth")
     private Date doB;
 
-    @Column(name ="Email")
+    @Column(name ="email")
     private String email;
 
-    //@OneToMany
-    //@Column(name = "PrintRequests")
-    //private List<PrintRequest> printRequests;
+    @OneToMany(mappedBy = "student", orphanRemoval = true)
+    private List<PrintRequest> printRequests;
+
+    @OneToMany(mappedBy = "student", orphanRemoval = true)
+    private List<Document> documents;
+
     //@OneToMany
     //Column(name ="BuyLogs")
     //private List<BuyLog> buyLogs;
@@ -64,6 +69,14 @@ public class Student {
     public String getName() {
         return name;
     }
+
+    public List<PrintRequest> getPrintRequests() {
+        return printRequests;
+    }
+
+    public List<Document> getDocuments() {
+        return documents;
+    }
     //setter
 
 
@@ -89,6 +102,14 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setPrintRequests(List<PrintRequest> printRequests) {
+        this.printRequests = printRequests;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
     }
     //Other methods
     //public void requestToPrint(){}

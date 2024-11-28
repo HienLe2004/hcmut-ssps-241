@@ -1,16 +1,10 @@
 package com.example.demo.Controller;
+
+import com.example.demo.Model.Document;
+import com.example.demo.Model.PrintRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.Model.Student;
 import com.example.demo.Repository.StudentRepository;
@@ -26,33 +20,49 @@ import java.util.HashMap;
 
 public class StudentController {
     @Autowired
-    private StudentRepository repo;
+    private StudentRepository studentRepository;
 
     //get all student
     @GetMapping("/students")
     public List<Student> getAllStudent(){
-        return repo.findAll();
+        return studentRepository.findAll();
     }
 
     //get a student by id
     @GetMapping("/student/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id)
     {
-        Student student = repo.findById(id)
+        Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
         return ResponseEntity.ok(student);
+    }
+
+    //get all document of student by student id
+    @GetMapping("/{id}/documents")
+    public List<Document> getDocumentById(@PathVariable Long id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+        return student.getDocuments();
+    }
+
+    //get all print request of student by student id
+    @GetMapping("/{id}/printRequests")
+    public List<PrintRequest> getPrintRequestById(@PathVariable Long id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+        return student.getPrintRequests();
     }
 
     //create a student
     @PostMapping("/student")
     public Student createStudent(@RequestBody Student student){
-        return repo.save(student);
+        return studentRepository.save(student);
     }
 
     //update a student
     @PutMapping("/student/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable long id, @RequestBody Student studentInfo) {
-        Student student = repo.findById(id)
+        Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
         if( String.valueOf(studentInfo.getBalance())  != null) {
             student.setBalance(studentInfo.getBalance());
@@ -69,25 +79,25 @@ public class StudentController {
         if(studentInfo.getName() != null) {
             student.setName(studentInfo.getName());
         }
-        Student updatedStudent = repo.save(student);
+        Student updatedStudent = studentRepository.save(student);
         return ResponseEntity.ok(updatedStudent);
     }
 
     //delete a student
     @DeleteMapping("/student/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteStudent(@PathVariable long id){
-        Student student = repo.findById(id)
+    public ResponseEntity<Map<String, Boolean>> deleteStudentByID(@PathVariable long id){
+        Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        repo.deleteById(id);
+        studentRepository.deleteById(id);
         Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
+        response.put("deleted student with id "+id, Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
 
     //delete all students
     @DeleteMapping("/students")
-    public ResponseEntity<Map<String, Boolean>> deleteStudent(){
-        repo.deleteAll();
+    public ResponseEntity<Map<String, Boolean>> deleteAllStudents(){
+        studentRepository.deleteAll();
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted all", Boolean.TRUE);
         return ResponseEntity.ok(response);
