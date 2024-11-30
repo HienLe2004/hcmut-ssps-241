@@ -33,6 +33,11 @@ public class Student {
     @OneToMany(mappedBy = "student", orphanRemoval = true)
     private List<Document> documents;
 
+    @OneToMany(mappedBy = "student", orphanRemoval = true)
+    private List<PrintLog> printLogs;
+
+
+
     public Student() {
     }
 
@@ -77,6 +82,8 @@ public class Student {
     public List<Document> getDocuments() {
         return documents;
     }
+
+    public List<PrintLog> getPrintLogs() { return printLogs;}
     //setter
 
 
@@ -111,6 +118,8 @@ public class Student {
     public void setDocuments(List<Document> documents) {
         this.documents = documents;
     }
+
+    public void setPrintLogs(List<PrintLog> printLogs) { this.printLogs = printLogs; }
 //Other methods
 //public void requestToPrint(){}
 //public void uploadDocument(){}
