@@ -17,23 +17,21 @@ import { ReportsPage } from "./pages/SPSO/ReportsPage";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/student/homepage" element={<StudentHomePage />} />
-        <Route path="/student/printDoc" element={<PrintDocument />} />
+    <div className="app">
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/student/homepage" element={<StudentHomePage />} />
+      <Route path="/student/printDoc" element={<PrintDocument />} />
 
-        <Route path="/spso/homepage" element={<SPSOHomePage/>}/>
-        <Route path="/spso/waiting-docs" element={<WaitingDocsPage/>}/>
-        <Route path="/spso/printers" element={<PrintersPage/>}/>
-        <Route path="/spso/history" element={<SystemHistoryPage/>}/>
-        <Route path="/spso/management" element={<ManagementPage/>}/>
-        <Route path="/spso/reports" element={<ReportsPage/>}/>
-
-      </Routes>
-
-    </Router>
+      <Route path="/spso/homepage" element={<SPSOHomePage/>}/>
+      <Route path="/spso/waiting-docs" element={<WaitingDocsPage/>}/>
+      <Route path="/spso/printers" element={<PrintersPage/>}/>
+      <Route path="/spso/history" element={<SystemHistoryPage/>}/>
+      <Route path="/spso/management" element={<ManagementPage/>}/>
+      <Route path="/spso/reports" element={<ReportsPage/>}/>    
+    </Routes>    
+    </div>
   );
 }
 
