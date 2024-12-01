@@ -18,6 +18,7 @@ public class Printer {
     @JoinColumn(name = "congiguration_id")
     private Configuration config;
 
+
     public long getId() {
         return id;
     }
