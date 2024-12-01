@@ -3,7 +3,7 @@ import { StudentHeader } from "../../components/StudentHeader";
 import { Footer } from "../../components/footer";
 import { Confirm } from "./Confirm";
 import { AddSuccess } from "./AddSuccess";
-import { AlertAddFile } from "./AlertAddFile";
+import { AlertAddFile } from "./Alert";
 import axios from 'axios';
 
 export const PrintDocument = () => {
