@@ -1,8 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Exception.ResourceNotFoundException;
-import com.example.demo.Model.Configuration;
-import com.example.demo.Model.Report;
+import com.example.demo.Model.*;
 import com.example.demo.Repository.ConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,13 @@ public class ConfigurationController {
         return configurationRepository.findAll();
     }
 
+    @GetMapping("/configuration/{id}/printer")
+    public ResponseEntity<Printer> getPrinter(@PathVariable long id){
+        Configuration config = configurationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Configuration not exist with id :" + id));
+        Printer printer = config.getPrinter();
+        return ResponseEntity.ok(printer);
+    }
     @GetMapping("/configuration/{id}")
     public ResponseEntity<Configuration> getConfiguration(@PathVariable long id){
         Configuration configuration = configurationRepository.findById(id)

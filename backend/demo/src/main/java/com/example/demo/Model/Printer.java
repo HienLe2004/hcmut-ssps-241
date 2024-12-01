@@ -1,6 +1,7 @@
 package com.example.demo.Model;
 
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "printer")
@@ -13,8 +14,9 @@ public class Printer {
     private String location;
     @Column(name = "state")
     private String state;
-    @Column(name = "congiguration")
-    private String config; // xai string tam thoi
+    @OneToOne
+    @JoinColumn(name = "congiguration_id")
+    private Configuration config;
 
     public long getId() {
         return id;
@@ -40,11 +42,11 @@ public class Printer {
         this.state = state;
     }
 
-    public String getConfig() {
+    public Configuration getConfig() {
         return config;
     }
 
-    public void setConfig(String config) {
+    public void setConfig(Configuration config) {
         this.config = config;
     }
 }

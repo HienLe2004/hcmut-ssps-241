@@ -17,9 +17,10 @@ public class Configuration {
     private int pageSize;
     @Column(name = "permitted_file")
     private String permittedFile; // "pdf,word"
-
     @Column(name = "given_page")
     private int givenPage;
+    @OneToOne(mappedBy = "config")
+    private Printer printer;
 
     public List<String> getpermittedFile() {
         return Arrays.asList(permittedFile.split(",")); // Chuyển chuỗi thành danh sách
@@ -46,5 +47,13 @@ public class Configuration {
 
     public void setGivenPage(int givenPage) {
         this.givenPage = givenPage;
+    }
+
+    public Printer getPrinter() {
+        return printer;
+    }
+
+    public void setPrinter(Printer printer) {
+        this.printer = printer;
     }
 }
