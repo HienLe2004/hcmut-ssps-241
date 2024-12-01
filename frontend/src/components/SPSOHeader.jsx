@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
+import avatar from '../images/VitaminMeo.jpg'
 
 export const SPSOHeader = () => {
 
@@ -29,39 +30,39 @@ export const SPSOHeader = () => {
 
         {/* Màn hình lớn */}
 
-        <div class="hidden md:flex flex-row w-full h-full text-xl ml-4           ">
+        <div class="hidden md:flex flex-row w-full h-full text-xl ml-4">
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/spso/homepage")}
           >
             Trang chủ
           </button>
 
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/spso/waiting-docs")}
           >
             Tài liệu chờ
           </button>
 
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/spso/printers")}
           >
             Máy in
           </button>
 
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/spso/history")}
           >
             Lịch sử
           </button>
 
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/spso/management")}
           >
             Quản lí
           </button>
 
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/spso/reports")}
           >
             Báo cáo
           </button>
@@ -142,7 +143,7 @@ export const SPSOHeader = () => {
 
       {/* Ảnh đại diện */}
 
-      <img src="https://scontent.fsgn5-10.fna.fbcdn.net/v/t39.30808-6/465763582_520176671010603_6514178882255750554_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeFzoiNzq2W4tu1tqeVvUqWxxm9Ikdogfg7Gb0iR2iB-DiOcY4fFwkRvRwMcqqm76J2LnhWTXeLxc8XdGcSP59s6&_nc_ohc=ApO8t8QuaKAQ7kNvgGZxqKq&_nc_zt=23&_nc_ht=scontent.fsgn5-10.fna&_nc_gid=AoNYopzxLZcuHUnbs7tsTuQ&oh=00_AYA7aDjV9d5xM-U3zFA7jbAlR6cTqx-06_6NzVgbod98Sw&oe=6747CA12" alt="Không có gì đâu hehehe"
+      <img src={avatar} alt="Không có gì đâu hehehe"
         class="h-[80%] aspect-square bg-red-300 rounded-full mr-5 hover:cursor-pointer    "
         onClick={clickImage}
       />
