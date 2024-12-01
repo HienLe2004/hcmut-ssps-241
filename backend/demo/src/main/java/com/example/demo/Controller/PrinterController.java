@@ -1,8 +1,8 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Exception.ResourceNotFoundException;
-import com.example.demo.Model.Printer;
-import com.example.demo.Model.Report;
+import com.example.demo.Model.*;
+import com.example.demo.Repository.ConfigurationRepository;
 import com.example.demo.Repository.PrintLogRepository;
 import com.example.demo.Repository.PrinterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,9 @@ public class PrinterController {
     @Autowired
     private PrinterRepository printerRepository;
 
+    @Autowired
+    private ConfigurationRepository configurationRepository;
+
     @GetMapping("/printers")
     public List<Printer> getAllPrinters(){
         return printerRepository.findAll();
@@ -33,8 +36,19 @@ public class PrinterController {
     }
 
     @PostMapping("/printer")
-    public Printer createPrinter(@RequestBody Printer printer){
-        return printerRepository.save(printer);
+    public Printer createPrinter(@RequestBody Printer printerInfo){
+        Printer printer = new Printer();
+
+        long configId = printerInfo.getConfig().getId();
+        Configuration config = configurationRepository.findById(configId)
+                .orElseThrow(() -> new ResourceNotFoundException("Configuration not exist with id :" + configId));
+        printer.setConfig(config);
+
+        printer.setLocation(printerInfo.getLocation());
+
+        printer.setState(printerInfo.getState());
+
+        return printerRepository.save(printerInfo);
     }
 
     @PutMapping("/printer/{id}")
