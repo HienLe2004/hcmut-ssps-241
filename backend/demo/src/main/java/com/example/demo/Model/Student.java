@@ -1,5 +1,6 @@
 package com.example.demo.Model;
 import com.example.demo.Model.PrintRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -34,6 +35,7 @@ public class Student {
     private List<Document> documents;
 
     @OneToMany(mappedBy = "student", orphanRemoval = true)
+    @JsonIgnore
     private List<PrintLog> printLogs;
 
 
