@@ -10,6 +10,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --blue-1:#b0d6f5;
+  --blue-2:#65c2f5;
+  --blue-3:#09b1ec;
+  --blue-4:#0487e2;
+  --blue-5:#0463ca;
 }
 
 code {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import avatar from '../images/VitaminMeo.jpg'
 
 export const SPSOHeader = () => {
@@ -101,59 +101,6 @@ export const SPSOHeader = () => {
               }}>
             Báo cáo
             </NavLink>
-            {/* <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/"); setMenuOpen(false);
-              }}
-            >
-              Trang chủ
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-
-            >
-              Tài liệu chờ
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-            >
-              Máy in
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-            >
-              Lịch sử
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-            >
-              Quản lí
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-            >
-              Báo cáo
-            </button> */}
           </div>
         )}
 
@@ -162,7 +109,7 @@ export const SPSOHeader = () => {
       {/* Ảnh đại diện */}
 
       <img src={avatar} alt="Không có gì đâu hehehe"
-        class="h-[80%] aspect-square bg-red-300 rounded-full mr-5 hover:cursor-pointer    "
+        className="h-[80%] aspect-square bg-red-300 rounded-full mr-5 hover:cursor-pointer    "
         onClick={clickImage}
       />
       {imgClick && (
