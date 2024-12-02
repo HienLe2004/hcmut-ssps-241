@@ -4,6 +4,7 @@ import { useState } from "react"
 import Select from "react-select"
 import { FaSearch } from "react-icons/fa"
 import { WaitingDocsTable } from "./WaitingDocsTable";
+import { UpdateWaitingDoc } from "./UpdateWaitingDoc";
 
 const students = [
     {value:2211012 , label:2211012},
@@ -128,7 +129,7 @@ export const WaitingDocsPage = () => {
                         noOptionsMessage={() => {return "Không tìm thấy"}}
                         />
                     </div>
-                    <button className="aspect-square rounded-full bg-blue-4 w-8 items-center justify-items-center hover:scale-110 duration-200">
+                    <button className="aspect-square rounded-full bg-blue-4 w-8  justify-items-center hover:scale-110 duration-200">
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
@@ -168,6 +169,7 @@ export const WaitingDocsPage = () => {
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
+                <WaitingDocsTable waitingDocs={waitingDocs}/>
             </div>
             <Footer />
         </div>
