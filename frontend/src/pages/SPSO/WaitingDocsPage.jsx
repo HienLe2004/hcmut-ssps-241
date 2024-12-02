@@ -30,7 +30,43 @@ const waitingDocs = [
         file: "oiwer.docx",
         start: "10:10 10/20/20",
         status: "Dang xu ly"
-    }
+    },
+    {
+        id: 2211024,
+        printer: "H1-101-1",
+        size: "A5",
+        copy: 10,
+        file: "oiwer.docx",
+        start: "10:10 10/20/20",
+        status: "Dang xu ly"
+    },
+    {
+        id: 2211024,
+        printer: "H1-101-1",
+        size: "A5",
+        copy: 10,
+        file: "oiwer.docx",
+        start: "10:10 10/20/20",
+        status: "Dang xu ly"
+    },
+    {
+        id: 2211024,
+        printer: "H1-101-1",
+        size: "A5",
+        copy: 10,
+        file: "oiwer.docx",
+        start: "10:10 10/20/20",
+        status: "Dang xu ly"
+    },
+    {
+        id: 2211024,
+        printer: "H1-101-1",
+        size: "A5",
+        copy: 10,
+        file: "oiwer.docx",
+        start: "10:10 10/20/20",
+        status: "Dang xu ly"
+    },
 ]
 export const WaitingDocsPage = () => {
     const [selectedPrinters, setSelectedPrinters] = useState([]);
@@ -136,8 +172,8 @@ export const WaitingDocsPage = () => {
                 <WaitingDocsTable waitingDocs={waitingDocs}/>
             </div>
             {/* Màn hình nhỏ */}
-            <div className="md:hidden flex flex-col flex-grow items-center justify-center w-full my-5">
-                <div className="flex flex-col items-start text-xl gap-y-1 px-3">
+            <div className="md:hidden flex flex-col flex-grow w-full my-5 gap-y-10">
+                <div className="flex flex-col items-start text-xl gap-y-5 px-10">
                     <div className="flex flex-col">
                         <p>Mã số sinh viên:</p>
                         <Select 
