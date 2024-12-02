@@ -101,59 +101,6 @@ export const SPSOHeader = () => {
               }}>
             Báo cáo
             </NavLink>
-            {/* <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/"); setMenuOpen(false);
-              }}
-            >
-              Trang chủ
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-
-            >
-              Tài liệu chờ
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-            >
-              Máy in
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-            >
-              Lịch sử
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-            >
-              Quản lí
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/");
-                setMenuOpen(false);
-              }}
-            >
-              Báo cáo
-            </button> */}
           </div>
         )}
 

@@ -1,28 +1,30 @@
+import { useRef, useState } from "react"
+
 export const LoginPage = () => {
+    const [isStudent, setIsStudent] = useState(true)
     return <>
-    
-        <section class="min-h-screen flex flex-col items-center justify-center bg-[#65c2f5]">
-        <h1 class="text-center text-3xl font-bold">HCMUT SSPS</h1>
-        <div class="flex bg-[#b0d6f5] rounded-xl p-5 px-12 mt-4">
+        <section className="min-h-screen flex flex-col items-center justify-center bg-[#65c2f5]">
+        <h1 className="text-center text-3xl font-bold">HCMUT SSPS</h1>
+        <div className="flex bg-[#b0d6f5] rounded-xl p-5 px-12 mt-4">
             <div>
-                <h1 class="font-bold text-2xl text-center text-[#0463ca]">Đăng nhập</h1>
-                <div class="mt-2">
-                    <div class="flex justify-stretch">
-                        <div class=" grid-cols-2 items-center flex-1" id="sv_option">
-                            <h1 class="text-center font-bold hover:scale-110 duration-200">Sinh viên</h1>
-                            <hr class=" border-[#0463ca] border-2"/>
+                <h1 className="font-bold text-2xl text-center text-[#0463ca]">Đăng nhập</h1>
+                <div className="mt-2">
+                    <div className="flex justify-stretch">
+                        <div className=" grid-cols-2 items-center flex-1" onClick={()=>setIsStudent(true)}>
+                            <h1 className={"text-center hover:scale-110 duration-200 " + (isStudent ? "font-bold" : "")}>Sinh viên</h1>
+                            <hr className={"border-[#0463ca] " + (isStudent ? "border-2" :"")}/>
                         </div>
-                        <div class=" grid-cols-2 items-center flex-1" id="spso_option">
-                            <h1 class="text-center hover:scale-110 duration-200">SPSO</h1>
-                            <hr class=" border-[#0463ca]"/>
+                        <div className="grid-cols-2 items-center flex-1" onClick={()=>setIsStudent(false)}>
+                            <h1 className={"text-center hover:scale-110 duration-200 " + (isStudent ? "":"font-bold")}>SPSO</h1>
+                            <hr className={"border-[#0463ca] " + (isStudent ? "":"border-2")}/>
                         </div>
                     </div>
                 </div>
-                <form class="mt-6 flex flex-col gap-4">
-                    <input class="p-2 rounded-xl border" type="email" name="email" placeholder="BKID"/>
-                    <input class="p-2 rounded-xl border" type="password" name="password" placeholder="Password"/>
-                    <button class="py-2 rounded-xl bg-[#0463ca] text-white  hover:scale-105 duration-200">Đăng nhập</button>
-                    <a class=" text-xs text-right  hover:scale-105 duration-200" href="#">Quên mật khẩu?</a>
+                <form className="mt-6 flex flex-col gap-4">
+                    <input className="p-2 rounded-xl border" type="email" name="email" placeholder="BKID"/>
+                    <input className="p-2 rounded-xl border" type="password" name="password" placeholder="Password"/>
+                    <button className="py-2 rounded-xl bg-[#0463ca] text-white  hover:scale-105 duration-200">Đăng nhập</button>
+                    <a className=" text-xs text-right  hover:scale-105 duration-200" href="#">Quên mật khẩu?</a>
                 </form>
             </div>
         </div>
