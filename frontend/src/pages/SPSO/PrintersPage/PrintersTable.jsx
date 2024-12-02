@@ -2,6 +2,7 @@ import { useState } from "react"
 import { FaPen } from "react-icons/fa";
 import { UpdatePrinterStatus } from "./UpdatePrinterSatus";
 import { Notification } from "../Notification";
+import { NavLink } from "react-router-dom";
 
 export const PrintersTable = ({printers}) => {
     const [updateOpen, setUpdateOpen] = useState(false);
@@ -22,7 +23,7 @@ export const PrintersTable = ({printers}) => {
             <tbody className="text-white">
                 {printers.map((printer, printerKey) => {
                     return <tr key={printerKey}>
-                        <td className="text-center"><a href="/spso/printers">{printer.name}</a></td>
+                        <td className="text-center"><NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink></td>
                         <td className="text-center">{printer.description}</td>
                         <td className="text-center">{printer.start}</td>
                         <td>

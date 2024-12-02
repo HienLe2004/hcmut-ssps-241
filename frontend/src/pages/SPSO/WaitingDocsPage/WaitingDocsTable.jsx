@@ -7,7 +7,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
     const [notiOpen, setNotiOpen] = useState(false);
     return <div className="w-full">
         {/* Màn hình lớn */}
-        <div className="hidden md:flex">
+        <div className="hidden md:flex justify-center">
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[800px]">
             <thead className="bg-blue-3">
                 <tr>

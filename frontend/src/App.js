@@ -1,10 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Header from "./components/header";
 import { LoginPage } from "./pages/loginPage";
 import { HomePage } from "./pages/Student/HomePage";
-import { StudentHeader } from "./components/StudentHeader";
 import { StudentHomePage } from "./pages/Student/StudentHomePage";
 import { PrintDocument } from "./pages/Student/PrintDocument";
 import { SPSOHomePage } from "./pages/SPSO/SPSOHomePage";
@@ -15,6 +13,7 @@ import { ManagementPage } from "./pages/SPSO/ManagementPage/ManagementPage";
 import { ReportsPage } from "./pages/SPSO/ReportsPage/ReportsPage";
 import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
+import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
 
 
 function App() {
@@ -31,6 +30,7 @@ function App() {
       <Route path="/spso/homepage" element={<SPSOHomePage/>}/>
       <Route path="/spso/waiting-docs" element={<WaitingDocsPage/>}/>
       <Route path="/spso/printers" element={<PrintersPage/>}/>
+      <Route path="/spso/printers/:id" element={<PrinterInfoPage/>}/>
       <Route path="/spso/history" element={<SystemHistoryPage/>}/>
       <Route path="/spso/management" element={<ManagementPage/>}/>
       <Route path="/spso/reports" element={<ReportsPage/>}/>    
