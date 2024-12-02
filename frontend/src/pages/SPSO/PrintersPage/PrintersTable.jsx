@@ -7,9 +7,9 @@ export const PrintersTable = ({printers}) => {
     const [updateOpen, setUpdateOpen] = useState(false);
     const [notiOpen, setNotiOpen] = useState(false);
     
-    return <div>
+    return <div className="w-full">
         {/* Big */}
-        <div className="hidden md:flex">
+        <div className="hidden md:flex justify-center">
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
             <thead className="bg-blue-3">
                 <tr>
@@ -22,7 +22,7 @@ export const PrintersTable = ({printers}) => {
             <tbody className="text-white">
                 {printers.map((printer, printerKey) => {
                     return <tr key={printerKey}>
-                        <td className="text-center">{printer.name}</td>
+                        <td className="text-center"><a href="/spso/printers">{printer.name}</a></td>
                         <td className="text-center">{printer.description}</td>
                         <td className="text-center">{printer.start}</td>
                         <td>
@@ -41,7 +41,7 @@ export const PrintersTable = ({printers}) => {
         </div>
         {/* Small */}
         <div className="flex md:hidden px-10 mt-10">
-        <table className="bg-blue-2 overflow-x-scroll max-w-full">
+        <table className="bg-blue-2 overflow-x-scroll w-full">
             {/* <thead className="bg-blue-3">
                 <tr>
                     <th className="min-w-[100px] py-4">Tên</th>

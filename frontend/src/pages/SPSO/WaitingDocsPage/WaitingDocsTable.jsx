@@ -5,7 +5,7 @@ import { Notification } from "../Notification";
 export const WaitingDocsTable = ({waitingDocs}) => {
     const [updateOpen, setUpdateOpen] = useState(false);
     const [notiOpen, setNotiOpen] = useState(false);
-    return <div>
+    return <div className="w-full">
         {/* Màn hình lớn */}
         <div className="hidden md:flex">
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[800px]">
