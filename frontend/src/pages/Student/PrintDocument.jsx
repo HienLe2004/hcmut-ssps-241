@@ -3,8 +3,7 @@ import { StudentHeader } from "../../components/StudentHeader";
 import { Footer } from "../../components/footer";
 import { Confirm } from "./Confirm";
 import { AddSuccess } from "./AddSuccess";
-import { AlertAddFile } from "./AlertAddFile";
-import axios from 'axios';
+import { AlertAddFile } from "./Alert";
 
 export const PrintDocument = () => {
 
@@ -23,21 +22,21 @@ export const PrintDocument = () => {
     const [canSubmit, setCanSubmit] = useState(true);
 
 
-    useEffect(() => {
-        const fetchPrinters = async () => {
-            try {
-                const response = await axios.get();
-                setPrinters(response.data.printers);
-                if (response.data.printers.length > 0) {
-                    setPrinter(response.data.printerss[0]);
-                }
-            }
-            catch (error) {
-                console.error("Không lấy được danh sách máy in", error);
-            }
-        };
-        fetchPrinters();
-    }, []);
+    // useEffect(() => {
+    //     const fetchPrinters = async () => {
+    //         try {
+    //             const response = await axios.get();
+    //             setPrinters(response.data.printers);
+    //             if (response.data.printers.length > 0) {
+    //                 setPrinter(response.data.printerss[0]);
+    //             }
+    //         }
+    //         catch (error) {
+    //             console.error("Không lấy được danh sách máy in", error);
+    //         }
+    //     };
+    //     fetchPrinters();
+    // }, []);
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];

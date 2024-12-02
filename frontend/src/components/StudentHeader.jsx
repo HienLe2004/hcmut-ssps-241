@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import avatar from '../images/VitaminMeo.jpg'
 
 export const StudentHeader = () => {
@@ -30,30 +30,19 @@ export const StudentHeader = () => {
 
         {/* Màn hình lớn */}
 
-        <div class="hidden md:flex flex-row w-full h-full text-xl ml-4           ">
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/student/homepage")}
-          >
-            Trang chủ
-          </button>
-
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/student/printDoc")}
-          >
-            In tài liệu
-          </button>
-
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/student/printHistory")}
-          >
-            Lịch sử in
-          </button>
-
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
-          >
-            Mua trang in
-          </button>
+        <div className="hidden md:flex items-center flex-row w-full h-full text-xl ml-4">
+          <NavLink to="/student/homepage" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Trang chủ
+          </NavLink>
+          <NavLink to="/student/printDoc" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          In tài liệu
+          </NavLink>
+          <NavLink to="/student/printHistory" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Lịch sử in
+          </NavLink>
+          <NavLink to="/student/buyPage" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Mua trang in
+          </NavLink>
 
         </div>
 
@@ -71,41 +60,30 @@ export const StudentHeader = () => {
         {menuOpen && (
           <div className="md:hidden flex flex-col items-center text-md text-blue-5 absolute top-[10vh] left-0 w-36 bg-white rounded-md shadow-lg z-10">
 
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
+            <NavLink to="/student/homepage" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
               onClick={() => {
-                navigate("/student/homepage"); setMenuOpen(false);
-              }}
-            >
-              Trang chủ
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigate("/student/printDoc");
                 setMenuOpen(false);
-              }}
-
-            >
-              In tài liệu
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
+              }}>
+            Trang chủ
+            </NavLink>
+            <NavLink to="/student/printDoc" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
               onClick={() => {
-                navigate("/");
                 setMenuOpen(false);
-              }}
-            >
-              Lịch sử in
-            </button>
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
+              }}>
+            In tài liệu
+            </NavLink>
+            <NavLink to="/student/printHistory" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
               onClick={() => {
-                navigate("/");
                 setMenuOpen(false);
-              }}
-            >
-              Mua trang in
-            </button>
+              }}>
+            Lịch sử in
+            </NavLink>
+            <NavLink to="/student/buyPage" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
+              onClick={() => {
+                setMenuOpen(false);
+              }}>
+            Mua trang in
+            </NavLink>
           </div>
         )}
 

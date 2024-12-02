@@ -1,7 +1,7 @@
 import { StudentHeader } from "../../components/StudentHeader";
 import { Footer } from "../../components/footer";
 import { AddSuccess } from "./AddSuccess";
-import { AlertAddFile } from "./AlertAddFile";
+import { AlertAddFile } from "./Alert";
 import { Confirm } from "./Confirm";
 import avatar from '../../images/VitaminMeo.jpg'
 

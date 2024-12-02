@@ -13,6 +13,8 @@ import { PrintersPage } from "./pages/SPSO/PrintersPage";
 import { SystemHistoryPage } from "./pages/SPSO/SystemHistoryPage";
 import { ManagementPage } from "./pages/SPSO/ManagementPage";
 import { ReportsPage } from "./pages/SPSO/ReportsPage";
+import { PrintingHistory } from "./pages/Student/PrintingHistory";
+import { BuyPage } from "./pages/Student/BuyPage";
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/student/homepage" element={<StudentHomePage />} />
       <Route path="/student/printDoc" element={<PrintDocument />} />
+      <Route path="/student/printHistory" element={<PrintingHistory />} />
+      <Route path="/student/buyPage" element={<BuyPage />} />
 
       <Route path="/spso/homepage" element={<SPSOHomePage/>}/>
       <Route path="/spso/waiting-docs" element={<WaitingDocsPage/>}/>
