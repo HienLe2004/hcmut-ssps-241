@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import avatar from '../images/VitaminMeo.jpg'
 
 export const StudentHeader = () => {
@@ -50,7 +50,7 @@ export const StudentHeader = () => {
           </button>
 
           <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/student/buyPage")}
           >
             Mua trang in
           </button>

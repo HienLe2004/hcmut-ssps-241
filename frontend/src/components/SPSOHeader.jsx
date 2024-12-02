@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { Link, NavLink, useNavigate } from "react-router-dom"
 import avatar from '../images/VitaminMeo.jpg'
 
 export const SPSOHeader = () => {
 
   const navigate = useNavigate();
-
+  
   const [imgClick, setImgClick] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -18,54 +18,37 @@ export const SPSOHeader = () => {
   }
 
   return <>
-    <header class="flex items-center justify-between px-5 w-full bg-blue-2 text-blue-900 font-bold h-[10vh]  ">
+    <header className="flex items-center justify-between px-5 w-full bg-blue-2 text-blue-900 font-bold h-[10vh]">
 
-      <div class="flex flex-row items-center h-full">
+      <div className="flex flex-row items-center h-full">
         <img
           loading="lazy"
           src="https://lms.hcmut.edu.vn/pluginfile.php/3/theme_academi/logo/1725955904/logoBK.png"
           alt="University logo"
-          class="aspect-square w-16"
+          className="aspect-square w-16"
         />
 
         {/* Màn hình lớn */}
 
-        <div class="hidden md:flex flex-row w-full h-full text-xl ml-4           ">
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
-          >
-            Trang chủ
-          </button>
-
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
-          >
-            Tài liệu chờ
-          </button>
-
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
-          >
-            Máy in
-          </button>
-
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
-          >
-            Lịch sử
-          </button>
-
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
-          >
-            Quản lí
-          </button>
-
-          <button class="hover:bg-blue-4 duration-200 px-2"
-            onClick={() => navigate("/")}
-          >
-            Báo cáo
-          </button>
+        <div className="hidden md:flex items-center flex-row w-full h-full text-xl ml-4">
+          <NavLink to="/spso/homepage" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Trang chủ
+          </NavLink>
+          <NavLink to="/spso/waiting-docs" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Tài liệu chờ
+          </NavLink>
+          <NavLink to="/spso/printers" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Máy in
+          </NavLink>
+          <NavLink to="/spso/history" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Lịch sử
+          </NavLink>
+          <NavLink to="/spso/management" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Quản lí
+          </NavLink>
+          <NavLink to="/spso/reports" className="hover:bg-blue-4 duration-200 px-2 h-full flex items-center [&.active]:bg-blue-3">
+          Báo cáo
+          </NavLink>
 
         </div>
 
@@ -82,8 +65,43 @@ export const SPSOHeader = () => {
 
         {menuOpen && (
           <div className="md:hidden flex flex-col items-center text-md text-blue-5 absolute top-[10vh] left-0 w-36 bg-white rounded-md shadow-lg z-10">
-
-            <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
+            <NavLink to="/spso/homepage" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
+              onClick={() => {
+                setMenuOpen(false);
+              }}>
+            Trang chủ
+            </NavLink>
+            <NavLink to="/spso/waiting-docs" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
+              onClick={() => {
+                setMenuOpen(false);
+              }}>
+            Tài liệu chờ
+            </NavLink>
+            <NavLink to="/spso/printers" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
+              onClick={() => {
+                setMenuOpen(false);
+              }}>
+            Máy in
+            </NavLink>
+            <NavLink to="/spso/history" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
+              onClick={() => {
+                setMenuOpen(false);
+              }}>
+            Lịch sử
+            </NavLink>
+            <NavLink to="/spso/management" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
+              onClick={() => {
+                setMenuOpen(false);
+              }}>
+            Quản lí
+            </NavLink>
+            <NavLink to="/spso/reports" className="hover:bg-blue-4 duration-200 px-4 py-2 w-full flex items-center justify-center [&.active]:bg-blue-3"
+              onClick={() => {
+                setMenuOpen(false);
+              }}>
+            Báo cáo
+            </NavLink>
+            {/* <button className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
               onClick={() => {
                 navigate("/"); setMenuOpen(false);
               }}
@@ -135,7 +153,7 @@ export const SPSOHeader = () => {
               }}
             >
               Báo cáo
-            </button>
+            </button> */}
           </div>
         )}
 
