@@ -1,5 +1,5 @@
-import { SPSOHeader } from "../../components/SPSOHeader"
-import { Footer } from "../../components/footer";
+import { SPSOHeader } from "../../../components/SPSOHeader"
+import { Footer } from "../../../components/footer";
 
 export const SystemHistoryPage = () => {
     return <>

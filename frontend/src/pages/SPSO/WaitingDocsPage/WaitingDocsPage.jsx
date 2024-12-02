@@ -1,10 +1,9 @@
-import { SPSOHeader } from "../../components/SPSOHeader"
-import { Footer } from "../../components/footer";
+import { SPSOHeader } from "../../../components/SPSOHeader"
+import { Footer } from "../../../components/footer";
 import { useState } from "react"
 import Select from "react-select"
 import { FaSearch } from "react-icons/fa"
 import { WaitingDocsTable } from "./WaitingDocsTable";
-import { UpdateWaitingDoc } from "./UpdateWaitingDoc";
 
 const students = [
     {value:2211012 , label:2211012},

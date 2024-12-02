@@ -1,10 +1,10 @@
 import { FaPen } from "react-icons/fa"
 import { UpdateWaitingDoc } from "./UpdateWaitingDoc"
 import { useState } from "react"
-import { ConfirmUpdate } from "./CofirmUpdate";
+import { Notification } from "../Notification";
 export const WaitingDocsTable = ({waitingDocs}) => {
     const [updateOpen, setUpdateOpen] = useState(false);
-    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [notiOpen, setNotiOpen] = useState(false);
     return <div>
         {/* Màn hình lớn */}
         <div className="hidden md:flex">
@@ -44,7 +44,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
         </table>
         </div>
         {/* Màn hình nhỏ */}
-        <div className="flex md:hidden min-w-10 px-10">
+        <div className="flex md:hidden px-10">
         <table className="bg-blue-2 overflow-x-scroll w-full">
             {/* <thead className="bg-blue-3">
                 <tr>
@@ -80,7 +80,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
             </tbody>
         </table>
         </div>
-        {updateOpen && <UpdateWaitingDoc closeUpdate = {() => {setUpdateOpen(false)}} openConfirm={() => setConfirmOpen(true)}/>}
-        {confirmOpen && <ConfirmUpdate noti="Đã xác nhận in tài liệu xong thành công!" closeConfirm={()=>setConfirmOpen(false)}/>}
+        {updateOpen && <UpdateWaitingDoc closeUpdate = {() => {setUpdateOpen(false)}} openNoti={() => setNotiOpen(true)}/>}
+        {notiOpen && <Notification noti="Đã xác nhận in tài liệu xong thành công!" closeNoti={()=>setNotiOpen(false)}/>}
     </div>
 }

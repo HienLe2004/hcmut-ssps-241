@@ -8,11 +8,11 @@ import { StudentHeader } from "./components/StudentHeader";
 import { StudentHomePage } from "./pages/Student/StudentHomePage";
 import { PrintDocument } from "./pages/Student/PrintDocument";
 import { SPSOHomePage } from "./pages/SPSO/SPSOHomePage";
-import { WaitingDocsPage } from "./pages/SPSO/WaitingDocsPage";
-import { PrintersPage } from "./pages/SPSO/PrintersPage";
-import { SystemHistoryPage } from "./pages/SPSO/SystemHistoryPage";
-import { ManagementPage } from "./pages/SPSO/ManagementPage";
-import { ReportsPage } from "./pages/SPSO/ReportsPage";
+import { WaitingDocsPage } from "./pages/SPSO/WaitingDocsPage/WaitingDocsPage";
+import { PrintersPage } from "./pages/SPSO/PrintersPage/PrintersPage";
+import { SystemHistoryPage } from "./pages/SPSO/SystemHistoryPage/SystemHistoryPage";
+import { ManagementPage } from "./pages/SPSO/ManagementPage/ManagementPage";
+import { ReportsPage } from "./pages/SPSO/ReportsPage/ReportsPage";
 import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
 
