@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import avatar from '../images/VitaminMeo.jpg'
 
 export const SPSOHeader = () => {
@@ -109,7 +109,7 @@ export const SPSOHeader = () => {
       {/* Ảnh đại diện */}
 
       <img src={avatar} alt="Không có gì đâu hehehe"
-        class="h-[80%] aspect-square bg-red-300 rounded-full mr-5 hover:cursor-pointer    "
+        className="h-[80%] aspect-square bg-red-300 rounded-full mr-5 hover:cursor-pointer    "
         onClick={clickImage}
       />
       {imgClick && (

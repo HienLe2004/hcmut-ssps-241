@@ -3,6 +3,7 @@ import { Footer } from "../../components/footer";
 import { useState } from "react"
 import Select from "react-select"
 import { FaSearch } from "react-icons/fa"
+import { WaitingDocsTable } from "./WaitingDocsTable";
 
 const students = [
     {value:2211012 , label:2211012},
@@ -19,7 +20,17 @@ const printers = [
     {value:"H3-301-1.1", label:"H3-301-1.1"},
     {value:"H3-401-1.1", label:"H3-401-1.1"},
 ];
-
+const waitingDocs = [
+    {
+        id: 2211024,
+        printer: "H1-101-1",
+        size: "A5",
+        copy: 10,
+        file: "oiwer.docx",
+        start: "10:10 10/20/20",
+        status: "Dang xu ly"
+    }
+]
 export const WaitingDocsPage = () => {
     const [selectedPrinters, setSelectedPrinters] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]);
@@ -81,12 +92,17 @@ export const WaitingDocsPage = () => {
             color:`black`
         })
     }
+    const handleSearch = () => {
+        console.log(selectedPrinters)
+        console.log(selectedStudents)
+    }
     return <>
         <div className="flex flex-col min-h-screen">
             <SPSOHeader />
-            <div className="flex flex-col flex-grow items-center justify-center w-full my-5">
+            {/* Màn hình lớn */}
+            <div className="hidden md:flex flex-col flex-grow items-center justify-center w-full my-5 gap-y-10">
                 <div className="flex flex-row items-center gap-x-10 text-xl">
-                    <div className="flex flow-row items-center">
+                    <div className="flex flex-row items-center">
                         <p>Mã số sinh viên:</p>
                         <Select 
                         options={students}
@@ -99,7 +115,7 @@ export const WaitingDocsPage = () => {
                         noOptionsMessage={() => {return "Không tìm thấy"}}
                         />
                     </div>
-                    <div className="flex flow-row items-center">
+                    <div className="flex flex-row items-center">
                         <p>Máy in:</p>
                         <Select 
                         options={printers}
@@ -113,6 +129,42 @@ export const WaitingDocsPage = () => {
                         />
                     </div>
                     <button className="aspect-square rounded-full bg-blue-4 w-8 items-center justify-items-center hover:scale-110 duration-200">
+                        <FaSearch id="search-icon" className="text-white"/>
+                    </button>
+                </div>
+                <WaitingDocsTable waitingDocs={waitingDocs}/>
+            </div>
+            {/* Màn hình nhỏ */}
+            <div className="md:hidden flex flex-col flex-grow items-center justify-center w-full my-5">
+                <div className="flex flex-col items-start text-xl gap-y-1 px-3">
+                    <div className="flex flex-col">
+                        <p>Mã số sinh viên:</p>
+                        <Select 
+                        options={students}
+                        value={selectedStudents}
+                        onChange={handleChangeStudent}
+                        isMulti
+                        placeholder="Tất cả"
+                        styles={selectStyles}
+                        className=""
+                        noOptionsMessage={() => {return "Không tìm thấy"}}
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <p>Máy in:</p>
+                        <Select 
+                        options={printers}
+                        value={selectedPrinters}
+                        onChange={handleChangePrinter}
+                        isMulti
+                        placeholder="Tất cả"
+                        styles={selectStyles}
+                        className=""
+                        noOptionsMessage={() => {return "Không tìm thấy"}}
+                        />
+                    </div>
+                    <button className="aspect-square rounded-full bg-blue-4 w-8 items-center justify-items-center hover:scale-110 duration-200"
+                        onClick={handleSearch}>
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
