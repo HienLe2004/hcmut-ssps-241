@@ -11,25 +11,25 @@ export const WaitingDocsTable = ({waitingDocs}) => {
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[800px]">
             <thead className="bg-blue-3">
                 <tr>
-                    <th className="min-w-[100px] py-4">MSSV</th>
-                    <th className="min-w-[80px]">Máy in</th>
-                    <th className="min-w-[100px]">Cỡ</th>
-                    <th className="min-w-[100px]">Số bản</th>
-                    <th className="min-w-[100px]">File</th>
-                    <th className="min-w-[180px]">Thời gian bắt đầu</th>
-                    <th className="min-w-[160px]">Trạng thái</th>
+                    <th className="min-w-[100px] py-4 border-2 border-blue-4">MSSV</th>
+                    <th className="min-w-[80px] border-2 border-blue-4">Máy in</th>
+                    <th className="min-w-[100px] border-2 border-blue-4">Cỡ</th>
+                    <th className="min-w-[100px] border-2 border-blue-4">Số bản</th>
+                    <th className="min-w-[100px] border-2 border-blue-4">File</th>
+                    <th className="min-w-[180px] border-2 border-blue-4">Thời gian bắt đầu</th>
+                    <th className="min-w-[160px] border-2 border-blue-4">Trạng thái</th>
                 </tr>
             </thead>
             <tbody className="text-white">
                 {waitingDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey}>
-                        <td className="text-center">{waitingDoc.id}</td>
-                        <td className="text-center">{waitingDoc.printer}</td>
-                        <td className="text-center">{waitingDoc.size}</td>
-                        <td className="text-center">{waitingDoc.copy}</td>
-                        <td className="text-center">{waitingDoc.file}</td>
-                        <td className="text-center">{waitingDoc.start}</td>
-                        <td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.id}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.printer}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.size}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.copy}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.file}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.start}</td>
+                        <td className="text-center border-2 border-blue-4">
                             <span className="flex items-center flex-row-reverse my-1 mx-1 gap-x-3">
                                 <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
                                     onClick={() => {setUpdateOpen(true)}}>

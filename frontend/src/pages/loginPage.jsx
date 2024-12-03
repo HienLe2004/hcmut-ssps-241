@@ -1,7 +1,14 @@
 import { useRef, useState } from "react"
+import { Navigate, redirect, useNavigate } from "react-router-dom"
 
 export const LoginPage = () => {
     const [isStudent, setIsStudent] = useState(true)
+    const navigate = useNavigate();
+    const handleLogin = (e) => {
+        e.preventDefault();
+        console.log("login");
+        navigate(isStudent ? "/student/homepage" : "/spso/homepage")
+    }
     return <>
         <section className="min-h-screen flex flex-col items-center justify-center bg-[#65c2f5]">
         <h1 className="text-center text-3xl font-bold">HCMUT SSPS</h1>
@@ -23,7 +30,8 @@ export const LoginPage = () => {
                 <form className="mt-6 flex flex-col gap-4">
                     <input className="p-2 rounded-xl border" type="email" name="email" placeholder="BKID"/>
                     <input className="p-2 rounded-xl border" type="password" name="password" placeholder="Password"/>
-                    <button className="py-2 rounded-xl bg-[#0463ca] text-white  hover:scale-105 duration-200">Đăng nhập</button>
+                    <button className="py-2 rounded-xl bg-[#0463ca] text-white  hover:scale-105 duration-200"
+                        onClick={handleLogin}>Đăng nhập</button>
                     <a className=" text-xs text-right  hover:scale-105 duration-200" href="#">Quên mật khẩu?</a>
                 </form>
             </div>

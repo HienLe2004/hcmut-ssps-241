@@ -61,23 +61,23 @@ export const PrinterHistoryTable = ({rows}) => {
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
             <thead className="bg-blue-3">
                 <tr>
-                    <th className="min-w-[100px] py-4">Tên file</th>
-                    <th className="min-w-[80px]">Cỡ giấy</th>
-                    <th className="min-w-[180px]">Số bản</th>
-                    <th className="min-w-[180px]">MSSV</th>
-                    <th className="min-w-[180px]">Thời gian bắt đầu</th>
-                    <th className="min-w-[180px]">Thời gian kết thúc</th>
+                    <th className="min-w-[100px] py-4 border-2 border-blue-4">Tên file</th>
+                    <th className="min-w-[80px] border-2 border-blue-4">Cỡ giấy</th>
+                    <th className="min-w-[100px] border-2 border-blue-4">Số bản</th>
+                    <th className="min-w-[180px] border-2 border-blue-4">MSSV</th>
+                    <th className="min-w-[180px] border-2 border-blue-4">Thời gian bắt đầu</th>
+                    <th className="min-w-[180px] border-2 border-blue-4">Thời gian kết thúc</th>
                 </tr>
             </thead>
             <tbody className="text-white">
                 {rows.map((row, rowKey) => {
                     return <tr key={rowKey}>
-                        <td className="text-center">{row.file}</td>
-                        <td className="text-center">{row.size}</td>
-                        <td className="text-center">{row.copy}</td>
-                        <td className="text-center">{row.id}</td>
-                        <td className="text-center">{row.start}</td>
-                        <td className="text-center">{row.end}</td>
+                        <td className="text-center border-2 border-blue-4">{row.file}</td>
+                        <td className="text-center border-2 border-blue-4">{row.size}</td>
+                        <td className="text-center border-2 border-blue-4">{row.copy}</td>
+                        <td className="text-center border-2 border-blue-4">{row.id}</td>
+                        <td className="text-center border-2 border-blue-4">{row.start}</td>
+                        <td className="text-center border-2 border-blue-4">{row.end}</td>
                     </tr>
                 })}  
             </tbody>
