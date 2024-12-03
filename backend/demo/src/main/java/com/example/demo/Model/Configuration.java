@@ -24,6 +24,16 @@ public class Configuration {
     public List<String> getpermittedFile() {
         return Arrays.asList(permittedFile.split(",")); // Chuyển chuỗi thành danh sách
     }
+
+    public Configuration(){}
+
+    public Configuration(Long id, int pageSize, String permittedFile, int givenPage) {
+        this.id = id;
+        this.pageSize = pageSize;
+        this.permittedFile = permittedFile;
+        this.givenPage = givenPage;
+    }
+
     public String getpermittedStringFile(){
         return permittedFile;
     }

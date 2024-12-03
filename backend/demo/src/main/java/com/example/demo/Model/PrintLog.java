@@ -23,6 +23,18 @@ public class PrintLog {
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
+    //Costructor
+    public PrintLog(){}
+
+    public PrintLog(long id, String filename, String sizePage, int numberPage, LocalDate date, Student student) {
+        this.id = id;
+        this.filename = filename;
+        this.sizePage = sizePage;
+        this.numberPage = numberPage;
+        this.date = date;
+        this.student = student;
+    }
+
     public long getId() {
         return id;
     }

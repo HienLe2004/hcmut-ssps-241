@@ -21,6 +21,15 @@ public class BuyLog {
     @Column(name = "payment_time")
     private LocalDateTime paymentTime;
 
+    public BuyLog(){}
+
+    public BuyLog(Long id, int boughtPageNum, String price, LocalDateTime paymentTime) {
+        this.id = id;
+        this.boughtPageNum = boughtPageNum;
+        this.price = price;
+        this.paymentTime = paymentTime;
+    }
+
     public Long getId() {
         return id;
     }

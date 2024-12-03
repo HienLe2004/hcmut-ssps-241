@@ -31,6 +31,8 @@ public class PrintRequest {
 
     //chua them khoa ngoai den Printer
 
+    //
+
     //getter
 
     public long getId() {

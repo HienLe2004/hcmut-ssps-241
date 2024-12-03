@@ -14,6 +14,13 @@ public class Report {
     @Column(name = "date")
     private Date date;
 
+    public Report(){}
+
+    public Report(Date date, long id) {
+        this.date = date;
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }

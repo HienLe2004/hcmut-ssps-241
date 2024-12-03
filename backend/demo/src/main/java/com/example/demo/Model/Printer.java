@@ -18,6 +18,14 @@ public class Printer {
     @JoinColumn(name = "congiguration_id")
     private Configuration config;
 
+    public Printer(){}
+
+    public Printer(long id, String location, String state, Configuration config) {
+        this.id = id;
+        this.location = location;
+        this.state = state;
+        this.config = config;
+    }
 
     public long getId() {
         return id;

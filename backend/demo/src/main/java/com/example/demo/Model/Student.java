@@ -1,5 +1,4 @@
 package com.example.demo.Model;
-import com.example.demo.Model.PrintRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -37,8 +36,6 @@ public class Student {
     @OneToMany(mappedBy = "student", orphanRemoval = true)
     @JsonIgnore
     private List<PrintLog> printLogs;
-
-
 
     public Student() {
     }
@@ -122,7 +119,4 @@ public class Student {
     }
 
     public void setPrintLogs(List<PrintLog> printLogs) { this.printLogs = printLogs; }
-//Other methods
-//public void requestToPrint(){}
-//public void uploadDocument(){}
 }

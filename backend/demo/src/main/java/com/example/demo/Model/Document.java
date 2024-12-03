@@ -2,6 +2,7 @@ package com.example.demo.Model;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "document")
 public class Document {
