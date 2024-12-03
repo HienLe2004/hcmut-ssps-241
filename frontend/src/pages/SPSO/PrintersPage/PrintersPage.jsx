@@ -39,7 +39,7 @@ export const PrintersPage = () => {
     return <>
         <div className="flex flex-col min-h-screen">
             <SPSOHeader />
-            <button className="bg-blue-5 text-white p-2 absolute rounded-xl right-3 top-20"
+            <button className="bg-blue-5 text-white p-2 absolute rounded-xl right-3 top-20 hover:scale-110 duration-200"
                 onClick={handleNewPrinter}>
                 Thêm mới
             </button>

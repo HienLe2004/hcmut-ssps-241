@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { FaPen } from "react-icons/fa";
-import { UpdatePrinterStatus } from "./UpdatePrinterSatus";
+import { UpdatePrinterStatus } from "./UpdatePrinterStatus";
 import { Notification } from "../Notification";
 import { NavLink } from "react-router-dom";
 
@@ -54,7 +54,9 @@ export const PrintersTable = ({printers}) => {
             <tbody className="text-white">
                 {printers.map((printer, printerKey) => {
                     return <tr key={printerKey} className={printerKey%2?"bg-blue-3":"bg-blue-2"}>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên">{printer.name}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên">
+                            <NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink>
+                        </td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Mô tả">{printer.description}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Bắt đầu sử dụng">{printer.start}</td>
                         <td className="text-left flex items-center before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Trạng thái">
