@@ -7,7 +7,6 @@ import { Notification } from "../Notification";
 import { useEffect, useState } from "react";
 import { UpdatePrinterDescription } from "./UpdatePrinterDescription";
 import { PrinterHistoryTable } from "./PrinterHistoryTable";
-import { printerHistory } from "../../../utils/mock-data";
 export const PrinterInfoPage = () => {
     const {id} = useParams();
     const [updateStatusOpen, setUpdateStatusOpen] = useState(false);
@@ -86,7 +85,7 @@ export const PrinterInfoPage = () => {
                     </div>
                 </div>
             </div>
-            <PrinterHistoryTable rows={printerHistory}/>
+            <PrinterHistoryTable printerID={id}/>
             {updateDescriptionOpen && <UpdatePrinterDescription 
                 closeUpdate = {() => {setUpdateDescriptionOpen(false)}} 
                 openNoti={() => { setNoti("Đã xác nhận cập nhật mô tả thành công!"); setNotiOpen(true);}}

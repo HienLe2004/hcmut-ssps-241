@@ -137,29 +137,3 @@ export let reports = [
         "date":"01:05 01/10/2024"
     }
 ]
-export let printerHistory = [
-    {
-        "file": "doc1.pdf",
-        "size": "A4",
-        "copy": 10,
-        "id": 2211020,
-        "start": "10:11 10/11/2024",
-        "end": "11:10 10/11/2024"
-    },
-    {
-        "file": "doc2.docx",
-        "size": "A4",
-        "copy": 11,
-        "id": 2211021,
-        "start": "10:12 10/11/2024",
-        "end": "11:12 10/11/2024"
-    },
-    {
-        "file": "doc3.pdf",
-        "size": "A4",
-        "copy": 20,
-        "id": 2211022,
-        "start": "10:14 10/11/2024",
-        "end": "11:14 10/11/2024"
-    }
-]

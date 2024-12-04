@@ -73,7 +73,7 @@ createServer({
     this.get("/api/rooms", (schema, request) => {
       return schema.rooms.all()
     })
-    //Lấy danh sách yêu cầu đang chờ in trong hệ thống
+    //Lấy danh sách yêu cầu trong hệ thống
     this.get("/api/printing-requests", (schema, request) => {
       return schema.printingRequests.all()
     })
