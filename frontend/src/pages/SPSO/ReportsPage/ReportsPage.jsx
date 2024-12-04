@@ -1,22 +1,40 @@
+import { parse } from "date-fns";
 import { SPSOHeader } from "../../../components/SPSOHeader"
 import { Footer } from "../../../components/footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa"
-import { reports } from "../../../utils/mock-data";
 export const ReportsPage = () => {
-    const rows = reports;
-    const [selectedStart, setSelecetedStart] = useState();
-    const [selectedEnd, setSelecetedEnd] = useState();
+    const [reports, setReports] = useState([]);
+    const [filteredReports, setFilteredReports] = useState([]);
+    const [selectedStart, setSelecetedStart] = useState(null);
+    const [selectedEnd, setSelecetedEnd] = useState(null);
     const handleChangeStart = (start) => {
-        setSelecetedStart(start.target.value);
+        setSelecetedStart(new Date(start.target.value));
     }
     const handleChangeEnd = (end) => {
-        setSelecetedEnd(end.target.value);
+        setSelecetedEnd(new Date(end.target.value));
     }
     const handleSearch = () => {
-        console.log(selectedStart)
-        console.log(selectedEnd)
+        const filterReportsWithDate = (reports) => {
+            return reports.filter(report => {
+                return  parse(report.date, 'kk:mm dd/MM/yyyy', new Date()).getTime() >= selectedStart.getTime() &&
+                    parse(report.date, 'kk:mm dd/MM/yyyy', new Date()).getTime() <= selectedEnd.getTime()
+            })
+        }
+        
+        const filteredReports = (selectedStart != null && selectedEnd != null) ? 
+            filterReportsWithDate(reports) : (()=>reports);
+        setFilteredReports(filteredReports)
     }
+    useEffect(()=>{
+        const fetchReports = async () => {
+            const response = await fetch('/api/reports');
+            const json = await response.json();
+            setReports(json.reports)
+            setFilteredReports(json.reports)
+        }
+        fetchReports();
+    },[])
     return <div className="flex flex-col min-h-screen">
         <SPSOHeader/>
         {/* Big */}
@@ -48,7 +66,7 @@ export const ReportsPage = () => {
                 </tr>
             </thead>
             <tbody className="text-white">
-                {rows.map((row, rowKey) => {
+                {filteredReports.map((row, rowKey) => {
                     return <tr key={rowKey}>
                         <td className="text-center border-2 border-blue-4">{row.name}</td>
                         <td className="text-center border-2 border-blue-4">{row.link}</td>
@@ -87,7 +105,7 @@ export const ReportsPage = () => {
                 </tr>
             </thead> */}
             <tbody className="text-white">
-                {rows.map((row, rowKey) => {
+                {filteredReports.map((row, rowKey) => {
                     return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-2"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên báo cáo">{row.name}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Link file">{row.link}</td>
@@ -97,6 +115,7 @@ export const ReportsPage = () => {
             </tbody>
         </table>
         </div>
+        {(filteredReports.length == 0) && <p className="text-center">Không tìm thấy</p>}
         <Footer/>
     </div>
 }

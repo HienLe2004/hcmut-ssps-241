@@ -14,20 +14,22 @@ import { ReportsPage } from "./pages/SPSO/ReportsPage/ReportsPage";
 import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
 import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
-import { students, rooms, printingRequests, printers, validDocs, defaultPage} from "./utils/mock-data";
+import { students, rooms, printingRequests, printers, validDocs, defaultPage, reports} from "./utils/mock-data";
 import { createServer, Model } from "miragejs";
 createServer({
   models: {
     printer: Model,
     student: Model,
     room: Model,
-    printingRequests: Model
+    printingRequests: Model,
+    reports: Model
   },
   seeds(server) {
     printers.forEach((printer) => {server.create('printer', printer);});
     students.forEach((student) => {server.create('student', student);});
     rooms.forEach((room) => {server.create('room', room)});
     printingRequests.forEach((printingRequest) => {server.create('printingRequest', printingRequest)});
+    reports.forEach((report) => {server.create('report',report)})
   },
   routes() {
     //Lấy danh sách sinh viên trong hệ thống
@@ -102,6 +104,10 @@ createServer({
       defaultPage.page = attrs.page
       defaultPage.date = attrs.date
       return defaultPage
+    })
+    //Lấy danh sách báo cáo trên hệ thống
+    this.get("/api/reports", (schema, request) => {
+      return schema.reports.all()
     })
     // //Lấy yêu cầu đang chờ in theo id
     // this.get("/api/printing-requests/:id", (schema,request) => {

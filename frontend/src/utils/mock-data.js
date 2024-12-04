@@ -124,17 +124,17 @@ export let reports = [
     {
         "name":"BC-T11-2024",
         "link":"BC-T11-2024.xsl",
-        "date":"0:10 1/12/2024"
+        "date":"03:10 01/12/2024"
     },
     {
         "name":"BC-T10-2024",
         "link":"BC-T10-2024.xsl",
-        "date":"0:08 1/11/2024"
+        "date":"05:08 01/11/2024"
     },
     {
         "name":"BC-T9-2024",
         "link":"BC-T9-2024.xsl",
-        "date":"0:5 1/10/2024"
+        "date":"01:05 01/10/2024"
     }
 ]
 export let printerHistory = [
