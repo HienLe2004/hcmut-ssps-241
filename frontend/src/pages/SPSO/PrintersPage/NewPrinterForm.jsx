@@ -49,14 +49,15 @@ const selectStyles = {
 }
 
 export const NewPrinterForm = ({closeForm, submitForm}) => {
-    const [selectedRoom, setSelectedRoom] = useState();
+    const [selectedRoom, setSelectedRoom] = useState(null);
     const [description, setDescription] = useState(null);
     const [rooms, setRooms] = useState();
     useEffect(() => {
         const fetchRoomData = async () => {
             const response = await fetch("/api/rooms");
-            const data = await response.json();
-            const tranformedData = data.map(item => ({
+            const json = await response.json();
+            const data = json.rooms
+            const tranformedData = await data.map(item => ({
                 id: item.id,
                 value: item.id,
                 label: item.id
@@ -92,7 +93,7 @@ export const NewPrinterForm = ({closeForm, submitForm}) => {
             </div>
             <div className="flex flex-row justify-around w-full">
                 <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
-                    onClick={() => {submitForm(selectedRoom.value, description); closeForm();}}>
+                    onClick={() => {submitForm((selectedRoom==null)?null:selectedRoom.value, description); closeForm();}}>
                     Đồng ý
                 </button>
                 <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"

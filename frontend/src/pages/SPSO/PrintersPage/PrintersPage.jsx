@@ -7,6 +7,7 @@ import { Notification } from "../Notification";
 export const PrintersPage = () => {
     const [formOpen, setFormOpen] = useState(false);
     const [notiOpen, setNotiOpen] = useState(false);
+    const [noti, setNoti] = useState(null);
     const [printers, setPrinters] = useState([]);
     const handleNewPrinter = () => {
         setFormOpen(true);
@@ -19,9 +20,15 @@ export const PrintersPage = () => {
     }, [])
     const handleSubmit = async (room, description) => {
         try {
+            if (room == null) {
+                setNoti("Hãy điền vị trí máy in!")
+                setNotiOpen(true)
+                return;
+            }
             const response = await fetch("/api/printers",{method:"POST", body:JSON.stringify({room,description})})
             const json = await response.json()
             setPrinters([...printers, json.printer])
+            setNoti("Đã thêm máy in mới thành công!")
             setNotiOpen(true)
         } catch (err) {
             console.log(err)
@@ -35,7 +42,7 @@ export const PrintersPage = () => {
                 Thêm mới
             </button>
             {formOpen && <NewPrinterForm closeForm={() => setFormOpen(false)} submitForm={(room, description) => {handleSubmit(room, description)}}/>}
-            {notiOpen && <Notification noti="Đã thêm máy in mới thành công!" closeNoti={() => {setNotiOpen(false)}}/>}
+            {notiOpen && <Notification noti={noti} closeNoti={() => {setNotiOpen(false)}}/>}
             {/* Màn hình lớn */}
             <div className="hidden md:flex flex-col flex-grow items-center justify-center w-full my-5">
                 <PrintersTable printers={printers}/>
