@@ -13,8 +13,10 @@ import waitingDocs from "../../../utils/waitingDocs.json";
 export const WaitingDocsPage = () => {
     const [students, setStudents] = useState([]);
     const [printers, setPrinters] = useState([]);
+    const [waitingDocs, setWaitingDocs] = useState([]);
     const [selectedPrinters, setSelectedPrinters] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]);
+    const [filteredWaitingDocs, setFilteredWaitingDocs] = useState([]);
     const handleChangePrinter = (selectedPrinters) => {
         setSelectedPrinters(selectedPrinters);
     }
@@ -22,6 +24,17 @@ export const WaitingDocsPage = () => {
         setSelectedStudents(selectedStudents);
     }
     const handleSearch = () => {
+        const filterStudents = (selectedStudents.length == 0) ? students : selectedStudents
+        const filterPrinters = (selectedPrinters.length == 0) ? printers : selectedPrinters
+        const filterDocs = (waitingDocs, filterStudents, filterPrinters) => {
+            return waitingDocs.filter(doc => {
+                return filterStudents.some(student => student.value === doc.student_id) &&
+                    filterPrinters.some(printer => printer.value === doc.printer_id)
+            })
+        }
+        const filteredDocs = filterDocs(waitingDocs, filterStudents, filterPrinters);
+        console.log(filteredDocs)
+        setFilteredWaitingDocs(filteredDocs)
         console.log(selectedPrinters)
         console.log(selectedStudents)
     }
@@ -44,8 +57,15 @@ export const WaitingDocsPage = () => {
             }))
             setPrinters(tranformedData);
         }
+        const fetchWaitingDocData = async () => {
+            const response = await fetch("/api/waiting-docs");
+            const data = await response.json();
+            setWaitingDocs(data);
+            setFilteredWaitingDocs(data);
+        }
         fetchStudentData();
         fetchPrinterData();
+        fetchWaitingDocData();
     }, [])
     return <>
         <div className="flex flex-col min-h-screen">
@@ -79,11 +99,13 @@ export const WaitingDocsPage = () => {
                         noOptionsMessage={() => {return "Không tìm thấy"}}
                         />
                     </div>
-                    <button className="aspect-square rounded-full bg-blue-4 w-8  justify-items-center hover:scale-110 duration-200">
+                    <button className="aspect-square rounded-full bg-blue-4 w-8  justify-items-center hover:scale-110 duration-200"
+                        onClick={handleSearch}>
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
-                <WaitingDocsTable waitingDocs={waitingDocs}/>
+                {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={filteredWaitingDocs}/>}
+                {filteredWaitingDocs.length === 0 && <p>Không tìm thấy</p>}
             </div>
             {/* Màn hình nhỏ */}
             <div className="md:hidden flex flex-col flex-grow w-full my-5 gap-y-10">

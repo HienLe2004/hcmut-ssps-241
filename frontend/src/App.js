@@ -18,18 +18,50 @@ import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
 import { createServer } from "miragejs";
 createServer({
   routes() {
+    //Lấy danh sách sinh viên trong hệ thống
     this.get("/api/students", () => [
-      { id: "2211020"},
-      { id: "2210202"},
-      { id: "2210203"},
-      { id: "2210231"},
-      { id: "2212020"}
+      { id: 2211020},
+      { id: 2210202},
+      { id: 2210203},
+      { id: 2210231},
+      { id: 2212020}
     ])
+    //Lấy danh sách máy in trong hệ thống
     this.get("/api/printers", () => [
       { id: "H1-101-1"},
       { id: "H1-102-1"},
       { id: "H2-201-1"},
       { id: "H2-202-2"}
+    ])
+    //Lấy danh sách yêu cầu đang chờ in trong hệ thống
+    this.get("/api/waiting-docs", () => [
+      { 
+        id: 1,
+        student_id: 2211020,
+        printer_id: "H1-101-1",
+        size: "A5",
+        copy: 10,
+        file: "oiw.docx",
+        start: "10:10 10/20/20",
+      },
+      { 
+        id: 2,
+        student_id: 2210202,
+        printer_id: "H1-101-1",
+        size: "A5",
+        copy: 10,
+        file: "ower.docx",
+        start: "10:12 10/20/20",
+      },
+      { 
+        id: 3,
+        student_id: 2210231,
+        printer_id: "H1-101-1",
+        size: "A5",
+        copy: 10,
+        file: "er.docx",
+        start: "10:13 10/20/20",
+      },
     ])
   }
 })
