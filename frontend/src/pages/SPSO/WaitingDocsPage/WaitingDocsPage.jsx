@@ -21,12 +21,13 @@ export const WaitingDocsPage = () => {
         setSelectedStudents(selectedStudents);
     }
     const handleSearch = () => {
+        console.log(filteredWaitingDocs)
         const filterStudents = (selectedStudents.length == 0) ? students : selectedStudents
         const filterPrinters = (selectedPrinters.length == 0) ? printers : selectedPrinters
         const filterDocs = (waitingDocs, filterStudents, filterPrinters) => {
             return waitingDocs.filter(doc => {
-                return filterStudents.some(student => student.value === doc.student_id) &&
-                    filterPrinters.some(printer => printer.value === doc.printer_id)
+                return filterStudents.some(student => student.value == doc.student_id) &&
+                    filterPrinters.some(printer => printer.value == doc.printer_id)
             })
         }
         const filteredDocs = filterDocs(waitingDocs, filterStudents, filterPrinters);
@@ -37,28 +38,26 @@ export const WaitingDocsPage = () => {
     }
     useEffect(() => {
         const fetchStudentData = async () => {
-            const response = await fetch("/api/students");
-            const data = await response.json();
-            const tranformedData = data.map(item => ({
-                value: item.id,
-                label: item.id
-            }))
-            setStudents(tranformedData);
+            const response = await fetch('/api/students')
+            const json = await response.json()
+            const data = json.students
+            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            setStudents(transformedData)
         }
         const fetchPrinterData = async () => {
-            const response = await fetch("/api/printers");
-            const data = await response.json();
-            const tranformedData = data.map(item => ({
-                value: item.id,
-                label: item.id
-            }))
-            setPrinters(tranformedData);
+            const response = await fetch('/api/printers')
+            const json = await response.json()
+            const data = json.printers
+            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            setPrinters(transformedData)
         }
         const fetchWaitingDocData = async () => {
-            const response = await fetch("/api/waiting-docs");
-            const data = await response.json();
-            setWaitingDocs(data);
-            setFilteredWaitingDocs(data);
+            const response = await fetch("/api/printing-requests")
+            const json = await response.json()
+            const data = json.printingRequests
+            const waitingData = data.filter((item) => item.status == "waiting")
+            setWaitingDocs(waitingData)
+            setFilteredWaitingDocs(waitingData)
         }
         fetchStudentData();
         fetchPrinterData();
@@ -138,7 +137,8 @@ export const WaitingDocsPage = () => {
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
-                <WaitingDocsTable waitingDocs={waitingDocs}/>
+                {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={filteredWaitingDocs}/>}
+                {filteredWaitingDocs.length === 0 && <p>Không tìm thấy</p>}
             </div>
             <Footer />
         </div>

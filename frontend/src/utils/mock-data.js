@@ -19,7 +19,7 @@ export let students = [
     { "id": 2210231},
     { "id": 2212020}
 ]
-export let waitingDocs = [
+export let printingRequests = [
     { 
       "id": 1,
       "student_id": 2211020,
@@ -27,7 +27,8 @@ export let waitingDocs = [
       "size": "A5",
       "copy": 10,
       "file": "oiw.docx",
-      "start": "10:10 10/20/20"
+      "start": "10:10 10/02/2020",
+      "status": "waiting"
     },
     { 
       "id": 2,
@@ -36,7 +37,8 @@ export let waitingDocs = [
       "size": "A5",
       "copy": 10,
       "file": "ower.docx",
-      "start": "10:12 10/20/20"
+      "start": "10:12 10/02/2021",
+      "status": "waiting"
     },
     { 
       "id": 3,
@@ -45,7 +47,41 @@ export let waitingDocs = [
       "size": "A5",
       "copy": 10,
       "file": "er.docx",
-      "start": "10:13 10/20/20"
+      "start": "10:13 10/02/2022",
+      "status": "waiting"
+    },
+    { 
+      "id": 4,
+      "student_id": 2210231,
+      "printer_id": "H1-101-1",
+      "size": "A5",
+      "copy": 10,
+      "file": "er1.docx",
+      "start": "10:13 10/10/2024",
+      "end": "11:13 10/10/2024",
+      "status": "done"
+    },
+    { 
+      "id": 5,
+      "student_id": 2210231,
+      "printer_id": "H1-101-1",
+      "size": "A5",
+      "copy": 10,
+      "file": "er2.docx",
+      "start": "10:13 10/08/2024",
+      "end": "12:13 10/08/2024",
+      "status": "done"
+    },
+    { 
+      "id": 6,
+      "student_id": 2210231,
+      "printer_id": "H1-101-1",
+      "size": "A5",
+      "copy": 10,
+      "file": "er3.docx",
+      "start": "08:13 10/02/2024",
+      "end": "10:13 10/02/2024",
+      "status": "done"
     }
 ]
 export let systemHistory = [

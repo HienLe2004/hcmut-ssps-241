@@ -14,16 +14,20 @@ import { ReportsPage } from "./pages/SPSO/ReportsPage/ReportsPage";
 import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
 import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
-import { students, rooms, waitingDocs, printers} from "./utils/mock-data";
+import { students, rooms, printingRequests, printers} from "./utils/mock-data";
 import { createServer, Model } from "miragejs";
 createServer({
   models: {
     printer: Model,
-    student: Model
+    student: Model,
+    room: Model,
+    printingRequests: Model
   },
   seeds(server) {
     printers.forEach((printer) => {server.create('printer', printer);});
-    students.forEach((student) => {server.create('student', student);})
+    students.forEach((student) => {server.create('student', student);});
+    rooms.forEach((room) => {server.create('room', room)});
+    printingRequests.forEach((printingRequest) => {server.create('printingRequest', printingRequest)});
   },
   routes() {
     //Lấy danh sách sinh viên trong hệ thống
@@ -50,7 +54,7 @@ createServer({
       let attrs = JSON.parse(request.requestBody)
       const printerAtRoom = printers.filter(printer => printer.room == attrs.room)
       attrs.id = attrs.room + "-" + (printerAtRoom.length + 1)
-      attrs.start = (format(new Date(),'kk:mm dd/MM/Y'))
+      attrs.start = (format(new Date(),'kk:mm dd/MM/yyyy'))
       attrs.status = "on"
       printers.push(attrs)
       console.log(printers)
@@ -64,9 +68,31 @@ createServer({
       return printer.update(newAttrs)
     })
     //Lấy danh sách phòng trên hệ thống
-    this.get("/api/rooms", () => rooms)
+    this.get("/api/rooms", (schema, request) => {
+      return schema.rooms.all()
+    })
     //Lấy danh sách yêu cầu đang chờ in trong hệ thống
-    this.get("/api/waiting-docs", () => waitingDocs)
+    this.get("/api/printing-requests", (schema, request) => {
+      return schema.printingRequests.all()
+    })
+    //Chuyển yều cầu đang chờ in thành in xong theo id
+    this.patch("/api/printing-requests/:id", (schema, request) => {
+      let newAttrs = JSON.parse(request.requestBody)
+      let id = request.params.id  
+      newAttrs.end = (format(new Date(),'kk:mm dd/MM/Y'))
+      let printingRequest = schema.printingRequests.find(id)
+      return printingRequest.update(newAttrs)
+    })
+    // //Lấy yêu cầu đang chờ in theo id
+    // this.get("/api/printing-requests/:id", (schema,request) => {
+    //   let id = request.params.id
+    //   return schema.printingRequests.find(id)
+    // })
+    // //Xóa yêu cầu đang chờ in theo id
+    // this.delete("/api/printing-requests/:id", (schema, request) => {
+    //   let id = request.params.id
+    //   return schema.printingRequests.find(id).destroy()
+    // })
   }
 })
 

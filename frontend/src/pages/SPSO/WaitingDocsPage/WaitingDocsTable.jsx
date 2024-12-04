@@ -5,6 +5,16 @@ import { Notification } from "../Notification";
 export const WaitingDocsTable = ({waitingDocs}) => {
     const [updateOpen, setUpdateOpen] = useState(false);
     const [notiOpen, setNotiOpen] = useState(false);
+    const [currentWaitingDoc, setCurrentWaitingDoc] = useState();
+    const doneWaitingDoc = () => {
+        waitingDocs = waitingDocs.filter((waitingDoc) => waitingDoc.id != currentWaitingDoc.id)
+        fetch(`/api/printing-requests/${currentWaitingDoc.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({status: "done"})
+        })
+        .then((res)=>res.json())
+        .then(json=>console.log(json))
+    }
     return <div className="w-full">
         {/* Màn hình lớn */}
         <div className="hidden md:flex justify-center">
@@ -32,7 +42,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
                         <td className="text-center border-2 border-blue-4">
                             <span className="flex items-center flex-row-reverse my-1 mx-1 gap-x-3">
                                 <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
-                                    onClick={() => {setUpdateOpen(true)}}>
+                                    onClick={() => {setCurrentWaitingDoc(waitingDoc);setUpdateOpen(true)}}>
                                     <FaPen className="aspect-square text-white w-6"/>
                                 </button>
                                 <p>Đang xử lý</p>
@@ -72,7 +82,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
                                 <p>Đang xử lý</p>
                                 {/* <p>{waitingDoc.status}</p> */}
                                 <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
-                                    onClick={() => {setUpdateOpen(true)}}>
+                                    onClick={() => {setCurrentWaitingDoc(waitingDoc);setUpdateOpen(true)}}>
                                     <FaPen className="aspect-square text-white w-6"/>
                                 </button>
                             </span>
@@ -82,7 +92,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
             </tbody>
         </table>
         </div>
-        {updateOpen && <UpdateWaitingDoc closeUpdate = {() => {setUpdateOpen(false)}} openNoti={() => setNotiOpen(true)}/>}
+        {updateOpen && <UpdateWaitingDoc closeUpdate = {() => {setUpdateOpen(false)}} openNoti={() => {doneWaitingDoc();setNotiOpen(true)}}/>}
         {notiOpen && <Notification noti="Đã xác nhận in tài liệu xong thành công!" closeNoti={()=>setNotiOpen(false)}/>}
     </div>
 }
