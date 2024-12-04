@@ -161,8 +161,8 @@ export const SystemHistoryPage = () => {
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey}>
-                        <td className="text-center border-2 border-blue-4">{row.id}</td>
-                        <td className="text-center border-2 border-blue-4">{row.printer}</td>
+                        <td className="text-center border-2 border-blue-4">{row.student_id}</td>
+                        <td className="text-center border-2 border-blue-4">{row.printer_id}</td>
                         <td className="text-center border-2 border-blue-4">{row.file}</td>
                         <td className="text-center border-2 border-blue-4">{row.size}</td>
                         <td className="text-center border-2 border-blue-4">{row.copy}</td>
@@ -233,8 +233,8 @@ export const SystemHistoryPage = () => {
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-2"}>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.id}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{row.printer}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.student_id}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{row.printer_id}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">{row.file}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{row.size}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{row.copy}</td>
