@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Exception.ResourceNotFoundException;
+import com.example.demo.Model.Login;
 import com.example.demo.Model.Printer;
 import com.example.demo.Model.SPSO;
 import com.example.demo.Repository.SPSORepository;
@@ -11,13 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class SPSOController {
     @Autowired
     private SPSORepository spsoRepository;
+
+    @GetMapping("/spsos")
+    public List<SPSO> getAllSPSO(){
+        return spsoRepository.findAll();
+    }
 
     @GetMapping("/spso/{id}")
     public ResponseEntity<SPSO> getSPSO(@PathVariable long id){
@@ -26,8 +33,20 @@ public class SPSOController {
         return ResponseEntity.ok(spso);
     }
 
+    @GetMapping("/spso/{id}/login")
+    public Login getLogin(@PathVariable long id){
+        SPSO spso = spsoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("SPSO not exist with id :" + id));
+        return spso.getLogin();
+    }
+
+    @GetMapping("")
+
     @PostMapping("/spso")
     public SPSO createConfiguration(@RequestBody SPSO spso){
+        long id = spso.getId();
+        Optional<SPSO> spsoOptional = spsoRepository.findById(id);
+        if(spsoOptional.isPresent()) throw new RuntimeException("SPSO is exist!");
         return spsoRepository.save(spso);
     }
 
@@ -48,8 +67,10 @@ public class SPSOController {
         if(spsoInfo.getName() != null) {
             spso.setName(spsoInfo.getName());
         }
-
-
+        if(String.valueOf(spsoInfo.getLogin().getId())!= null)
+        {
+            spso.setLogin(spsoInfo.getLogin());
+        }
 
         SPSO updatedSPSO = spsoRepository.save(spso);
         return ResponseEntity.ok(updatedSPSO);

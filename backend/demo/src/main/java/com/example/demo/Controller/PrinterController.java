@@ -3,7 +3,6 @@ package com.example.demo.Controller;
 import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Model.*;
 import com.example.demo.Repository.ConfigurationRepository;
-import com.example.demo.Repository.PrintLogRepository;
 import com.example.demo.Repository.PrinterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class PrinterController {
     @Autowired
     private PrinterRepository printerRepository;
@@ -28,22 +27,17 @@ public class PrinterController {
         return printerRepository.findAll();
     }
 
-    @GetMapping("/printer/{id}")
-    public ResponseEntity<Printer> getPrinter(@PathVariable long id){
-        Printer printer = printerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("report not exist with id :" + id));
+    @GetMapping("/printer/{name}")
+    public ResponseEntity<Printer> getPrinter(@PathVariable String name){
+        Printer printer = printerRepository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("report not exist with name :" + name));
         return ResponseEntity.ok(printer);
     }
 
     @PostMapping("/printer")
     public Printer createPrinter(@RequestBody Printer printerInfo){
         Printer printer = new Printer();
-
-        long configId = printerInfo.getConfig().getId();
-        Configuration config = configurationRepository.findById(configId)
-                .orElseThrow(() -> new ResourceNotFoundException("Configuration not exist with id :" + configId));
-        printer.setConfig(config);
-
+        printer.setName(printerInfo.getName());
         printer.setLocation(printerInfo.getLocation());
 
         printer.setState(printerInfo.getState());
@@ -51,10 +45,10 @@ public class PrinterController {
         return printerRepository.save(printerInfo);
     }
 
-    @PutMapping("/printer/{id}")
-    public ResponseEntity<Printer> updatePrinter(@PathVariable long id, @RequestBody Printer printerInfo) {
-        Printer printer = printerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Printer not exist with id :" + id));
+    @PutMapping("/printer/{name}")
+    public ResponseEntity<Printer> updatePrinter(@PathVariable String name, @RequestBody Printer printerInfo) {
+        Printer printer = printerRepository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("report not exist with name :" + name));
 
         if(printerInfo.getState() != null) {
             printer.setState(printerInfo.getState());
@@ -64,21 +58,18 @@ public class PrinterController {
             printer.setLocation(printerInfo.getLocation());
         }
 
-        if(printerInfo.getConfig() != null) {
-            printer.setConfig(printerInfo.getConfig());
-        }
 
         Printer updatedPrinter = printerRepository.save(printer);
         return ResponseEntity.ok(updatedPrinter);
     }
 
-    @DeleteMapping("/printer/{id}")
-    public ResponseEntity<Map<String, Boolean>> deletePrinterByID(@PathVariable long id){
-        Printer printer = printerRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Printer not exist with id :" + id));
-        printerRepository.deleteById(id);
+    @DeleteMapping("/printer/{name}")
+    public ResponseEntity<Map<String, Boolean>> deletePrinterByID(@PathVariable String name){
+        Printer printer = printerRepository.findByName(name)
+                .orElseThrow(() -> new ResourceNotFoundException("report not exist with name :" + name));
+        printerRepository.delete(printer);
         Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted printer with id " + id, Boolean.TRUE);
+        response.put("deleted printer with name " + name, Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
 

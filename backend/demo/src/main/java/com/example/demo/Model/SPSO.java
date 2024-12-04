@@ -8,7 +8,6 @@ import java.util.Date;
 @Table(name = "spso")
 public class SPSO {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column(name = "manager_id")
     private Long id;
     @Column(name = "full_name")
@@ -23,6 +22,10 @@ public class SPSO {
     @Column(name = "email")
     private String email;
 
+    @OneToOne
+    @JoinColumn(name = "login_id")
+    private Login login;
+
     public SPSO() {
     }
 
@@ -30,12 +33,22 @@ public class SPSO {
                 String name,
                 String phoneNum,
                 Date doB,
-                String email) {
+                String email,
+                Login login) {
         this.id = id;
         this.name = name;
         this.phoneNum = phoneNum;
         this.doB = doB;
         this.email = email;
+        this.login = login;
+    }
+
+    public Login getLogin() {
+        return login;
+    }
+
+    public void setLogin(Login login) {
+        this.login = login;
     }
 
     public Long getId() {

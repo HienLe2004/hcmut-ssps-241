@@ -14,48 +14,59 @@ public class Configuration {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column(name = "configuration_id")
     private Long id;
-    @Column(name = "page_size")
-    private int pageSize;
-    @Column(name = "permitted_file")
-    private String permittedFile; // "pdf,word"
-    @Column(name = "given_page")
-    private int givenPage;
 
-    public List<String> getpermittedFile() {
-        return Arrays.asList(permittedFile.split(",")); // Chuyển chuỗi thành danh sách
+    @Column(name = "model") //PIXMA, imageCLASS
+    private String model;
+
+    @Column(name = "brand") //Canon, Epson
+    private String brand;
+
+    @Column(name = "printing_technology")
+    private String technology;
+
+    @Column(name = "duplex_printing")
+    private String duplexPrinting; // manual or automatic
+
+
+    @OneToOne()
+    @JoinColumn(name = "printer_name")
+    private Printer printer;
+    //@Column(name = "given_page")
+    //private int givenPage;
+
+
+    public Configuration() {
     }
 
-    public Configuration(){}
-
-    public Configuration(Long id, int pageSize, String permittedFile, int givenPage) {
-        this.id = id;
-        this.pageSize = pageSize;
-        this.permittedFile = permittedFile;
-        this.givenPage = givenPage;
+    public Configuration(String model, String brand, String technology, String duplexPrinting) {
+        this.model = model;
+        this.brand = brand;
+        this.technology = technology;
+        this.duplexPrinting = duplexPrinting;
     }
 
-    public String getpermittedStringFile(){
-        return permittedFile;
+    public String getModel() {
+        return model;
     }
 
-    public void setpermittedFile(String listString) {
-        permittedFile = listString;
+    public void setModel(String model) {
+        this.model = model;
     }
 
-    public int getPageSize() {
-        return pageSize;
+    public Printer getPrinter() {
+        return printer;
     }
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
+    public void setPrinter(Printer printer) {
+        this.printer = printer;
     }
 
-    public int getGivenPage() {
-        return givenPage;
+    public String getBrand() {
+        return brand;
     }
 
-    public void setGivenPage(int givenPage) {
-        this.givenPage = givenPage;
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 
     public Long getId() {
@@ -66,5 +77,20 @@ public class Configuration {
         this.id = id;
     }
 
+    public String getTechnology() {
+        return technology;
+    }
+
+    public void setTechnology(String technology) {
+        this.technology = technology;
+    }
+
+    public String getDuplexPrinting() {
+        return duplexPrinting;
+    }
+
+    public void setDuplexPrinting(String duplexPrinting) {
+        this.duplexPrinting = duplexPrinting;
+    }
 
 }

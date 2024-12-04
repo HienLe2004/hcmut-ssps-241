@@ -7,33 +7,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Table(name = "printer")
 public class Printer {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    @Column(name = "printer_id")
-    private long id;
+    @Column(name = "printer_name")
+    private String name;
     @Column(name = "location")
     private String location;
     @Column(name = "state")
     private String state;
-    @OneToOne
-    @JoinColumn(name = "congiguration_id")
-    private Configuration config;
 
     public Printer(){}
 
-    public Printer(long id, String location, String state, Configuration config) {
-        this.id = id;
+    public Printer(String location, String state, Configuration config, String name) {
         this.location = location;
         this.state = state;
-        this.config = config;
+        this.name = name;
     }
 
-    public long getId() {
-        return id;
+    public String getName() {
+        return name;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setName(String name) {
+        this.name = name;
     }
+
 
     public String getLocation() {
         return location;
@@ -51,11 +47,4 @@ public class Printer {
         this.state = state;
     }
 
-    public Configuration getConfig() {
-        return config;
-    }
-
-    public void setConfig(Configuration config) {
-        this.config = config;
-    }
 }
