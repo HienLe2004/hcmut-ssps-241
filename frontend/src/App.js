@@ -15,13 +15,36 @@ import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
 import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
 import { students, rooms, waitingDocs, printers} from "./utils/mock-data";
-import { createServer } from "miragejs";
+import { createServer, Model } from "miragejs";
 createServer({
+  models: {
+    printer: Model,
+    student: Model
+  },
+  seeds(server) {
+    printers.forEach((printer) => {server.create('printer', printer);});
+    students.forEach((student) => {server.create('student', student);})
+  },
   routes() {
     //Lấy danh sách sinh viên trong hệ thống
-    this.get("/api/students", () => students)
+    this.get("/api/students", (schema, request) => {
+      return schema.students.all()
+    })
+    //Lấy sinh viên theo id
+    this.get("/api/students/:id", (schema, request) => {
+      let id = request.params.id
+      return schema.students.find(id)
+    })
     //Lấy danh sách máy in trong hệ thống
-    this.get("/api/printers", () => printers)
+    this.get("/api/printers", (schema, request) => {
+      console.log(schema.printers.all())
+      return schema.printers.all()
+    })
+    //Lấy máy in theo id
+    this.get("api/printers/:id", (schema, request) => {
+      let id = request.params.id
+      return schema.printers.find(id)
+    })
     //Thêm máy in mới
     this.post("/api/printers", (schema, request) => {
       let attrs = JSON.parse(request.requestBody)
@@ -32,6 +55,13 @@ createServer({
       printers.push(attrs)
       console.log(printers)
       return {printer: attrs}
+    })
+    //Cập nhật thông tin máy in
+    this.patch("/api/printers/:id", (schema, request) => {
+      let newAttrs = JSON.parse(request.requestBody)
+      let id = request.params.id
+      let printer = schema.printers.find(id)
+      return printer.update(newAttrs)
     })
     //Lấy danh sách phòng trên hệ thống
     this.get("/api/rooms", () => rooms)

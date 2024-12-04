@@ -12,16 +12,16 @@ export const PrintersPage = () => {
         setFormOpen(true);
     }
     useEffect(() => {
-        const fetchPrinterData = async () => {
-            const response = await fetch("/api/printers");
-            const data = await response.json();
-            setPrinters(data);
-        }
-        fetchPrinterData();
+        fetch('/api/printers')
+            .then((res)=>res.json())
+            .then((json)=>setPrinters(json.printers))
+            .catch((err)=>console.log(err))
     }, [])
     const handleSubmit = async (room, description) => {
         try {
             const response = await fetch("/api/printers",{method:"POST", body:JSON.stringify({room,description})})
+            const json = await response.json()
+            setPrinters([...printers, json.printer])
             setNotiOpen(true)
         } catch (err) {
             console.log(err)
