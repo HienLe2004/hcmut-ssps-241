@@ -1,8 +1,8 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Document;
-import com.example.demo.Model.Login;
 import com.example.demo.Model.PrintLog;
+import com.example.demo.Model.PrintRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +13,9 @@ import com.example.demo.Exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Optional;
-
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/")
 
 public class StudentController {
     @Autowired
@@ -29,14 +27,6 @@ public class StudentController {
         return studentRepository.findAll();
     }
 
-    //get login info of a studet
-    @GetMapping("student/{id}/login")
-    public Login getStudentLogin (@PathVariable Long id){
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        return student.getLogin();
-    }
-
     //get a student by id
     @GetMapping("/student/{id}")
     public ResponseEntity<Student> getStudentById(@PathVariable Long id)
@@ -46,12 +36,33 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+    //get all document of student by student id
+    @GetMapping("/{id}/documents")
+    public List<Document> getDocumentById(@PathVariable Long id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+        return student.getDocuments();
+    }
+
+    //get all print request of student by student id
+    @GetMapping("/{id}/printRequests")
+    public List<PrintRequest> getPrintRequestById(@PathVariable Long id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+        return student.getPrintRequests();
+    }
+
+    //get all print log of student by student id
+    @GetMapping("/{id}/printLogs")
+    public List<PrintLog> getPrintLogsById(@PathVariable Long id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+        return student.getPrintLogs();
+    }
+
     //create a student
     @PostMapping("/student")
     public Student createStudent(@RequestBody Student student){
-        long student_id = student.getId();
-        Optional<Student> student1 = studentRepository.findById(student_id);
-        if(!student1.isEmpty()) throw new RuntimeException("Student is exist!");
         return studentRepository.save(student);
     }
 
@@ -75,11 +86,6 @@ public class StudentController {
         if(studentInfo.getName() != null) {
             student.setName(studentInfo.getName());
         }
-
-        if(String.valueOf(studentInfo.getLogin().getId())!= null)
-        {
-            student.setLogin(studentInfo.getLogin());
-        }
         Student updatedStudent = studentRepository.save(student);
         return ResponseEntity.ok(updatedStudent);
     }
@@ -89,7 +95,7 @@ public class StudentController {
     public ResponseEntity<Map<String, Boolean>> deleteStudentByID(@PathVariable long id){
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        studentRepository.delete(student);
+        studentRepository.deleteById(id);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted student with id "+id, Boolean.TRUE);
         return ResponseEntity.ok(response);
