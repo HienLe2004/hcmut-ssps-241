@@ -5,6 +5,16 @@ import { Notification } from "../Notification";
 export const WaitingDocsTable = ({waitingDocs}) => {
     const [updateOpen, setUpdateOpen] = useState(false);
     const [notiOpen, setNotiOpen] = useState(false);
+    const [currentWaitingDoc, setCurrentWaitingDoc] = useState();
+    const doneWaitingDoc = () => {
+        waitingDocs = waitingDocs.filter((waitingDoc) => waitingDoc.id != currentWaitingDoc.id)
+        fetch(`/api/printing-requests/${currentWaitingDoc.id}`, {
+            method: 'PATCH',
+            body: JSON.stringify({status: "done"})
+        })
+        .then((res)=>res.json())
+        .then(json=>console.log(json))
+    }
     return <div className="w-full">
         {/* Màn hình lớn */}
         <div className="hidden md:flex justify-center">
@@ -23,8 +33,8 @@ export const WaitingDocsTable = ({waitingDocs}) => {
             <tbody className="text-white">
                 {waitingDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey}>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.id}</td>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.printer}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.student_id}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.printer_id}</td>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.size}</td>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.copy}</td>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.file}</td>
@@ -32,10 +42,11 @@ export const WaitingDocsTable = ({waitingDocs}) => {
                         <td className="text-center border-2 border-blue-4">
                             <span className="flex items-center flex-row-reverse my-1 mx-1 gap-x-3">
                                 <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
-                                    onClick={() => {setUpdateOpen(true)}}>
+                                    onClick={() => {setCurrentWaitingDoc(waitingDoc);setUpdateOpen(true)}}>
                                     <FaPen className="aspect-square text-white w-6"/>
                                 </button>
-                                <p>{waitingDoc.status}</p>
+                                <p>Đang xử lý</p>
+                                {/* <p>{waitingDoc.status}</p> */}
                             </span>
                         </td>
                     </tr>
@@ -60,17 +71,18 @@ export const WaitingDocsTable = ({waitingDocs}) => {
             <tbody className="text-white">
                 {waitingDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey} className={docKey%2?"bg-blue-3":"bg-blue-2"}>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{waitingDoc.id}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{waitingDoc.printer}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{waitingDoc.student_id}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{waitingDoc.printe_idr}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ">{waitingDoc.size}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{waitingDoc.cop}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="File">{waitingDoc.file}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{waitingDoc.start}</td>
                         <td className="text-left flex items-center before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Trạng thái">
                             <span className="flex items-center  my-1 mx-1 gap-x-3">
-                                <p>{waitingDoc.status}</p>
+                                <p>Đang xử lý</p>
+                                {/* <p>{waitingDoc.status}</p> */}
                                 <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
-                                    onClick={() => {setUpdateOpen(true)}}>
+                                    onClick={() => {setCurrentWaitingDoc(waitingDoc);setUpdateOpen(true)}}>
                                     <FaPen className="aspect-square text-white w-6"/>
                                 </button>
                             </span>
@@ -80,7 +92,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
             </tbody>
         </table>
         </div>
-        {updateOpen && <UpdateWaitingDoc closeUpdate = {() => {setUpdateOpen(false)}} openNoti={() => setNotiOpen(true)}/>}
+        {updateOpen && <UpdateWaitingDoc closeUpdate = {() => {setUpdateOpen(false)}} openNoti={() => {doneWaitingDoc();setNotiOpen(true)}}/>}
         {notiOpen && <Notification noti="Đã xác nhận in tài liệu xong thành công!" closeNoti={()=>setNotiOpen(false)}/>}
     </div>
 }

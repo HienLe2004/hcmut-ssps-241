@@ -5,16 +5,15 @@ import Select from "react-select"
 import { FaSearch } from "react-icons/fa"
 import { WaitingDocsTable } from "./WaitingDocsTable";
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
-import students from "../../../utils/students.json";
-import printers from "../../../utils/printers.json";
-import waitingDocs from "../../../utils/waitingDocs.json";
 
 
 export const WaitingDocsPage = () => {
     const [students, setStudents] = useState([]);
     const [printers, setPrinters] = useState([]);
+    const [waitingDocs, setWaitingDocs] = useState([]);
     const [selectedPrinters, setSelectedPrinters] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]);
+    const [filteredWaitingDocs, setFilteredWaitingDocs] = useState([]);
     const handleChangePrinter = (selectedPrinters) => {
         setSelectedPrinters(selectedPrinters);
     }
@@ -22,30 +21,47 @@ export const WaitingDocsPage = () => {
         setSelectedStudents(selectedStudents);
     }
     const handleSearch = () => {
+        console.log(filteredWaitingDocs)
+        const filterStudents = (selectedStudents.length == 0) ? students : selectedStudents
+        const filterPrinters = (selectedPrinters.length == 0) ? printers : selectedPrinters
+        const filterDocs = (waitingDocs, filterStudents, filterPrinters) => {
+            return waitingDocs.filter(doc => {
+                return filterStudents.some(student => student.value == doc.student_id) &&
+                    filterPrinters.some(printer => printer.value == doc.printer_id)
+            })
+        }
+        const filteredDocs = filterDocs(waitingDocs, filterStudents, filterPrinters);
+        console.log(filteredDocs)
+        setFilteredWaitingDocs(filteredDocs)
         console.log(selectedPrinters)
         console.log(selectedStudents)
     }
     useEffect(() => {
         const fetchStudentData = async () => {
-            const response = await fetch("/api/students");
-            const data = await response.json();
-            const tranformedData = data.map(item => ({
-                value: item.id,
-                label: item.id
-            }))
-            setStudents(tranformedData);
+            const response = await fetch('/api/students')
+            const json = await response.json()
+            const data = json.students
+            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            setStudents(transformedData)
         }
         const fetchPrinterData = async () => {
-            const response = await fetch("/api/printers");
-            const data = await response.json();
-            const tranformedData = data.map(item => ({
-                value: item.id,
-                label: item.id
-            }))
-            setPrinters(tranformedData);
+            const response = await fetch('/api/printers')
+            const json = await response.json()
+            const data = json.printers
+            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            setPrinters(transformedData)
+        }
+        const fetchWaitingDocData = async () => {
+            const response = await fetch("/api/printing-requests")
+            const json = await response.json()
+            const data = json.printingRequests
+            const waitingData = data.filter((item) => item.status == "waiting")
+            setWaitingDocs(waitingData)
+            setFilteredWaitingDocs(waitingData)
         }
         fetchStudentData();
         fetchPrinterData();
+        fetchWaitingDocData();
     }, [])
     return <>
         <div className="flex flex-col min-h-screen">
@@ -79,11 +95,13 @@ export const WaitingDocsPage = () => {
                         noOptionsMessage={() => {return "Không tìm thấy"}}
                         />
                     </div>
-                    <button className="aspect-square rounded-full bg-blue-4 w-8  justify-items-center hover:scale-110 duration-200">
+                    <button className="aspect-square rounded-full bg-blue-4 w-8  justify-items-center hover:scale-110 duration-200"
+                        onClick={handleSearch}>
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
-                <WaitingDocsTable waitingDocs={waitingDocs}/>
+                {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={filteredWaitingDocs}/>}
+                {filteredWaitingDocs.length === 0 && <p>Không tìm thấy</p>}
             </div>
             {/* Màn hình nhỏ */}
             <div className="md:hidden flex flex-col flex-grow w-full my-5 gap-y-10">
@@ -119,7 +137,8 @@ export const WaitingDocsPage = () => {
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
-                <WaitingDocsTable waitingDocs={waitingDocs}/>
+                {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={filteredWaitingDocs}/>}
+                {filteredWaitingDocs.length === 0 && <p>Không tìm thấy</p>}
             </div>
             <Footer />
         </div>
