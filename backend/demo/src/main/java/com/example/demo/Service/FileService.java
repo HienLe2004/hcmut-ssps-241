@@ -2,6 +2,7 @@ package com.example.demo.Service;
 
 import com.example.demo.Config.FileStorageProperties;
 import com.example.demo.Exception.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -12,7 +13,8 @@ import java.io.IOException;
 import java.util.Comparator;
 
 public class FileService {
-    private FileStorageProperties fileStorageProperties;
+    private FileStorageProperties fileStorageProperties = new FileStorageProperties();
+
     public String getNewFileName(String originalFileName, int count) {
         int dotIndex = originalFileName.lastIndexOf('.');
         if (dotIndex == -1) {
@@ -25,11 +27,44 @@ public class FileService {
             return namePart + "(" + count + ")" + extensionPart;
         }
     }
+    public String saveReport(MultipartFile file){
+        // Lấy đường dẫn thư mục upload từ cấu hình
+        String uploadDir = fileStorageProperties.getUploadDir();
+
+        if (uploadDir == null) {
+            throw new IllegalArgumentException("Upload directory is not configured.");
+        }
+        Path uploadPath = Paths.get(uploadDir,"reports");
+        try {
+
+            // Tạo thư mục nếu chưa tồn tại
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            // Lấy tên gốc của file
+            String originalFileName = file.getOriginalFilename();
+            String fileName = originalFileName;
+            Path destinationPath = uploadPath.resolve(fileName);
+            //do các báo cáo có tên khác nhau (theo tháng, theo năm), nên không cần phải sợ các file trùng nhau
+            // Lưu file vào thư mục nếu chưa tồn tại
+            Files.copy(file.getInputStream(), destinationPath);
+
+            // Kiểm tra xem file đã được lưu chưa
+            if (Files.exists(destinationPath)) {
+                return destinationPath.toString();
+            } else {
+                throw (new ResourceNotFoundException("can't save report"));
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+            return "Failed to upload report: " + e.getMessage();
+        }
+    }
 
     public String saveFile(MultipartFile file, long studentID){
         // Lấy đường dẫn thư mục upload từ cấu hình
         String uploadDir = fileStorageProperties.getUploadDir();
-        Path uploadPath = Paths.get(uploadDir,String.valueOf(studentID));
+        Path uploadPath = Paths.get(uploadDir,"documents",String.valueOf(studentID));
         try {
 
             // Tạo thư mục nếu chưa tồn tại
@@ -77,9 +112,9 @@ public class FileService {
             System.err.println("Không thể xóa file: " + e.getMessage());
         }
     }
-    public void deleteAllFile(){
+    public void deleteAllFile(String dict){
         String uploadDir = fileStorageProperties.getUploadDir();
-        Path dirPath = Paths.get(uploadDir);
+        Path dirPath = Paths.get(uploadDir,dict);
         try {
             if (Files.exists(dirPath) && Files.isDirectory(dirPath)) {
                 Files.walk(dirPath) // Duyệt qua tất cả file và thư mục con

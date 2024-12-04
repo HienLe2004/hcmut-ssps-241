@@ -9,7 +9,7 @@ public class Login {
     @Column(name = "id")
     private long id;
 
-    @Column(name ="user_name")
+    @Column(name ="user_name", unique = true)
     private String username;
 
     @Column(name ="password")
@@ -18,17 +18,25 @@ public class Login {
     public Login() {
     }
 
-    public Login(String userName, String passWord) {
-        this.username = userName;
-        this.password = passWord;
+    public Login(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
-    public String getUserName() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUserName(String userName) {
-        this.username = userName;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public long getId() {
@@ -39,11 +47,5 @@ public class Login {
         this.id = id;
     }
 
-    public String getPassWord() {
-        return password;
-    }
 
-    public void setPassWord(String passWord) {
-        this.password = passWord;
-    }
 }

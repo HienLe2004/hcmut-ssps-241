@@ -23,9 +23,9 @@ import java.util.Optional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class DocumentController {
     @Autowired
     private DocumentRepository documentRepository;
@@ -33,8 +33,7 @@ public class DocumentController {
     @Autowired
     private StudentRepository studentRepository; //su dung de truy xuat student
 
-    private FileStorageProperties fileStorageProperties;
-    private FileService fileService; //luu file
+    private FileService fileService = new FileService(); //luu file
 
     //get all Document
     @GetMapping("/documents")
@@ -51,8 +50,8 @@ public class DocumentController {
     }
 
     //create a new document
-    @PostMapping("/document/{studentId}")
-    public ResponseEntity<Document> createAFile(@PathVariable long studentId, @RequestParam("file") MultipartFile file){
+    @PostMapping("/document/{document_id}/{studentId}")
+    public ResponseEntity<Document> createAFile(@PathVariable long document_id,@PathVariable long studentId, @RequestParam("file") MultipartFile file){
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -66,11 +65,13 @@ public class DocumentController {
         String file_path = fileService.saveFile(file, studentId);
         //tạo đối tượng document
         Document document = new Document();
+        document.setId(document_id);
         document.setFileName(file.getOriginalFilename());
-        document.setSize(file.getSize());
         document.setFileStyle(file.getContentType());
         document.setFilePath(file_path);
-        return ResponseEntity.ok(document);
+        document.setStudent(student);
+        Document updateDocumnet = documentRepository.save(document);
+        return ResponseEntity.ok(updateDocumnet);
     }
 
     //Update a document
@@ -79,23 +80,36 @@ public class DocumentController {
         Document document = documentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Document not exist with id :" + id));
         long studentId = documentDetail.getStudent().getId();
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        document.setStudent(student);
+        if(String.valueOf(studentId)!= null)
+        {
+            Student student = studentRepository.findById(studentId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+            document.setStudent(student);
+        }
         if(documentDetail.getFileName()!= null) document.setFileName(documentDetail.getFileName());
-        if(documentDetail.getFilePath()!= null) document.setFilePath(documentDetail.getFilePath());
         if(documentDetail.getFileStyle()!= null)document.setFileName(documentDetail.getFileStyle());
-        if(String.valueOf(documentDetail.getSize())!=null)
-            document.setSize(documentDetail.getSize());
-        documentRepository.save(document);
-        return ResponseEntity.ok(document);
+        Document updateDocumnet = documentRepository.save(document);
+        return ResponseEntity.ok(updateDocumnet);
     }
 
-    //Delete All documents
+    //Delete All documents of a student
     @DeleteMapping("/documents")
     public ResponseEntity<Map<String, Boolean>> deleteDocuments(){
         documentRepository.deleteAll();
-        fileService.deleteAllFile();
+        fileService.deleteAllFile("documents");
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted all", Boolean.TRUE);
+        return ResponseEntity.ok(response);
+    }
+    //Delete tất cả tài liệu của sinh viên
+    @DeleteMapping("/documents/{student_id}")
+    public ResponseEntity<Map<String, Boolean>> deleteDocumentsofStudent(@PathVariable long student_id){
+        List<Document> documents = documentRepository.findAllByStudentId(student_id);
+        for(Document document: documents){
+            documentRepository.delete(document);
+        }
+        String st_id = "documents/" +String.valueOf(student_id);
+        fileService.deleteAllFile(st_id);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted all", Boolean.TRUE);
         return ResponseEntity.ok(response);
@@ -111,8 +125,4 @@ public class DocumentController {
         response.put("deleted student with id "+id, Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
-
-
-
-
 }

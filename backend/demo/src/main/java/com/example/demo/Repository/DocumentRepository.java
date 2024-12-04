@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     List<Document> findAllByOrderByIdAsc();
+    List<Document> findAllByStudentId(long student_id);
 }

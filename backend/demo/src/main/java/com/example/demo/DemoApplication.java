@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @SpringBootApplication
-@EnableConfigurationProperties(FileStorageProperties.class)
 public class DemoApplication {
 
     public static void main(String[] args) {

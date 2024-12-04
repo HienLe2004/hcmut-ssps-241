@@ -9,12 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 public class FileStorageProperties {
     private String uploadDir;
 
-    @Value("${upload.base-dir}")
     public String getUploadDir() {
         return uploadDir;
     }
 
-    public void setUploadDir(String uploadDir) {
-        this.uploadDir = uploadDir;
+    public FileStorageProperties(){
+        uploadDir = "D:/HK241/uploads/";
     }
 }

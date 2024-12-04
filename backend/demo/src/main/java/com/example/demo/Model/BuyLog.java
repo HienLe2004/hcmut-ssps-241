@@ -12,6 +12,9 @@ public class BuyLog {
     @Column(name = "buylog_id")
     private Long id;
 
+    @Column(name ="paper_size")
+    private String paperSize;
+
     @Column(name = "number_bought_page")
     private int boughtPageNum;
 
@@ -21,13 +24,27 @@ public class BuyLog {
     @Column(name = "payment_time")
     private LocalDateTime paymentTime;
 
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private Student student;
+
     public BuyLog(){}
 
-    public BuyLog(Long id, int boughtPageNum, String price, LocalDateTime paymentTime) {
+    public BuyLog(Long id, String paperSize, int boughtPageNum, String price, LocalDateTime paymentTime, Student student) {
         this.id = id;
+        this.paperSize = paperSize;
         this.boughtPageNum = boughtPageNum;
         this.price = price;
         this.paymentTime = paymentTime;
+        this.student = student;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Long getId() {
@@ -60,5 +77,13 @@ public class BuyLog {
 
     public void setPaymentTime(LocalDateTime paymentTime) {
         this.paymentTime = paymentTime;
+    }
+
+    public String getPaperSize() {
+        return paperSize;
+    }
+
+    public void setPaperSize(String paperSize) {
+        this.paperSize = paperSize;
     }
 }

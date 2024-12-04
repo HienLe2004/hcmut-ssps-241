@@ -2,7 +2,9 @@ package com.example.demo.Controller;
 
 import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Model.BuyLog;
+import com.example.demo.Model.Student;
 import com.example.demo.Repository.BuyLogRepository;
+import com.example.demo.Repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class BuyLogController {
     @Autowired
     private BuyLogRepository buyLogRepository;
+    @Autowired
+    private StudentRepository studentRepository;
 
     @GetMapping("/buyLogs")
     public List<BuyLog> getAllbuyLogs(){
@@ -30,10 +34,18 @@ public class BuyLogController {
         return ResponseEntity.ok(buyLog);
     }
 
+    @GetMapping("/student/{id}/buyLogs")
+    public List<BuyLog> getStudentBuyLogs(@PathVariable long id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+        return buyLogRepository.findAllByStudentId(id);
+    }
+
     @PostMapping("/buyLog")
     public BuyLog createBuyLog(@RequestBody BuyLog buyLog){
         return buyLogRepository.save(buyLog);
     }
+
 
     @PutMapping("/buyLog/{id}")
     public ResponseEntity<BuyLog> updateBuyLog(@PathVariable long id, @RequestBody BuyLog buyLogInfo) {
@@ -51,7 +63,13 @@ public class BuyLogController {
         if(buyLogInfo.getPaymentTime() != null) {
             buyLog.setPaymentTime(buyLogInfo.getPaymentTime());
         }
-
+        long student_id = buyLogInfo.getStudent().getId();
+        if(String.valueOf(student_id)!= null)
+        {
+            Student student = studentRepository.findById(student_id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + student_id));
+            buyLog.setStudent(student);
+        }
 
         BuyLog updatedBuyLog = buyLogRepository.save(buyLog);
         return ResponseEntity.ok(updatedBuyLog);
@@ -64,6 +82,19 @@ public class BuyLogController {
         buyLogRepository.deleteById(id);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted buy log with id " + id, Boolean.TRUE);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/student/{id}/buyLogs")
+    public ResponseEntity<Map<String, Boolean>> DeleteStudentBuyLogs(@PathVariable long id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+        List<BuyLog> buyLogs = buyLogRepository.findAllByStudentId(id);
+        for(BuyLog buyLog: buyLogs){
+            buyLogRepository.delete(buyLog);
+        }
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted all buy log of student: "+ id, Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
 

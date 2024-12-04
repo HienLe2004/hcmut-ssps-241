@@ -2,84 +2,135 @@ package com.example.demo.Model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "print_log")
 public class PrintLog {
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     @Column(name = "print_log_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(name = "file_name")
-    private String filename;
-    @Column(name = "size_page")
-    private String sizePage;
-    @Column(name = "number_page")
-    private int numberPage;
-    @Column(name = "date")
-    private LocalDate date;
+
+    @Column(name = "status")
+    private String status;
+
+    //khoa ngoai tro den bang Document
+    @OneToOne
+    @JoinColumn(name= "document_id")
+    private Document document;
+
+    //khoa ngoai tro den bang PrintModification
+    @OneToOne
+    @JoinColumn(name = "print_modification_id")
+    private PrintModification printModification;
+
+    //khoa ngoai tro den bang Student
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
+    @JoinColumn(name = "student_id",nullable = false)
     private Student student;
 
-    //Costructor
-    public PrintLog(){}
+    @Column(name = "start_time")
+    private Timestamp startTime;
 
-    public PrintLog(long id, String filename, String sizePage, int numberPage, LocalDate date, Student student) {
+    @Column(name ="finished_time")
+    private Timestamp finishedTime;
+
+    @ManyToOne
+    @JoinColumn(name="printer_name")
+    private Printer printer;
+
+    //constructor
+
+    public PrintLog(long id, String status, Document document, PrintModification printModification, Student student, Timestamp startTime, Timestamp finishedTime, Printer printer) {
         this.id = id;
-        this.filename = filename;
-        this.sizePage = sizePage;
-        this.numberPage = numberPage;
-        this.date = date;
+        this.status = status;
+        this.document = document;
+        this.printModification = printModification;
         this.student = student;
+        this.startTime = startTime;
+        this.finishedTime = finishedTime;
+        this.printer = printer;
+    }
+
+    public PrintLog(String status, Document document, PrintModification printModification, Student student, Timestamp startTime, Timestamp finishedTime, Printer printer) {
+        this.status = status;
+        this.document = document;
+        this.printModification = printModification;
+        this.student = student;
+        this.startTime = startTime;
+        this.finishedTime = finishedTime;
+        this.printer = printer;
+    }
+
+    public PrintLog() {
+    }
+    //getter
+
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public Timestamp getFinishedTime() {
+        return finishedTime;
+    }
+
+    public Printer getPrinter() {
+        return printer;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public String getStatus() {
+        return status;
     }
 
-    public String getFilename() {
-        return filename;
+    public Document getDocument() {
+        return document;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public PrintModification getPrintModification() {
+        return printModification;
     }
 
     public Student getStudent() {
         return student;
     }
 
+    //setter
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
+
+    public void setPrintModification(PrintModification printModification) {
+        this.printModification = printModification;
+    }
+
     public void setStudent(Student student) {
         this.student = student;
     }
 
-    public String getSizePage() {
-        return sizePage;
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
     }
 
-    public void setSizePage(String sizePage) {
-        this.sizePage = sizePage;
+    public void setFinishedTime(Timestamp finishedTime) {
+        this.finishedTime = finishedTime;
     }
 
-    public int getNumberPage() {
-        return numberPage;
-    }
-
-    public void setNumberPage(int numberPage) {
-        this.numberPage = numberPage;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setPrinter(Printer printer) {
+        this.printer = printer;
     }
 }

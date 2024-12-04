@@ -1,7 +1,9 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Document;
+import com.example.demo.Model.Login;
 import com.example.demo.Model.PrintLog;
+import com.example.demo.Repository.LoginRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,9 @@ import java.util.HashMap;
 public class StudentController {
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private LoginRepository loginRepository;
 
     //get all student
     @GetMapping("/students")
@@ -72,6 +77,13 @@ public class StudentController {
         }
         if(studentInfo.getName() != null) {
             student.setName(studentInfo.getName());
+        }
+        if(String.valueOf(studentInfo.getLogin().getId())!= null)
+        {
+            Login login = loginRepository.findById(studentInfo.getLogin().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + studentInfo.getLogin().getId()));
+            student.setLogin(login);
+
         }
         Student updatedStudent = studentRepository.save(student);
         return ResponseEntity.ok(updatedStudent);
