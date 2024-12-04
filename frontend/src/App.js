@@ -14,7 +14,7 @@ import { ReportsPage } from "./pages/SPSO/ReportsPage/ReportsPage";
 import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
 import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
-import { students, rooms, printingRequests, printers} from "./utils/mock-data";
+import { students, rooms, printingRequests, printers, validDocs, defaultPage} from "./utils/mock-data";
 import { createServer, Model } from "miragejs";
 createServer({
   models: {
@@ -82,6 +82,26 @@ createServer({
       newAttrs.end = (format(new Date(),'kk:mm dd/MM/Y'))
       let printingRequest = schema.printingRequests.find(id)
       return printingRequest.update(newAttrs)
+    })
+    //Lấy mảng tài liệu được in
+    this.get("/api/validDocs", (schema, request) => {
+      return validDocs
+    })
+    //Cập nhật mảng tài liệu được in
+    this.patch("/api/validDocs", (schema, request) => {
+      validDocs.array = JSON.parse(request.requestBody)
+      return validDocs
+    })
+    //Lấy số trang mặc định và ngày
+    this.get("/api/defaultPage", (schema, request) => {
+      return defaultPage
+    })
+    //Cập nhật số trang mặc định và ngày
+    this.patch("/api/defaultPage", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody)
+      defaultPage.page = attrs.page
+      defaultPage.date = attrs.date
+      return defaultPage
     })
     // //Lấy yêu cầu đang chờ in theo id
     // this.get("/api/printing-requests/:id", (schema,request) => {

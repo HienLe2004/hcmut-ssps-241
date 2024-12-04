@@ -113,6 +113,13 @@ export let systemHistory = [
         "end": "11:14 10/11/2024"
     }
 ]
+export let validDocs = {
+    "array": ["docx","pdf"]
+}
+export let defaultPage = {
+    "page":10,
+    "date":"01/01/2025"
+}
 export let reports = [
     {
         "name":"BC-T11-2024",
