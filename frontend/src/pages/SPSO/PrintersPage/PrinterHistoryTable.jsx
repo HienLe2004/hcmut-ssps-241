@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa"
 import Select from "react-select"
-import students from "../../../utils/students.json"
+import { students } from "../../../utils/mock-data";
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
 
 export const PrinterHistoryTable = ({rows}) => {

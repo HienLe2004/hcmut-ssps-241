@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import { format, parse } from "date-fns";
 import { LoginPage } from "./pages/loginPage";
 import { HomePage } from "./pages/Student/HomePage";
 import { StudentHomePage } from "./pages/Student/StudentHomePage";
@@ -14,55 +14,29 @@ import { ReportsPage } from "./pages/SPSO/ReportsPage/ReportsPage";
 import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
 import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
-
+import { students, rooms, waitingDocs, printers} from "./utils/mock-data";
 import { createServer } from "miragejs";
 createServer({
   routes() {
     //Lấy danh sách sinh viên trong hệ thống
-    this.get("/api/students", () => [
-      { id: 2211020},
-      { id: 2210202},
-      { id: 2210203},
-      { id: 2210231},
-      { id: 2212020}
-    ])
+    this.get("/api/students", () => students)
     //Lấy danh sách máy in trong hệ thống
-    this.get("/api/printers", () => [
-      { id: "H1-101-1"},
-      { id: "H1-102-1"},
-      { id: "H2-201-1"},
-      { id: "H2-202-2"}
-    ])
+    this.get("/api/printers", () => printers)
+    //Thêm máy in mới
+    this.post("/api/printers", (schema, request) => {
+      let attrs = JSON.parse(request.requestBody)
+      const printerAtRoom = printers.filter(printer => printer.room == attrs.room)
+      attrs.id = attrs.room + "-" + (printerAtRoom.length + 1)
+      attrs.start = (format(new Date(),'kk:mm dd/MM/Y'))
+      attrs.status = "on"
+      printers.push(attrs)
+      console.log(printers)
+      return {printer: attrs}
+    })
+    //Lấy danh sách phòng trên hệ thống
+    this.get("/api/rooms", () => rooms)
     //Lấy danh sách yêu cầu đang chờ in trong hệ thống
-    this.get("/api/waiting-docs", () => [
-      { 
-        id: 1,
-        student_id: 2211020,
-        printer_id: "H1-101-1",
-        size: "A5",
-        copy: 10,
-        file: "oiw.docx",
-        start: "10:10 10/20/20",
-      },
-      { 
-        id: 2,
-        student_id: 2210202,
-        printer_id: "H1-101-1",
-        size: "A5",
-        copy: 10,
-        file: "ower.docx",
-        start: "10:12 10/20/20",
-      },
-      { 
-        id: 3,
-        student_id: 2210231,
-        printer_id: "H1-101-1",
-        size: "A5",
-        copy: 10,
-        file: "er.docx",
-        start: "10:13 10/20/20",
-      },
-    ])
+    this.get("/api/waiting-docs", () => waitingDocs)
   }
 })
 

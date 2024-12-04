@@ -7,7 +7,7 @@ import { Notification } from "../Notification";
 import { useState } from "react";
 import { UpdatePrinterDescription } from "./UpdatePrinterDescription";
 import { PrinterHistoryTable } from "./PrinterHistoryTable";
-import printerHistory from "../../../utils/printerHistory.json";
+import { printerHistory } from "../../../utils/mock-data";
 export const PrinterInfoPage = () => {
     const {id} = useParams();
     const [updateStatusOpen, setUpdateStatusOpen] = useState(false);

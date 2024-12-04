@@ -5,9 +5,6 @@ import Select from "react-select"
 import { FaSearch } from "react-icons/fa"
 import { WaitingDocsTable } from "./WaitingDocsTable";
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
-import students from "../../../utils/students.json";
-import printers from "../../../utils/printers.json";
-import waitingDocs from "../../../utils/waitingDocs.json";
 
 
 export const WaitingDocsPage = () => {

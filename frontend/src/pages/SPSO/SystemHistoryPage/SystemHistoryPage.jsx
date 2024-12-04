@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa"
 import Select from "react-select"
-import printers from "../../../utils/printers.json"
-import students from "../../../utils/students.json"
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
-import rows from "../../../utils/systemHistory.json";
+import { systemHistory, students } from "../../../utils/mock-data";
+import {printers} from "../../../utils/mock-data";
 import { SPSOHeader } from "../../../components/SPSOHeader";
 import { Footer } from "../../../components/footer";
 
 export const SystemHistoryPage = () => {
+    const rows = systemHistory;
     const [selectedStudents, setSelectedStudents] = useState([]);
     const [selectedPrinters, setSelectedPrinters] = useState([]);
     const [selectedStart, setSelecetedStart] = useState();

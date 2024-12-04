@@ -2,8 +2,9 @@ import { SPSOHeader } from "../../../components/SPSOHeader"
 import { Footer } from "../../../components/footer";
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa"
-import rows from "../../../utils/reports.json";
+import { reports } from "../../../utils/mock-data";
 export const ReportsPage = () => {
+    const rows = reports;
     const [selectedStart, setSelecetedStart] = useState();
     const [selectedEnd, setSelecetedEnd] = useState();
     const handleChangeStart = (start) => {

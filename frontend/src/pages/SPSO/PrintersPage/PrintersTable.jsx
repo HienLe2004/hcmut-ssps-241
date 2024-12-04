@@ -23,7 +23,7 @@ export const PrintersTable = ({printers}) => {
             <tbody className="text-white">
                 {printers.map((printer, printerKey) => {
                     return <tr key={printerKey}>
-                        <td className="text-center border-2 border-blue-4"><NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink></td>
+                        <td className="text-center border-2 border-blue-4"><NavLink to={`/spso/printers/${printer.id}`}>{printer.id}</NavLink></td>
                         <td className="text-center border-2 border-blue-4">{printer.description}</td>
                         <td className="text-center border-2 border-blue-4">{printer.start}</td>
                         <td className="text-center border-2 border-blue-4">
@@ -32,7 +32,7 @@ export const PrintersTable = ({printers}) => {
                                     onClick={() => {setUpdateOpen(true)}}>
                                     <FaPen className="aspect-square text-white w-6"/>
                                 </button>
-                                <p>{printer.status}</p>
+                                <p>{printer.status == "on" ? "Đang hoạt động" : "Tạm dừng"}</p>
                             </span>
                         </td>
                     </tr>
@@ -55,7 +55,7 @@ export const PrintersTable = ({printers}) => {
                 {printers.map((printer, printerKey) => {
                     return <tr key={printerKey} className={printerKey%2?"bg-blue-3":"bg-blue-2"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên">
-                            <NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink>
+                            <NavLink to={`/spso/printers/${printer.id}`}>{printer.id}</NavLink>
                         </td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Mô tả">{printer.description}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Bắt đầu sử dụng">{printer.start}</td>
@@ -65,7 +65,7 @@ export const PrintersTable = ({printers}) => {
                                     onClick={() => {setUpdateOpen(true)}}>
                                     <FaPen className="aspect-square text-white w-6"/>
                                 </button>
-                                <p>{printer.status}</p>
+                                <p>{printer.status == "on" ? "Đang hoạt động" : "Tạm dừng"}</p>
                             </span>
                         </td>
                     </tr>
