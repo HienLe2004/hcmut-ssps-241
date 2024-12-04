@@ -15,6 +15,24 @@ import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
 import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
 
+import { createServer } from "miragejs";
+createServer({
+  routes() {
+    this.get("/api/students", () => [
+      { id: "2211020"},
+      { id: "2210202"},
+      { id: "2210203"},
+      { id: "2210231"},
+      { id: "2212020"}
+    ])
+    this.get("/api/printers", () => [
+      { id: "H1-101-1"},
+      { id: "H1-102-1"},
+      { id: "H2-201-1"},
+      { id: "H2-202-2"}
+    ])
+  }
+})
 
 function App() {
   return (

@@ -1,6 +1,6 @@
 import { SPSOHeader } from "../../../components/SPSOHeader"
 import { Footer } from "../../../components/footer";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Select from "react-select"
 import { FaSearch } from "react-icons/fa"
 import { WaitingDocsTable } from "./WaitingDocsTable";
@@ -11,6 +11,8 @@ import waitingDocs from "../../../utils/waitingDocs.json";
 
 
 export const WaitingDocsPage = () => {
+    const [students, setStudents] = useState([]);
+    const [printers, setPrinters] = useState([]);
     const [selectedPrinters, setSelectedPrinters] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]);
     const handleChangePrinter = (selectedPrinters) => {
@@ -23,6 +25,28 @@ export const WaitingDocsPage = () => {
         console.log(selectedPrinters)
         console.log(selectedStudents)
     }
+    useEffect(() => {
+        const fetchStudentData = async () => {
+            const response = await fetch("/api/students");
+            const data = await response.json();
+            const tranformedData = data.map(item => ({
+                value: item.id,
+                label: item.id
+            }))
+            setStudents(tranformedData);
+        }
+        const fetchPrinterData = async () => {
+            const response = await fetch("/api/printers");
+            const data = await response.json();
+            const tranformedData = data.map(item => ({
+                value: item.id,
+                label: item.id
+            }))
+            setPrinters(tranformedData);
+        }
+        fetchStudentData();
+        fetchPrinterData();
+    }, [])
     return <>
         <div className="flex flex-col min-h-screen">
             <SPSOHeader />

@@ -53,12 +53,12 @@ public class StudentController {
     }
 
     //get all print log of student by student id
-    @GetMapping("/{id}/printLogs")
-    public List<PrintLog> getPrintLogsById(@PathVariable Long id){
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        return student.getPrintLogs();
-    }
+    // @GetMapping("/{id}/printLogs")
+    // public List<PrintLog> getPrintLogsById(@PathVariable Long id){
+    //     Student student = studentRepository.findById(id)
+    //             .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+    //     return student.getPrintLogs();
+    // }
 
     //create a student
     @PostMapping("/student")
