@@ -2,7 +2,6 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.Document;
 import com.example.demo.Model.PrintLog;
-import com.example.demo.Model.PrintRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,28 +36,16 @@ public class StudentController {
     }
 
     //get all document of student by student id
-    @GetMapping("/{id}/documents")
+    /*@GetMapping("/{id}/documents")
     public List<Document> getDocumentById(@PathVariable Long id){
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
         return student.getDocuments();
-    }
+    }*/
 
-    //get all print request of student by student id
-    @GetMapping("/{id}/printRequests")
-    public List<PrintRequest> getPrintRequestById(@PathVariable Long id){
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        return student.getPrintRequests();
-    }
 
-    //get all print log of student by student id
-    @GetMapping("/{id}/printLogs")
-    public List<PrintLog> getPrintLogsById(@PathVariable Long id){
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        return student.getPrintLogs();
-    }
+
+
 
     //create a student
     @PostMapping("/student")
