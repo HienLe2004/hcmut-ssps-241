@@ -1,18 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa"
 import Select from "react-select"
-import printers from "../../../utils/printers.json"
-import students from "../../../utils/students.json"
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
-import rows from "../../../utils/systemHistory.json";
 import { SPSOHeader } from "../../../components/SPSOHeader";
 import { Footer } from "../../../components/footer";
+import { parse } from "date-fns";
 
 export const SystemHistoryPage = () => {
     const [selectedStudents, setSelectedStudents] = useState([]);
     const [selectedPrinters, setSelectedPrinters] = useState([]);
-    const [selectedStart, setSelecetedStart] = useState();
-    const [selectedEnd, setSelecetedEnd] = useState();
+    const [selectedStart, setSelecetedStart] = useState(null);
+    const [selectedEnd, setSelecetedEnd] = useState(null);
+    const [students, setStudents] = useState([]);
+    const [printers, setPrinters] = useState([]);
+    const [history, setHistory] = useState([]);
+    const [filteredHistory, setFilteredHistory] = useState([]);
+    const [statistic, setStatistic] = useState();
     const handleChangeStudents = (selectedStudents) => {
         setSelectedStudents(selectedStudents);
     }
@@ -20,15 +23,74 @@ export const SystemHistoryPage = () => {
         setSelectedPrinters(selectedPrinters);
     }
     const handleChangeStart = (start) => {
-        setSelecetedStart(start.target.value);
+        setSelecetedStart(new Date(start.target.value));
     }
     const handleChangeEnd = (end) => {
-        setSelecetedEnd(end.target.value);
+        setSelecetedEnd(new Date(end.target.value));
     }
+    const countPage = (doneData) => {
+        let numA3 = 0
+        let numA4 = 0
+        let numA5 = 0
+        doneData.forEach(data => {
+            if (data.size == "A3") numA3 += data.copy
+            if (data.size == "A4") numA4 += data.copy
+            if (data.size == "A5") numA5 += data.copy
+        })
+        let str = (numA3 == 0) ? "" : (numA3+" A3")
+        str += (numA4 == 0) ? "" : (numA4+" A4")
+        str += (numA5 == 0) ? "" : (numA5+" A5")
+        setStatistic(str)
+    }
+    useEffect(() => {
+        const fetchStudentData = async () => {
+            const response = await fetch('/api/students')
+            const json = await response.json()
+            const data = json.students
+            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            setStudents(transformedData)
+        }
+        const fetchPrinterData = async () => {
+            const response = await fetch('/api/printers')
+            const json = await response.json()
+            const data = json.printers
+            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            setPrinters(transformedData)
+        }
+        const fetchHistoryData = async () => {
+            const response = await fetch("/api/printing-requests")
+            const json = await response.json()
+            const data = json.printingRequests
+            const doneData = data.filter((item) => item.status == "done")
+            setHistory(doneData)
+            setFilteredHistory(doneData)
+            countPage(doneData)
+        }
+        fetchStudentData();
+        fetchPrinterData();
+        fetchHistoryData();
+    },[])
     const handleSearch = () => {
-        console.log(selectedPrinters)
-        console.log(selectedStart)
-        console.log(selectedEnd)
+        const filterStudents = (selectedStudents.length == 0) ? students : selectedStudents
+        const filterPrinters = (selectedPrinters.length == 0) ? printers : selectedPrinters
+        const filterDocsWithDate = (history, filterStudents, filterPrinters) => {
+            return history.filter(doc => {
+                return filterStudents.some(student => student.value == doc.student_id) &&
+                    filterPrinters.some(printer => printer.value == doc.printer_id) &&
+                    parse(doc.start, 'kk:mm dd/MM/yyyy', new Date()).getTime() >= selectedStart.getTime() &&
+                    parse(doc.start, 'kk:mm dd/MM/yyyy', new Date()).getTime() <= selectedEnd.getTime()
+            })
+        }
+        const filterDocsWithoutDate = (history, filterStudents, filterPrinters) => {
+            return history.filter(doc => {
+                return filterStudents.some(student => student.value == doc.student_id) &&
+                    filterPrinters.some(printer => printer.value == doc.printer_id) 
+            })
+        }
+        const filteredDocs = (selectedStart != null && selectedEnd != null) ? 
+            filterDocsWithDate(history, filterStudents, filterPrinters) : filterDocsWithoutDate(history, filterStudents, filterPrinters);
+        countPage(filteredDocs)
+        setFilteredHistory(filteredDocs)
     }
     return <div className="flex flex-col min-h-screen">
         <SPSOHeader/>
@@ -82,7 +144,7 @@ export const SystemHistoryPage = () => {
             </div>
         </div>
         <div className="text-right text-xs">
-            <p>Thống kế: 41 A4</p>
+            <p>Thống kế: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
             <thead className="bg-blue-3">
@@ -97,7 +159,7 @@ export const SystemHistoryPage = () => {
                 </tr>
             </thead>
             <tbody className="text-white">
-                {rows.map((row, rowKey) => {
+                {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey}>
                         <td className="text-center border-2 border-blue-4">{row.id}</td>
                         <td className="text-center border-2 border-blue-4">{row.printer}</td>
@@ -157,7 +219,7 @@ export const SystemHistoryPage = () => {
             </button>
         </div>
         <div className="text-right text-xs">
-            <p>Thống kế: 41 A4</p>
+            <p>Thống kế: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll w-full">
             {/* <thead className="bg-blue-3">
@@ -169,7 +231,7 @@ export const SystemHistoryPage = () => {
                 </tr>
             </thead> */}
             <tbody className="text-white">
-                {rows.map((row, rowKey) => {
+                {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-2"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.id}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{row.printer}</td>

@@ -1,26 +1,78 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa"
 import Select from "react-select"
-import students from "../../../utils/students.json"
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
+import { parse } from "date-fns";
 
-export const PrinterHistoryTable = ({rows}) => {
+export const PrinterHistoryTable = ({printerID}) => {
+    const [students, setStudents] = useState([])
     const [selectedStudents, setSelectedStudents] = useState([]);
-    const [selectedStart, setSelecetedStart] = useState();
-    const [selectedEnd, setSelecetedEnd] = useState();
-    const handleChangeStudent = (selectedStudents) => {
+    const [selectedStart, setSelecetedStart] = useState(null);
+    const [selectedEnd, setSelecetedEnd] = useState(null);
+    const [history, setHistory] = useState([]);
+    const [filteredHistory, setFilteredHistory] = useState([]);
+    const [statistic, setStatistic] = useState();
+    const handleChangeStudents = (selectedStudents) => {
         setSelectedStudents(selectedStudents);
     }
     const handleChangeStart = (start) => {
-        setSelecetedStart(start.target.value);
+        setSelecetedStart(new Date(start.target.value));
     }
     const handleChangeEnd = (end) => {
-        setSelecetedEnd(end.target.value);
+        setSelecetedEnd(new Date(end.target.value));
     }
+    const countPage = (doneData) => {
+        let numA3 = 0
+        let numA4 = 0
+        let numA5 = 0
+        doneData.forEach(data => {
+            if (data.size == "A3") numA3 += data.copy
+            if (data.size == "A4") numA4 += data.copy
+            if (data.size == "A5") numA5 += data.copy
+        })
+        let str = (numA3 == 0) ? "" : (numA3+" A3")
+        str += (numA4 == 0) ? "" : (numA4+" A4")
+        str += (numA5 == 0) ? "" : (numA5+" A5")
+        setStatistic(str)
+    }
+    useEffect(() => {
+        const fetchStudentData = async () => {
+            const response = await fetch('/api/students')
+            const json = await response.json()
+            const data = json.students
+            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            setStudents(transformedData)
+        }
+        const fetchHistoryData = async () => {
+            const response = await fetch("/api/printing-requests")
+            const json = await response.json()
+            const data = json.printingRequests
+            const doneData = data.filter((item) => (item.status == "done" && item.printer_id == printerID))
+            setHistory(doneData)
+            setFilteredHistory(doneData)
+            countPage(doneData)
+        }
+        fetchStudentData();
+        fetchHistoryData();
+    },[])
     const handleSearch = () => {
-        console.log(selectedStudents)
-        console.log(selectedStart)
-        console.log(selectedEnd)
+        const filterStudents = (selectedStudents.length == 0) ? students : selectedStudents
+        const filterDocsWithDate = (history, filterStudents) => {
+            return history.filter(doc => {
+                return filterStudents.some(student => student.value == doc.student_id) &&
+                    parse(doc.start, 'kk:mm dd/MM/yyyy', new Date()).getTime() >= selectedStart.getTime() &&
+                    parse(doc.start, 'kk:mm dd/MM/yyyy', new Date()).getTime() <= selectedEnd.getTime()
+            })
+        }
+        const filterDocsWithoutDate = (history, filterStudents) => {
+            return history.filter(doc => {
+                return filterStudents.some(student => student.value == doc.student_id)
+            })
+        }
+        const filteredDocs = (selectedStart != null && selectedEnd != null) ? 
+            filterDocsWithDate(history, filterStudents) : filterDocsWithoutDate(history, filterStudents);
+        countPage(filteredDocs)
+        setFilteredHistory(filteredDocs)
     }
     return <div className="w-full">
         {/* Big */}
@@ -32,7 +84,7 @@ export const PrinterHistoryTable = ({rows}) => {
                 <Select 
                 options={students}
                 value={selectedStudents}
-                onChange={handleChangeStudent}
+                onChange={handleChangeStudents}
                 isMulti
                 placeholder="Tất cả"
                 styles={selectStudentStyles}
@@ -56,7 +108,7 @@ export const PrinterHistoryTable = ({rows}) => {
             </button>
         </div>
         <div className="text-right text-xs">
-            <p>Thống kế: 41 A4</p>
+            <p>Thống kế: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
             <thead className="bg-blue-3">
@@ -70,12 +122,12 @@ export const PrinterHistoryTable = ({rows}) => {
                 </tr>
             </thead>
             <tbody className="text-white">
-                {rows.map((row, rowKey) => {
+                {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey}>
                         <td className="text-center border-2 border-blue-4">{row.file}</td>
                         <td className="text-center border-2 border-blue-4">{row.size}</td>
                         <td className="text-center border-2 border-blue-4">{row.copy}</td>
-                        <td className="text-center border-2 border-blue-4">{row.id}</td>
+                        <td className="text-center border-2 border-blue-4">{row.student_id}</td>
                         <td className="text-center border-2 border-blue-4">{row.start}</td>
                         <td className="text-center border-2 border-blue-4">{row.end}</td>
                     </tr>
@@ -92,7 +144,7 @@ export const PrinterHistoryTable = ({rows}) => {
                 <Select 
                 options={students}
                 value={selectedStudents}
-                onChange={handleChangeStudent}
+                onChange={handleChangeStudents}
                 isMulti
                 placeholder="Tất cả"
                 styles={selectStudentStyles}
@@ -116,7 +168,7 @@ export const PrinterHistoryTable = ({rows}) => {
             </button>
         </div>
         <div className="text-right text-xs">
-            <p>Thống kế: 41 A4</p>
+            <p>Thống kế: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll w-full">
             {/* <thead className="bg-blue-3">
@@ -128,12 +180,12 @@ export const PrinterHistoryTable = ({rows}) => {
                 </tr>
             </thead> */}
             <tbody className="text-white">
-                {rows.map((row, rowKey) => {
+                {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-2"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">{row.file}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{row.size}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{row.copy}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.id}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.student_id}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{row.start}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian kết thúc">{row.end}</td>    
                     </tr>
@@ -141,5 +193,6 @@ export const PrinterHistoryTable = ({rows}) => {
             </tbody>
         </table>
         </div>
+        {(filteredHistory.length == 0) && <p className="text-center">Không tồn tại</p>}
     </div>
 }

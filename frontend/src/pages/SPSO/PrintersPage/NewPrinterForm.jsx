@@ -1,13 +1,5 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Select from "react-select"
-
-const rooms = [
-    {value:"H1-101", label:"H1-101"},
-    {value:"H2-101", label:"H2-101"},
-    {value:"H2-201", label:"H2-201"},
-    {value:"H3-101", label:"H3-101"},
-    {value:"H3-301", label:"H3-301"},
-]
 const selectStyles = {
     dropdownIndicator: (styles) => ({
         ...styles,
@@ -58,11 +50,29 @@ const selectStyles = {
 
 export const NewPrinterForm = ({closeForm, submitForm}) => {
     const [selectedRoom, setSelectedRoom] = useState();
+    const [description, setDescription] = useState(null);
+    const [rooms, setRooms] = useState();
+    useEffect(() => {
+        const fetchRoomData = async () => {
+            const response = await fetch("/api/rooms");
+            const data = await response.json();
+            const tranformedData = data.map(item => ({
+                id: item.id,
+                value: item.id,
+                label: item.id
+            }))
+            setRooms(tranformedData);
+        }
+        fetchRoomData()
+    },[])
     const handleChangeRoom = (room) => {
         setSelectedRoom(room)
     }
+    const handleChangeDescription = (e) => {
+        setDescription(e.target.value)
+    }
     return <div className="fixed bg-black/50 left-0 top-0 z-1 w-full h-full flex items-center justify-center">
-        <form className="p-5 bg-blue-4 text-white rounded-xl flex flex-col gap-y-5 w-max-[300px]">
+        <div className="p-5 bg-blue-4 text-white rounded-xl flex flex-col gap-y-5 w-max-[300px]">
             <p className="font-bold text-center text-xl">Thêm máy in mới</p>
             <div className="flex items-center">
                 <p>Vị trí</p>
@@ -78,11 +88,11 @@ export const NewPrinterForm = ({closeForm, submitForm}) => {
             </div>
             <div className="flex items-center gap-x-1"> 
                 <p>Mô tả</p>
-                <input className="pl-1 bg-blue-2 py-2 rounded-xl" type="text"/>
+                <input className="pl-1 bg-blue-2 py-2 rounded-xl" type="text" onChange={handleChangeDescription}/>
             </div>
             <div className="flex flex-row justify-around w-full">
                 <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
-                    onClick={() => {submitForm(); closeForm();}}>
+                    onClick={() => {submitForm(selectedRoom.value, description); closeForm();}}>
                     Đồng ý
                 </button>
                 <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
@@ -90,6 +100,6 @@ export const NewPrinterForm = ({closeForm, submitForm}) => {
                     Hủy
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 }
