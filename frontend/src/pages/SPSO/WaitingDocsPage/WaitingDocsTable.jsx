@@ -25,6 +25,8 @@ export const WaitingDocsTable = ({waitingDocs}) => {
                     <th className="min-w-[80px] border-2 border-blue-4">Máy in</th>
                     <th className="min-w-[100px] border-2 border-blue-4">Cỡ</th>
                     <th className="min-w-[100px] border-2 border-blue-4">Số bản</th>
+                    <th className="min-w-[100px] border-2 border-blue-4">Số trang</th>
+                    <th className="min-w-[100px] border-2 border-blue-4">Số mặt</th>
                     <th className="min-w-[100px] border-2 border-blue-4">File</th>
                     <th className="min-w-[180px] border-2 border-blue-4">Thời gian bắt đầu</th>
                     <th className="min-w-[160px] border-2 border-blue-4">Trạng thái</th>
@@ -37,6 +39,8 @@ export const WaitingDocsTable = ({waitingDocs}) => {
                         <td className="text-center border-2 border-blue-4">{waitingDoc.printer_id}</td>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.size}</td>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.copy}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.page}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.side}</td>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.file}</td>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.start}</td>
                         <td className="text-center border-2 border-blue-4">
@@ -74,7 +78,9 @@ export const WaitingDocsTable = ({waitingDocs}) => {
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{waitingDoc.student_id}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{waitingDoc.printe_idr}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ">{waitingDoc.size}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{waitingDoc.cop}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{waitingDoc.copy}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang">{waitingDoc.page}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{waitingDoc.side}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="File">{waitingDoc.file}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{waitingDoc.start}</td>
                         <td className="text-left flex items-center before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Trạng thái">

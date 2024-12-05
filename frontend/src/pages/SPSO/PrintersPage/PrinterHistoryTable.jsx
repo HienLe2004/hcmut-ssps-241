@@ -26,13 +26,13 @@ export const PrinterHistoryTable = ({printerID}) => {
         let numA4 = 0
         let numA5 = 0
         doneData.forEach(data => {
-            if (data.size == "A3") numA3 += data.copy
-            if (data.size == "A4") numA4 += data.copy
-            if (data.size == "A5") numA5 += data.copy
+            if (data.size == "A3") numA3 += Math.round(data.page/data.side) * data.copy
+            if (data.size == "A4") numA4 += Math.round(data.page/data.side) * data.copy
+            if (data.size == "A5") numA5 += Math.round(data.page/data.side) * data.copy
         })
-        let str = (numA3 == 0) ? "" : (numA3+" A3")
-        str += (numA4 == 0) ? "" : (numA4+" A4")
-        str += (numA5 == 0) ? "" : (numA5+" A5")
+        let str = (numA3 == 0) ? "" : (numA3+" A3 ")
+        str += (numA4 == 0) ? "" : (numA4+" A4 ")
+        str += (numA5 == 0) ? "" : (numA5+" A5 ")
         setStatistic(str)
     }
     useEffect(() => {
@@ -116,6 +116,8 @@ export const PrinterHistoryTable = ({printerID}) => {
                     <th className="min-w-[100px] py-4 border-2 border-blue-4">Tên file</th>
                     <th className="min-w-[80px] border-2 border-blue-4">Cỡ giấy</th>
                     <th className="min-w-[100px] border-2 border-blue-4">Số bản</th>
+                    <th className="min-w-[100px] border-2 border-blue-4">Số trang</th>
+                    <th className="min-w-[100px] border-2 border-blue-4">Số mặt</th>
                     <th className="min-w-[180px] border-2 border-blue-4">MSSV</th>
                     <th className="min-w-[180px] border-2 border-blue-4">Thời gian bắt đầu</th>
                     <th className="min-w-[180px] border-2 border-blue-4">Thời gian kết thúc</th>
@@ -127,6 +129,8 @@ export const PrinterHistoryTable = ({printerID}) => {
                         <td className="text-center border-2 border-blue-4">{row.file}</td>
                         <td className="text-center border-2 border-blue-4">{row.size}</td>
                         <td className="text-center border-2 border-blue-4">{row.copy}</td>
+                        <td className="text-center border-2 border-blue-4">{row.page}</td>
+                        <td className="text-center border-2 border-blue-4">{row.side}</td>
                         <td className="text-center border-2 border-blue-4">{row.student_id}</td>
                         <td className="text-center border-2 border-blue-4">{row.start}</td>
                         <td className="text-center border-2 border-blue-4">{row.end}</td>
@@ -185,6 +189,8 @@ export const PrinterHistoryTable = ({printerID}) => {
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">{row.file}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{row.size}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{row.copy}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang">{row.page}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{row.side}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.student_id}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{row.start}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian kết thúc">{row.end}</td>    
