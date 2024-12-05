@@ -100,7 +100,7 @@ export const WaitingDocsPage = () => {
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
-                {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={filteredWaitingDocs}/>}
+                {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={waitingDocs} filteredWaitingDocs={filteredWaitingDocs}/>}
                 {filteredWaitingDocs.length === 0 && <p>Không tìm thấy</p>}
             </div>
             {/* Màn hình nhỏ */}
@@ -137,7 +137,7 @@ export const WaitingDocsPage = () => {
                         <FaSearch id="search-icon" className="text-white"/>
                     </button>
                 </div>
-                {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={filteredWaitingDocs}/>}
+                {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={waitingDocs} filteredWaitingDocs={filteredWaitingDocs}/>}
                 {filteredWaitingDocs.length === 0 && <p>Không tìm thấy</p>}
             </div>
             <Footer />
