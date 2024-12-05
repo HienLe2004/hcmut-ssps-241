@@ -1,13 +1,18 @@
 import { FaPen } from "react-icons/fa"
 import { UpdateWaitingDoc } from "./UpdateWaitingDoc"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Notification } from "../Notification";
-export const WaitingDocsTable = ({waitingDocs}) => {
+export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
     const [updateOpen, setUpdateOpen] = useState(false);
     const [notiOpen, setNotiOpen] = useState(false);
     const [currentWaitingDoc, setCurrentWaitingDoc] = useState();
+    const [docs,setDocs] = useState(waitingDocs);
+    const [filteredDocs, setFilteredDocs] = useState(filteredWaitingDocs);
+    // const [filteredWaitingDocs, setFilteredWaitingDocs] = useState(waitingDocs);
     const doneWaitingDoc = () => {
-        waitingDocs = waitingDocs.filter((waitingDoc) => waitingDoc.id != currentWaitingDoc.id)
+        setDocs(docs.filter((doc) => doc.id != currentWaitingDoc.id))
+        setFilteredDocs(filteredDocs.filter((doc) => doc.id != currentWaitingDoc.id))
+        // setFilteredWaitingDocs(waitingDocs.filter((waitingDoc) => waitingDoc.id != currentWaitingDoc.id))
         fetch(`/api/printing-requests/${currentWaitingDoc.id}`, {
             method: 'PATCH',
             body: JSON.stringify({status: "done"})
@@ -15,6 +20,9 @@ export const WaitingDocsTable = ({waitingDocs}) => {
         .then((res)=>res.json())
         .then(json=>console.log(json))
     }
+    // useEffect(() => {
+    //      setFilteredWaitingDocs(waitingDocs)
+    // },[waitingDocs])
     return <div className="w-full">
         {/* Màn hình lớn */}
         <div className="hidden md:flex justify-center">
@@ -33,7 +41,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
                 </tr>
             </thead>
             <tbody className="text-white">
-                {waitingDocs.map((waitingDoc, docKey) => {
+                {filteredDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey}>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.student_id}</td>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.printer_id}</td>
@@ -73,7 +81,7 @@ export const WaitingDocsTable = ({waitingDocs}) => {
                 </tr>
             </thead> */}
             <tbody className="text-white">
-                {waitingDocs.map((waitingDoc, docKey) => {
+                {filteredDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey} className={docKey%2?"bg-blue-3":"bg-blue-2"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{waitingDoc.student_id}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{waitingDoc.printe_idr}</td>
