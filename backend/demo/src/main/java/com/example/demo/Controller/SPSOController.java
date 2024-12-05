@@ -71,7 +71,7 @@ public class SPSOController {
         if(spsoInfo.getName() != null) {
             spso.setName(spsoInfo.getName());
         }
-        if(String.valueOf(spsoInfo.getLogin().getId())!= null)
+        if(spsoInfo.getLogin().getId()!= 0)
         {
             Login login = loginRepository.findById(spsoInfo.getLogin().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + spsoInfo.getLogin().getId()));

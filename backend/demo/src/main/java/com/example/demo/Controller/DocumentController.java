@@ -2,12 +2,15 @@ package com.example.demo.Controller;
 
 import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Model.Document;
+import com.example.demo.Model.PaperSetting;
 import com.example.demo.Model.Student;
 import com.example.demo.Repository.DocumentRepository;
+import com.example.demo.Repository.PaperSettingRepository;
 import com.example.demo.Repository.StudentRepository;
 
 import com.example.demo.Config.FileStorageProperties;
 import com.example.demo.Service.FileService;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.print.Doc;
+import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -29,6 +30,8 @@ import java.nio.file.Path;
 public class DocumentController {
     @Autowired
     private DocumentRepository documentRepository;
+    @Autowired
+    private PaperSettingRepository paperSettingRepository;
 
     @Autowired
     private StudentRepository studentRepository; //su dung de truy xuat student
@@ -51,7 +54,7 @@ public class DocumentController {
 
     //create a new document
     @PostMapping("/document/{document_id}/{studentId}")
-    public ResponseEntity<Document> createAFile(@PathVariable long document_id,@PathVariable long studentId, @RequestParam("file") MultipartFile file){
+    public ResponseEntity<Document> createAFile(@PathVariable long document_id,@PathVariable long studentId, @RequestParam("file") MultipartFile file) throws IOException, InvalidFormatException {
         if (file.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -67,9 +70,49 @@ public class DocumentController {
         Document document = new Document();
         document.setId(document_id);
         document.setFileName(file.getOriginalFilename());
-        document.setFileStyle(file.getContentType());
+
         document.setFilePath(file_path);
         document.setStudent(student);
+
+
+        String file_type = file.getContentType();
+        PaperSetting paperSetting = paperSettingRepository.findLatestPaperSetting().get();
+        String valid_file_type = paperSetting.getValidFileType();
+        List<String> listFT = Arrays.asList(valid_file_type.split(","));
+
+        document.setFileType(file_type);
+        int numPage = 0;
+        if(file_type.equals("application/pdf")) {
+            if(!listFT.contains("pdf"))
+                throw new ResourceNotFoundException("type "+file_type+ " is not valid!");
+            numPage = fileService.handlePdf(file);
+        }
+        else if(file_type.equals("application/msword") ||
+                file_type.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
+        {
+            if(!listFT.contains("docx") && !listFT.contains("doc"))
+                throw new ResourceNotFoundException("type "+file_type+ " is not valid!");
+            numPage = fileService.handleWord(file);
+        }
+        else if ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(file_type) ||
+                "application/vnd.ms-excel".equals(file_type)) {
+            try {
+                if(!listFT.contains("xls") && !listFT.contains("xlsx"))
+                    throw new ResourceNotFoundException("type "+file_type+ " is not valid!");
+                numPage = fileService.handleExcel(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+            // Xử lý PowerPoint (PPT/PPTX)
+        else if ("application/vnd.openxmlformats-officedocument.presentationml.presentation".equals(file_type) ||
+                    "application/vnd.ms-powerpoint".equals(file_type)) {
+            if(!listFT.contains("ppt") && !listFT.contains("pptx"))
+                throw new ResourceNotFoundException("type "+file_type+ " is not valid!");
+                numPage = fileService.handlePowerPoint(file);
+            }
+        if (numPage <= 0) throw new ResourceNotFoundException("can't count number of pages: " + file_type);
+        document.setNumPages(numPage);
         Document updateDocumnet = documentRepository.save(document);
         return ResponseEntity.ok(updateDocumnet);
     }
@@ -87,7 +130,8 @@ public class DocumentController {
             document.setStudent(student);
         }
         if(documentDetail.getFileName()!= null) document.setFileName(documentDetail.getFileName());
-        if(documentDetail.getFileStyle()!= null)document.setFileName(documentDetail.getFileStyle());
+        if(documentDetail.getFileType()!= null)document.setFileName(documentDetail.getFileType());
+        if(documentDetail.getNumPages() != 0) document.setNumPages(documentDetail.getNumPages());
         Document updateDocumnet = documentRepository.save(document);
         return ResponseEntity.ok(updateDocumnet);
     }

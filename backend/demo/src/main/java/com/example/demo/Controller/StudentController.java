@@ -63,7 +63,7 @@ public class StudentController {
     public ResponseEntity<Student> updateStudent(@PathVariable long id, @RequestBody Student studentInfo) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        if( String.valueOf(studentInfo.getBalance())  != null) {
+        if( studentInfo.getBalance()  != 0) {
             student.setBalance(studentInfo.getBalance());
         }
         if (studentInfo.getDoB() != null) {
@@ -78,7 +78,7 @@ public class StudentController {
         if(studentInfo.getName() != null) {
             student.setName(studentInfo.getName());
         }
-        if(String.valueOf(studentInfo.getLogin().getId())!= null)
+        if(studentInfo.getLogin().getId()!= 0)
         {
             Login login = loginRepository.findById(studentInfo.getLogin().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + studentInfo.getLogin().getId()));

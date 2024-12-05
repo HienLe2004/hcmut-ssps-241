@@ -56,7 +56,7 @@ public class BuyLogController {
             buyLog.setPrice(buyLogInfo.getPrice());
         }
 
-        if(String.valueOf(buyLogInfo.getBoughtPageNum()) != null) {
+        if(buyLogInfo.getBoughtPageNum() != 0) {
             buyLog.setBoughtPageNum(buyLogInfo.getBoughtPageNum());
         }
 
@@ -64,13 +64,12 @@ public class BuyLogController {
             buyLog.setPaymentTime(buyLogInfo.getPaymentTime());
         }
         long student_id = buyLogInfo.getStudent().getId();
-        if(String.valueOf(student_id)!= null)
+        if(student_id != 0)
         {
             Student student = studentRepository.findById(student_id)
                     .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + student_id));
             buyLog.setStudent(student);
         }
-
         BuyLog updatedBuyLog = buyLogRepository.save(buyLog);
         return ResponseEntity.ok(updatedBuyLog);
     }

@@ -57,7 +57,7 @@ public class PrintModificationController {
         if(String.valueOf(newPM.isDoubleSided()) != null){
             printModification.setDoubleSided(newPM.isDoubleSided());
         }
-        if(String.valueOf(newPM.getCopies()) != null){
+        if(newPM.getCopies() != 0){
             printModification.setCopies(newPM.getCopies());
         }
         return ResponseEntity.ok(printModification);

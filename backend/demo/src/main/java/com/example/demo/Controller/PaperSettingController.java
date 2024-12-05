@@ -52,10 +52,10 @@ public class PaperSettingController {
         if(paperSettingInfo.getPapersize() != null){
             paperSetting.setPapersize(paperSettingInfo.getPapersize());
         }
-        if(String.valueOf(paperSettingInfo.getNumPage())!= null){
+        if(paperSettingInfo.getNumPage()!= 0){
             paperSetting.setNumPage(paperSettingInfo.getNumPage());
         }
-        if(String.valueOf(paperSettingInfo.getSettingDate())!= null){
+        if(paperSettingInfo.getSettingDate()!= null){
             paperSetting.setSettingDate(paperSettingInfo.getSettingDate());
         }
         if(paperSetting.getValidFileType() != null){

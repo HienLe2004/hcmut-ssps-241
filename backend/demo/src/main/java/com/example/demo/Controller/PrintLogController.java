@@ -105,20 +105,20 @@ public class PrintLogController
                 .orElseThrow(() -> new ResourceNotFoundException("Print Request not exist with id :" + id));
         if(updateRequest.getStatus() != null)
             printRequest.setStatus(updateRequest.getStatus());
-        if(String.valueOf(updateRequest.getStudent().getId()) != null)
+        if(updateRequest.getStudent().getId() != 0)
         {
             long studentId = updateRequest.getStudent().getId();
             Student student = studentRepository.findById(studentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + studentId));
             printRequest.setStudent(student);
         }
-        if(String.valueOf(updateRequest.getPrintModification().getId())!= null){
+        if(updateRequest.getPrintModification().getId()!= 0){
             long printModificationId = updateRequest.getPrintModification().getId();
             PrintModification printModification = printModificationRepository.findById(printModificationId)
                     .orElseThrow(() -> new ResourceNotFoundException("Print Modification not exist with id :" + printModificationId));
             printRequest.setPrintModification(printModification);
         }
-        if(String.valueOf(updateRequest.getDocument().getId())!= null){
+        if(updateRequest.getDocument().getId() != 0){
             long documentId = updateRequest.getDocument().getId();
             Document document = documentRepository.findById(documentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Document not exist with id :" + documentId));

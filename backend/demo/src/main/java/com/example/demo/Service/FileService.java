@@ -2,9 +2,17 @@ package com.example.demo.Service;
 
 import com.example.demo.Config.FileStorageProperties;
 import com.example.demo.Exception.ResourceNotFoundException;
+import com.example.demo.Model.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
+import java.io.InputStream;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -134,5 +142,36 @@ public class FileService {
             e.printStackTrace();
         }
 
+    }
+    public int handlePdf(MultipartFile file) {
+        try (PDDocument document = PDDocument.load(file.getInputStream())) {
+            return document.getNumberOfPages();
+        }
+        catch (Exception e) {
+            return 0; // Không lấy được số trang
+        }
+    }
+    public int handleWord(MultipartFile file){
+        try (XWPFDocument document = new XWPFDocument(file.getInputStream())) {
+            return document.getProperties().getExtendedProperties().getPages();
+        } catch (Exception e) {
+            return 0; // Không thể lấy số trang chính xác
+        }
+    }
+    // Hàm xử lý Excel (XLSX/XLS)
+    public int handleExcel(MultipartFile file) throws IOException{
+        try (InputStream inputStream = file.getInputStream()) {
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            return workbook.getNumberOfSheets();
+        }
+    }
+
+    // Hàm xử lý PowerPoint (PPT/PPTX)
+    public int handlePowerPoint(MultipartFile file){
+        try (XMLSlideShow ppt = new XMLSlideShow(file.getInputStream())) {
+            return ppt.getSlides().size();
+        } catch (Exception e) {
+            return 0; // Không thể lấy số slide
+        }
     }
 }

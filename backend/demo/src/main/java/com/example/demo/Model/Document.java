@@ -19,6 +19,9 @@ public class Document {
     @Column(name = "file_path")
     private String filePath;
 
+    @Column(name ="num_of_pages")
+    private int numPages;
+
     public Document(){}
 
     public Document(String fileName, String fileType, String filePath) {
@@ -41,16 +44,21 @@ public class Document {
 
     //getter
 
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public int getNumPages() {
+        return numPages;
+    }
+
     public long getId() {
         return id;
     }
 
     public String getFileName() {
         return fileName;
-    }
-
-    public String getFileStyle() {
-        return fileType;
     }
 
     public Student getStudent() {
@@ -71,15 +79,19 @@ public class Document {
         this.fileName = fileName;
     }
 
-    public void setFileStyle(String fileType) {
-        this.fileType = fileType;
-    }
-
     public void setStudent(Student student) {
         this.student = student;
     }
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
+    public void setNumPages(int numPages) {
+        this.numPages = numPages;
     }
 }
