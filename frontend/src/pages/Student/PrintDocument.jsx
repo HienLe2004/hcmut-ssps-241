@@ -4,6 +4,7 @@ import { Footer } from "../../components/footer";
 import { Confirm } from "./Confirm";
 import { AddSuccess } from "./AddSuccess";
 import { AlertAddFile } from "./Alert";
+import axios from "axios";
 
 export const PrintDocument = () => {
 
@@ -22,21 +23,8 @@ export const PrintDocument = () => {
     const [canSubmit, setCanSubmit] = useState(true);
 
 
-    // useEffect(() => {
-    //     const fetchPrinters = async () => {
-    //         try {
-    //             const response = await axios.get();
-    //             setPrinters(response.data.printers);
-    //             if (response.data.printers.length > 0) {
-    //                 setPrinter(response.data.printerss[0]);
-    //             }
-    //         }
-    //         catch (error) {
-    //             console.error("Không lấy được danh sách máy in", error);
-    //         }
-    //     };
-    //     fetchPrinters();
-    // }, []);
+
+
 
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
@@ -98,6 +86,67 @@ export const PrintDocument = () => {
     const turnOffAlertAddFile = () => {
         setAlertPopup(false);
     }
+
+    useEffect(() => {
+
+        // Lấy danh sách các máy in
+        const fetchPrinterList = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/v1/printers');
+                console.log("Check printer:", response.data);
+            } catch (error) {
+                console.error("Error fetching printer list:", error.message);
+            }
+        };
+
+        // Lấy các cấu hình cho máy in
+        const fetchPrinterSetting = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/v1/paperSetting');
+                console.log("Check printer setting:", response.data);
+            } catch (error) {
+                console.error("Error fetching printer list:", error.message);
+            }
+        };
+
+        // Lấy các print log
+        const fetchPrintLog = async () => {
+            try {
+                const student_id = 2211024;
+                const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
+                console.log("Check print log:", response.data);
+                const data = response.data;
+                
+                data.map((logs) => {
+                    console.log(logs.document.fileName);
+                    console.log(logs.printModification.paperSize);
+                    console.log(logs.printModification.copies);
+                    console.log(logs.printer.name);
+                    console.log(logs.status);
+                    console.log(logs.startTime);
+                    console.log(logs.finishedTime);
+                    const req = {
+                        fileName: logs.document.fileName,
+                        pageSize:logs.printModification.paperSize,
+                        numCopy:logs.printModification.copies,
+                        printer:logs.printer.name,
+                        status:logs.status,
+                        startTime:logs.startTime,
+                        endTime:logs.finishedTime
+                    }
+                    setRequests([req, ...requests]);
+                })
+
+            } catch (error) {
+                console.error("Error fetching printer list:", error.message);
+            }
+        };
+
+        fetchPrinterList();
+        fetchPrinterSetting();
+        fetchPrintLog();
+    }, []);
+
 
     return (
         <div className="flex flex-col min-h-screen">
