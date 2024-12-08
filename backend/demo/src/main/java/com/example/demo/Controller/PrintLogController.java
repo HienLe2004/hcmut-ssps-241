@@ -1,9 +1,8 @@
 package com.example.demo.Controller;
 
-import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Model.*;
-import com.example.demo.Repository.PrintLogRepository;
-import com.example.demo.Repository.StudentRepository;
+import com.example.demo.Repository.*;
+import com.example.demo.Exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +11,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/v1/")
-public class PrintLogController {
+public class PrintLogController
+{
     @Autowired
     private PrintLogRepository printLogRepository;
     @Autowired
+    private DocumentRepository documentRepository;
+    @Autowired
+    private PrintModificationRepository printModificationRepository;
+    @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private PrinterRepository printerRepository;
 
     @GetMapping("/printLogs")
     public List<PrintLog> getAllPrintLogs(){
@@ -28,54 +34,110 @@ public class PrintLogController {
 
     @GetMapping("/printLog/{id}")
     public ResponseEntity<PrintLog> getPrintLog(@PathVariable long id){
-        PrintLog printLog = printLogRepository.findById(id)
+        PrintLog printRequest = printLogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Print Log not exist with id :" + id));
-        return ResponseEntity.ok(printLog);
+        return ResponseEntity.ok(printRequest);
     }
-    @PostMapping("/printLog")
-    public PrintLog createPrintLog(@RequestBody PrintLog detailPrintLog){
-        PrintLog printLog = new PrintLog();
 
-        long studentId = detailPrintLog.getStudent().getId();
+    @GetMapping("/student/{id}/printLogs")
+    public List<PrintLog> getPrintLogsOfStudent(@PathVariable long id)
+    {
+        List<PrintLog> printLogs = printLogRepository.findAllByStudentId(id);
+        return printLogs;
+    }
+
+    @GetMapping("printer/{name}/printLogs")
+    public List<PrintLog> getPrintLogByPrinterName(@PathVariable String name)
+    {
+        System.out.println(name);
+        List<PrintLog> printLogs = printLogRepository.findAllByPrinterName(name);
+        return printLogs;
+    }
+
+    @GetMapping("/printLog/{id}/printModification")
+    public ResponseEntity<PrintModification> getPrintModification(@PathVariable long id){
+        PrintLog printRequest = printLogRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Print Log not exist with id :" + id));
+        PrintModification printModification = printRequest.getPrintModification();
+        return ResponseEntity.ok(printModification);
+    }
+
+    @GetMapping("/printLog/{id}/document")
+    public ResponseEntity<Document> getDocument(@PathVariable long id){
+        PrintLog printRequest = printLogRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Print Og not exist with id :" + id));
+        Document document = printRequest.getDocument() ;
+        return ResponseEntity.ok(document);
+    }
+
+    @PostMapping("/printLog")
+    public PrintLog createRequest(@RequestBody PrintLog detailPrintRequest) {
+        PrintLog printRequest = new PrintLog();
+        printRequest.setStatus(detailPrintRequest.getStatus());
+
+        long documentId = detailPrintRequest.getDocument().getId();
+        Document document = documentRepository.findById(documentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Document not exist with id :" + documentId));
+        printRequest.setDocument(document);
+
+        long printModificationId = detailPrintRequest.getPrintModification().getId();
+        PrintModification printModification = printModificationRepository.findById(printModificationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Print Modification not exist with id :" + printModificationId));
+        printRequest.setPrintModification(printModification);
+
+        long studentId = detailPrintRequest.getStudent().getId();
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + studentId));
-        printLog.setStudent(student);
+        printRequest.setStudent(student);
 
-        return printLogRepository.save(printLog);
+        String printerName = detailPrintRequest.getPrinter().getName();
+        Printer printer = printerRepository.findByName(printerName)
+                .orElseThrow(() -> new ResourceNotFoundException("Printer not exist with name :" + printerName));
+        printRequest.setPrinter(printer);
+
+        return printLogRepository.save(printRequest);
     }
 
     @PutMapping("/printLog/{id}")
-    public ResponseEntity<PrintLog> updatePrintLog(@PathVariable long id, @RequestBody PrintLog updateLog)
+    public ResponseEntity<PrintLog> updatePrintRequest(@PathVariable long id, @RequestBody PrintLog updateRequest)
     {
-        PrintLog printLog = printLogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Print Log not exist with id :" + id));
-
-        if(updateLog.getDate() != null)
-            printLog.setDate(updateLog.getDate());
-
-        if(updateLog.getFilename() != null)
-            printLog.setFilename(updateLog.getFilename());
-
-        if(String.valueOf(updateLog.getNumberPage())!= null)
-            printLog.setNumberPage(updateLog.getNumberPage());
-
-        if(updateLog.getSizePage() != null)
-            printLog.setSizePage(updateLog.getSizePage());
-
-        if(String.valueOf(updateLog.getStudent().getId()) != null)
+        PrintLog printRequest = printLogRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Print Request not exist with id :" + id));
+        if(updateRequest.getStatus() != null)
+            printRequest.setStatus(updateRequest.getStatus());
+        if(updateRequest.getStudent().getId() != 0)
         {
-            long studentId = updateLog.getStudent().getId();
+            long studentId = updateRequest.getStudent().getId();
             Student student = studentRepository.findById(studentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + studentId));
-            printLog.setStudent(student);
+            printRequest.setStudent(student);
         }
-
-        PrintLog printLog1 = printLogRepository.save(printLog);
-        return ResponseEntity.ok(printLog1);
+        if(updateRequest.getPrintModification().getId()!= 0){
+            long printModificationId = updateRequest.getPrintModification().getId();
+            PrintModification printModification = printModificationRepository.findById(printModificationId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Print Modification not exist with id :" + printModificationId));
+            printRequest.setPrintModification(printModification);
+        }
+        if(updateRequest.getDocument().getId() != 0){
+            long documentId = updateRequest.getDocument().getId();
+            Document document = documentRepository.findById(documentId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Document not exist with id :" + documentId));
+            printRequest.setDocument(document);
+        }
+        if(updateRequest.getPrinter().getName()!= null)
+        {
+            String printerName = updateRequest.getPrinter().getName();
+            Printer printer = printerRepository.findByName(printerName)
+                    .orElseThrow(() -> new ResourceNotFoundException("Printer not exist with name :" + printerName));
+            printRequest.setPrinter(printer);
+        }
+        PrintLog printRequest1 = printLogRepository.save(printRequest);
+        return ResponseEntity.ok(printRequest1);
     }
 
     @DeleteMapping("/printLogs")
-    public ResponseEntity<Map<String, Boolean>> deletePrintLogs(){
+    //delete print request
+    public ResponseEntity<Map<String, Boolean>> deletePrintRequests(){
         printLogRepository.deleteAll();
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted all", Boolean.TRUE);
@@ -83,12 +145,14 @@ public class PrintLogController {
     }
 
     @DeleteMapping("/printLog/{id}")
-    public ResponseEntity<Map<String, Boolean>> deletePrintLogById(@PathVariable long id){
-        PrintLog printLog = printLogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Print log not exist with id :" + id));
+    //delete a print request by id
+    public ResponseEntity<Map<String, Boolean>> deletePrintRequestById(@PathVariable long id){
+        PrintLog printRequest = printLogRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Print Request not exist with id :" + id));
         studentRepository.deleteById(id);
         Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted print log with id " + id, Boolean.TRUE);
+        response.put("deleted print request with id "+id, Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
+
 }

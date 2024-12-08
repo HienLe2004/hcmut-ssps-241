@@ -2,7 +2,6 @@ package com.example.demo.Controller;
 
 import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Model.*;
-import com.example.demo.Repository.PrinterRepository;
 import com.example.demo.Repository.PrintingSystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class PrintingSystemController {
     @Autowired
     private PrintingSystemRepository printingSystemRepository;
@@ -39,7 +38,7 @@ public class PrintingSystemController {
         return printingSystem.getPrinters();
     }
 
-    @GetMapping("/{id}/printLogs")
+    @GetMapping("printingSystem/{id}/printLogs")
     public List<PrintLog> getPrintLogById(@PathVariable Long id){
         PrintingSystem printingSystem = printingSystemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Print log does not exist with printing system id :" + id));

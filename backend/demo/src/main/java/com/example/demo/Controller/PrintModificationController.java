@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/v1/")
 
@@ -35,16 +35,16 @@ public class PrintModificationController {
     }
 
     //create a new print modification
-    /*@PostMapping("/printModification")
+    @PostMapping("/printModification")
     public PrintModification createPrintModification(@RequestBody PrintModification printModification){
         return printModificationRepository.save(printModification);
-    }*/
+    }
 
-    @PostMapping("/PrintModification")
+    /*@PostMapping("/PrintModification")
     public long createPrintModification(@RequestBody PrintModification printModification){
         printModificationRepository.save(printModification);
         return printModification.getId();
-    }
+    }*/
 
     //upload a new print modification by id
     @PutMapping("/printModification/{id}")
@@ -57,7 +57,7 @@ public class PrintModificationController {
         if(String.valueOf(newPM.isDoubleSided()) != null){
             printModification.setDoubleSided(newPM.isDoubleSided());
         }
-        if(String.valueOf(newPM.getCopies()) != null){
+        if(newPM.getCopies() != 0){
             printModification.setCopies(newPM.getCopies());
         }
         return ResponseEntity.ok(printModification);

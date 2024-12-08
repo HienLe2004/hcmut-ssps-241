@@ -4,6 +4,7 @@ import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Model.Login;
 import com.example.demo.Model.Printer;
 import com.example.demo.Model.SPSO;
+import com.example.demo.Repository.LoginRepository;
 import com.example.demo.Repository.SPSORepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ import java.util.Optional;
 public class SPSOController {
     @Autowired
     private SPSORepository spsoRepository;
+
+    @Autowired
+    private LoginRepository loginRepository;
 
     @GetMapping("/spsos")
     public List<SPSO> getAllSPSO(){
@@ -67,11 +71,12 @@ public class SPSOController {
         if(spsoInfo.getName() != null) {
             spso.setName(spsoInfo.getName());
         }
-        if(String.valueOf(spsoInfo.getLogin().getId())!= null)
+        if(spsoInfo.getLogin().getId()!= 0)
         {
-            spso.setLogin(spsoInfo.getLogin());
+            Login login = loginRepository.findById(spsoInfo.getLogin().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + spsoInfo.getLogin().getId()));
+            spso.setLogin(login);
         }
-
         SPSO updatedSPSO = spsoRepository.save(spso);
         return ResponseEntity.ok(updatedSPSO);
     }

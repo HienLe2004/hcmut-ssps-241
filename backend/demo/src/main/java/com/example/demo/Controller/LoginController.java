@@ -35,9 +35,10 @@ public class LoginController {
     @PostMapping("/login")
     public Login createNewLogin(@RequestBody Login login)
     {
-        Optional<Login> loginOptional = loginRepository.findByUsername(login.getUserName());
+        String username = login.getUsername();
+        Optional<Login> loginOptional = loginRepository.findByUsername(username);
         if (loginOptional.isPresent())
-            throw new RuntimeException("username is exist");
+            throw new RuntimeException("username" + username+ "is exist");
         return loginRepository.save(login);
     }
 
@@ -45,7 +46,7 @@ public class LoginController {
     public ResponseEntity<Login> updateLogin(@PathVariable long id, @RequestBody Login loginInfo){
         Login login = loginRepository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("login not exist with id: "+ id));
-        login.setPassWord(loginInfo.getPassWord());
+        login.setPassword(loginInfo.getPassword());
         Login newLogin = loginRepository.save(login);
         return ResponseEntity.ok(login);
     }
