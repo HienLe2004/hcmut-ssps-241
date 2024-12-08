@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom"
 import avatar from '../images/VitaminMeo.jpg'
-import { setCurrentUser } from "../config/auth";
 
 export const StudentHeader = () => {
 
@@ -105,7 +104,7 @@ export const StudentHeader = () => {
               Thông tin
             </button>
             <button
-              onClick={() => {setCurrentUser({});navigate("/")}}
+              onClick={() => {navigate("/")}}
               className="block px-4 py-2 w-full hover:bg-gray-100 cursor-pointer"
             >
               Đăng xuất

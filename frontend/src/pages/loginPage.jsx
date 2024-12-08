@@ -1,9 +1,8 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { getCurrentUser, setCurrentUser } from "../config/auth"
 import { getAllStudents } from "../api/students"
 import { getAllSPSOs } from "../api/spsos"
-export const LoginPage = () => {
+export const LoginPage = ({login}) => {
     const [isStudent, setIsStudent] = useState(true)
     const [username,setUsername] = useState();
     const [password,setPassword] = useState();
@@ -17,8 +16,7 @@ export const LoginPage = () => {
                 return student.login?.username == username && student.login?.password == password
             })
             if (foundStudent) {
-                setCurrentUser(foundStudent)
-                alert("Đăng nhập thành công")
+                login({...foundStudent,role:"student"})
                 navigate("/student/homepage")
             }
             else {
@@ -30,8 +28,7 @@ export const LoginPage = () => {
                 return spso.login?.username == username && spso.login?.password == password
             })
             if (foundSPSO) {
-                setCurrentUser(foundSPSO)
-                alert("Đăng nhập thành công")
+                login({...foundSPSO,role:"spso"})
                 navigate("/spso/homepage")
             }
             else {
@@ -44,7 +41,6 @@ export const LoginPage = () => {
             try{
                 const {data} = await getAllStudents();
                 setStudents(data);
-                console.log(data);
             }catch(err){
                 console.log(err)
             }
@@ -53,7 +49,6 @@ export const LoginPage = () => {
             try{
                 const {data} = await getAllSPSOs();
                 setSPSOs(data);
-                console.log(data);
             }catch(err){
                 console.log(err)
             }
