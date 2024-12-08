@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class PrinterController {
@@ -37,9 +37,14 @@ public class PrinterController {
     @PostMapping("/printer")
     public Printer createPrinter(@RequestBody Printer printerInfo){
         Printer printer = new Printer();
+        List<Printer> existingPrintersAtLocation = printerRepository.findByLocation(printerInfo.getLocation());
+        int count = existingPrintersAtLocation.size();
+        printerInfo.setName(printerInfo.getLocation() + "-" + (count + 1));
+        printerInfo.setState("on");
+    
         printer.setName(printerInfo.getName());
         printer.setLocation(printerInfo.getLocation());
-
+        printer.setDescription(printerInfo.getDescription());
         printer.setState(printerInfo.getState());
 
         return printerRepository.save(printerInfo);
@@ -58,6 +63,9 @@ public class PrinterController {
             printer.setLocation(printerInfo.getLocation());
         }
 
+        if(printerInfo.getDescription() != null) {
+            printer.setDescription(printerInfo.getDescription());
+        }
 
         Printer updatedPrinter = printerRepository.save(printer);
         return ResponseEntity.ok(updatedPrinter);
