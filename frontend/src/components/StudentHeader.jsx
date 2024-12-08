@@ -18,14 +18,14 @@ export const StudentHeader = () => {
   }
 
   return <>
-    <header class="flex items-center justify-between px-5 w-full bg-blue-2 text-blue-900 font-bold h-[10vh]  ">
+    <header className="flex items-center justify-between px-5 w-full bg-blue-2 text-blue-900 font-bold h-[10vh]  ">
 
-      <div class="flex flex-row items-center h-full">
+      <div className="flex flex-row items-center h-full">
         <img
           loading="lazy"
           src="https://lms.hcmut.edu.vn/pluginfile.php/3/theme_academi/logo/1725955904/logoBK.png"
           alt="University logo"
-          class="aspect-square w-16"
+          className="aspect-square w-16"
         />
 
         {/* Màn hình lớn */}
@@ -92,7 +92,7 @@ export const StudentHeader = () => {
       {/* Ảnh đại diện */}
 
       <img src={avatar} alt="Không có gì đâu hehehe"
-        class="h-[80%] aspect-square bg-red-300 rounded-full mr-5 hover:cursor-pointer    "
+        className="h-[80%] aspect-square bg-red-300 rounded-full mr-5 hover:cursor-pointer    "
         onClick={clickImage}
       />
       {imgClick && (
