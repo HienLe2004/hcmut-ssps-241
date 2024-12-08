@@ -4,6 +4,7 @@ import { Footer } from "../../../components/footer";
 import { NewPrinterForm } from "./NewPrinterForm";
 import { PrintersTable } from "./PrintersTable";
 import { Notification } from "../Notification";
+import { createPrinter, getAllPrinters } from "../../../api/printers";
 export const PrintersPage = () => {
     const [formOpen, setFormOpen] = useState(false);
     const [notiOpen, setNotiOpen] = useState(false);
@@ -13,21 +14,25 @@ export const PrintersPage = () => {
         setFormOpen(true);
     }
     useEffect(() => {
-        fetch('/api/printers')
-            .then((res)=>res.json())
-            .then((json)=>setPrinters(json.printers))
-            .catch((err)=>console.log(err))
+        const fetchPrintersData = async () => {
+            try{
+                const {data} = await getAllPrinters();
+                setPrinters(data);
+            }catch(err){
+                console.log(err)
+            }
+        }
+        fetchPrintersData()
     }, [])
-    const handleSubmit = async (room, description) => {
+    const handleSubmit = async (location, description) => {
         try {
-            if (room == null) {
+            if (location == null) {
                 setNoti("Hãy điền vị trí máy in!")
                 setNotiOpen(true)
                 return;
             }
-            const response = await fetch("/api/printers",{method:"POST", body:JSON.stringify({room,description})})
-            const json = await response.json()
-            setPrinters([...printers, json.printer])
+            const response = await createPrinter({location: location, description: description})
+            setPrinters([...printers, response.data])
             setNoti("Đã thêm máy in mới thành công!")
             setNotiOpen(true)
         } catch (err) {

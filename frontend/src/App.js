@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { format, parse } from "date-fns";
 import { LoginPage } from "./pages/loginPage";
@@ -127,7 +127,14 @@ import { createServer, Model } from "miragejs";
 // })
 
 function App() {
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") ? localStorage.getItem("user") : JSON.stringify({})))
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+    }
+  }, []);
   return (
     <div className="app">
     <Routes>

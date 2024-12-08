@@ -16,7 +16,8 @@ export const LoginPage = ({login}) => {
                 return student.login?.username == username && student.login?.password == password
             })
             if (foundStudent) {
-                login({...foundStudent,role:"student"})
+                localStorage.setItem('user', JSON.stringify({...foundStudent, role:"student"}))
+                login({...foundStudent, role:"student"})
                 navigate("/student/homepage")
             }
             else {
@@ -28,7 +29,10 @@ export const LoginPage = ({login}) => {
                 return spso.login?.username == username && spso.login?.password == password
             })
             if (foundSPSO) {
-                login({...foundSPSO,role:"spso"})
+                localStorage.setItem('user', JSON.stringify({...foundSPSO, role:"spso"}))
+                login({...foundSPSO, role:"spso"})
+                console.log({...foundSPSO, role:"spso"})
+                console.log(localStorage.getItem("user"))
                 navigate("/spso/homepage")
             }
             else {

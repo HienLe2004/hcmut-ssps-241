@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import Select from "react-select"
+import { getAllLocations } from "../../../api/locations";
 const selectStyles = {
     dropdownIndicator: (styles) => ({
         ...styles,
@@ -49,25 +50,27 @@ const selectStyles = {
 }
 
 export const NewPrinterForm = ({closeForm, submitForm}) => {
-    const [selectedRoom, setSelectedRoom] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState(null);
     const [description, setDescription] = useState(null);
-    const [rooms, setRooms] = useState();
+    const [locations, setLocations] = useState([]);
     useEffect(() => {
-        const fetchRoomData = async () => {
-            const response = await fetch("/api/rooms");
-            const json = await response.json();
-            const data = json.rooms
-            const tranformedData = await data.map(item => ({
-                id: item.id,
-                value: item.id,
-                label: item.id
-            }))
-            setRooms(tranformedData);
+        const fetchLocationData = async () => {
+            try{
+                const {data} = await getAllLocations()
+                const tranformedData = await data.map(item => ({
+                    name: item.name,
+                    value: item.name,
+                    label: item.name
+                }))
+                setLocations(tranformedData)
+            }catch(err){
+                console.log(err)
+            }
         }
-        fetchRoomData()
+        fetchLocationData()
     },[])
-    const handleChangeRoom = (room) => {
-        setSelectedRoom(room)
+    const handleChangeLocaiton = (location) => {
+        setSelectedLocation(location)
     }
     const handleChangeDescription = (e) => {
         setDescription(e.target.value)
@@ -78,9 +81,9 @@ export const NewPrinterForm = ({closeForm, submitForm}) => {
             <div className="flex items-center">
                 <p>Vị trí</p>
                 <Select
-                options={rooms}
-                value={selectedRoom}
-                onChange={handleChangeRoom}
+                options={locations}
+                value={selectedLocation}
+                onChange={handleChangeLocaiton}
                 placeholder="phòng..."
                 styles={selectStyles}
                 className="pl-1"
@@ -93,7 +96,7 @@ export const NewPrinterForm = ({closeForm, submitForm}) => {
             </div>
             <div className="flex flex-row justify-around w-full">
                 <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
-                    onClick={() => {submitForm((selectedRoom==null)?null:selectedRoom.value, description); closeForm();}}>
+                    onClick={() => {submitForm((selectedLocation==null)?null:selectedLocation.value, description); closeForm();}}>
                     Đồng ý
                 </button>
                 <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
