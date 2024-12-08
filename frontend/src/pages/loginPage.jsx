@@ -1,14 +1,66 @@
-import { useRef, useState } from "react"
-import { Navigate, redirect, useNavigate } from "react-router-dom"
-
+import { useEffect, useState, useRef } from "react"
+import { useNavigate } from "react-router-dom"
+import { getCurrentUser, setCurrentUser } from "../config/auth"
+import { getAllStudents } from "../api/students"
+import { getAllSPSOs } from "../api/spsos"
 export const LoginPage = () => {
     const [isStudent, setIsStudent] = useState(true)
+    const [username,setUsername] = useState();
+    const [password,setPassword] = useState();
+    const [students, setStudents] = useState([])
+    const [spsos, setSPSOs] = useState([])
     const navigate = useNavigate();
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        console.log("login");
-        navigate(isStudent ? "/student/homepage" : "/spso/homepage")
+        if (isStudent) {
+            const foundStudent = students.find(student => {
+                return student.login?.username == username && student.login?.password == password
+            })
+            if (foundStudent) {
+                setCurrentUser(foundStudent)
+                alert("Đăng nhập thành công")
+                navigate("/student/homepage")
+            }
+            else {
+                alert("Đăng nhập thất bại")
+            }
+        }
+        else {
+            const foundSPSO = spsos.find(spso => {
+                return spso.login?.username == username && spso.login?.password == password
+            })
+            if (foundSPSO) {
+                setCurrentUser(foundSPSO)
+                alert("Đăng nhập thành công")
+                navigate("/spso/homepage")
+            }
+            else {
+                alert("Đăng nhập thất bại")
+            }
+        }
     }
+    useEffect(()=>{
+        const fetchStudentData = async () => {
+            try{
+                const {data} = await getAllStudents();
+                setStudents(data);
+                console.log(data);
+            }catch(err){
+                console.log(err)
+            }
+        }
+        const fetchSPSOData = async () => {
+            try{
+                const {data} = await getAllSPSOs();
+                setSPSOs(data);
+                console.log(data);
+            }catch(err){
+                console.log(err)
+            }
+        }
+        fetchStudentData()
+        fetchSPSOData()
+    },[])
     return <>
         <section className="min-h-screen flex flex-col items-center justify-center bg-[#65c2f5]">
         <h1 className="text-center text-3xl font-bold">HCMUT SSPS</h1>
@@ -28,8 +80,10 @@ export const LoginPage = () => {
                     </div>
                 </div>
                 <form className="mt-6 flex flex-col gap-4">
-                    <input className="p-2 rounded-xl border" type="email" name="email" placeholder="BKID"/>
-                    <input className="p-2 rounded-xl border" type="password" name="password" placeholder="Password"/>
+                    <input className="p-2 rounded-xl border" type="text" name="email" placeholder="BKID" 
+                        onChange={(e)=>{setUsername(e.target.value)}}/>
+                    <input className="p-2 rounded-xl border" type="password" name="password" placeholder="Password"
+                        onChange={(e)=>{setPassword(e.target.value)}}/>
                     <button className="py-2 rounded-xl bg-[#0463ca] text-white  hover:scale-105 duration-200"
                         onClick={handleLogin}>Đăng nhập</button>
                     <a className=" text-xs text-right  hover:scale-105 duration-200" href="#">Quên mật khẩu?</a>

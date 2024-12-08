@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class SPSOController {
@@ -44,7 +44,6 @@ public class SPSOController {
         return spso.getLogin();
     }
 
-    @GetMapping("")
 
     @PostMapping("/spso")
     public SPSO createConfiguration(@RequestBody SPSO spso){
