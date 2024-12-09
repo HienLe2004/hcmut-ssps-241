@@ -1,29 +1,27 @@
 import { useEffect, useState } from "react";
 import { FaPen } from "react-icons/fa";
+import { getPaperSetting, updatePaperSetting } from "../../../api/paperSetting";
 
 export const ValidDocuments = () => {
     const [editable, setEditable] = useState(false);
     const [validDocs, setValidDocs] = useState([]);
-    const [validDocsStr, setValidDocsStr] = useState();
+    const [paperSettingID, setPaperSettingID] = useState();
     useEffect(()=>{
         const fetchValidDocs = async () => {
-            const response = await fetch('/api/validDocs')
-            const json = await response.json()
-            setValidDocs(json.array)
+            const {data} = await getPaperSetting();
+            setPaperSettingID(data.id);
+            setValidDocs(data.validFileType?data.validFileType.split(', '):null);
         }
         fetchValidDocs()
     },[])
     const handleChangeValidDocs = (e) => {
-        setValidDocsStr(e.target.value)
+        setValidDocs(e.target.value.split(','))
     }
-    const updateValidDocs = () => {
-        setValidDocs(validDocsStr.split(','));
-        fetch(`/api/validDocs`, {
-            method: 'PATCH',
-            body: JSON.stringify({array: validDocsStr.split(',')})
-        })
-        .then((res)=>res.json())
-        .then(json=>console.log(json))
+    const updateValidDocs = async () => {
+        const formatedStr = validDocs.join(', ');
+        console.log({validFileType: formatedStr});
+        const newSetting = await updatePaperSetting(paperSettingID, {validFileType: formatedStr})
+        console.log(newSetting)
     }
     return <div className="p-4 bg-blue-4 rounded-xl text-white flex flex-col gap-y-2">
         <p className="font-bold">Danh sách các loại tệp được in:</p>

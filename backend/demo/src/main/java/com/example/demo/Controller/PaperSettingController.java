@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class PaperSettingController {
@@ -58,7 +58,7 @@ public class PaperSettingController {
         if(paperSettingInfo.getSettingDate()!= null){
             paperSetting.setSettingDate(paperSettingInfo.getSettingDate());
         }
-        if(paperSetting.getValidFileType() != null){
+        if(paperSettingInfo.getValidFileType() != null){
             paperSetting.setValidFileType(paperSettingInfo.getValidFileType());
         }
         return paperSettingRepository.save(paperSetting);

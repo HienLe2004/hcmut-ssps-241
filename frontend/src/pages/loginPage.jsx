@@ -31,8 +31,6 @@ export const LoginPage = ({login}) => {
             if (foundSPSO) {
                 localStorage.setItem('user', JSON.stringify({...foundSPSO, role:"spso"}))
                 login({...foundSPSO, role:"spso"})
-                console.log({...foundSPSO, role:"spso"})
-                console.log(localStorage.getItem("user"))
                 navigate("/spso/homepage")
             }
             else {
