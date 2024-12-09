@@ -3,6 +3,11 @@ package com.example.demo.Model;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "print_log")
@@ -30,11 +35,14 @@ public class PrintLog {
     @JoinColumn(name = "student_id",nullable = false)
     private Student student;
 
+    @CreationTimestamp
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     @Column(name = "start_time")
-    private Timestamp startTime;
+    private LocalDateTime startTime;
 
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     @Column(name ="finished_time")
-    private Timestamp finishedTime;
+    private LocalDateTime finishedTime;
 
     @ManyToOne
     @JoinColumn(name="printer_name")
@@ -42,7 +50,7 @@ public class PrintLog {
 
     //constructor
 
-    public PrintLog(long id, String status, Document document, PrintModification printModification, Student student, Timestamp startTime, Timestamp finishedTime, Printer printer) {
+    public PrintLog(long id, String status, Document document, PrintModification printModification, Student student, LocalDateTime startTime, LocalDateTime finishedTime, Printer printer) {
         this.id = id;
         this.status = status;
         this.document = document;
@@ -53,7 +61,7 @@ public class PrintLog {
         this.printer = printer;
     }
 
-    public PrintLog(String status, Document document, PrintModification printModification, Student student, Timestamp startTime, Timestamp finishedTime, Printer printer) {
+    public PrintLog(String status, Document document, PrintModification printModification, Student student, LocalDateTime startTime, LocalDateTime finishedTime, Printer printer) {
         this.status = status;
         this.document = document;
         this.printModification = printModification;
@@ -68,11 +76,11 @@ public class PrintLog {
     //getter
 
 
-    public Timestamp getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public Timestamp getFinishedTime() {
+    public LocalDateTime getFinishedTime() {
         return finishedTime;
     }
 
@@ -122,11 +130,11 @@ public class PrintLog {
         this.student = student;
     }
 
-    public void setStartTime(Timestamp startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
-    public void setFinishedTime(Timestamp finishedTime) {
+    public void setFinishedTime(LocalDateTime finishedTime) {
         this.finishedTime = finishedTime;
     }
 

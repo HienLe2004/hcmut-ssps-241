@@ -14,6 +14,6 @@ public class FileStorageProperties {
     }
 
     public FileStorageProperties(){
-        uploadDir = "D:/HK241/uploads/";
+        uploadDir = "../../frontend/public/uploads";
     }
 }
