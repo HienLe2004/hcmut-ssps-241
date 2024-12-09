@@ -2,8 +2,6 @@ package com.example.demo.Model;
 
 import jakarta.persistence.*;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
