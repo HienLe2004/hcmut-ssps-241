@@ -7,6 +7,7 @@ import { Footer } from "../../../components/footer";
 import { parse } from "date-fns";
 import { getAllStudents } from "../../../api/students";
 import { getAllPrinters } from "../../../api/printers";
+import { getAllPrintLogs } from "../../../api/printLogs";
 
 export const SystemHistoryPage = () => {
     const [selectedStudents, setSelectedStudents] = useState([]);
@@ -35,14 +36,27 @@ export const SystemHistoryPage = () => {
         let numA4 = 0
         let numA5 = 0
         doneData.forEach(data => {
-            if (data.size == "A3") numA3 += Math.round(data.page/data.side) * data.copy
-            if (data.size == "A4") numA4 += Math.round(data.page/data.side) * data.copy
-            if (data.size == "A5") numA5 += Math.round(data.page/data.side) * data.copy
+            if (data.printModification.paperSize == "A3") numA3 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
+            if (data.printModification.paperSize == "A4") numA4 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
+            if (data.printModification.paperSize == "A5") numA5 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
         })
         let str = (numA3 == 0) ? "" : (numA3+" A3 ")
         str += (numA4 == 0) ? "" : (numA4+" A4 ")
         str += (numA5 == 0) ? "" : (numA5+" A5 ")
         setStatistic(str)
+    }
+    const processFilePath = (filePath) => {
+        // Tìm vị trí đầu tiên của "uploads" trong chuỗi
+        const uploadsIndex = filePath.indexOf('uploads');
+      
+        // Nếu tìm thấy "uploads", cắt chuỗi từ vị trí đó trở đi
+        if (uploadsIndex !== -1) {
+          return filePath.slice(uploadsIndex);
+        } else {
+          // Xử lý trường hợp không tìm thấy "uploads" (có thể báo lỗi hoặc trả về giá trị mặc định)
+          console.error('Không tìm thấy "uploads" trong đường dẫn');
+          return '';
+        }
     }
     useEffect(() => {
         const fetchStudentData = async () => {
@@ -57,10 +71,8 @@ export const SystemHistoryPage = () => {
             setPrinters(transformedData)
         }
         const fetchHistoryData = async () => {
-            const response = await fetch("/api/printing-requests")
-            const json = await response.json()
-            const data = json.printingRequests
-            const doneData = data.filter((item) => item.status == "done")
+            const {data} = await getAllPrintLogs()
+            const doneData = data.filter((item) => item.status == "Đã in xong")
             setHistory(doneData)
             setFilteredHistory(doneData)
             countPage(doneData)
@@ -143,7 +155,7 @@ export const SystemHistoryPage = () => {
             </div>
         </div>
         <div className="text-right text-xs">
-            <p>Thống kế: {statistic}</p>
+            <p>Thống kê: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
             <thead className="bg-blue-3">
@@ -162,15 +174,21 @@ export const SystemHistoryPage = () => {
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey}>
-                        <td className="text-center border-2 border-blue-4">{row.student_id}</td>
-                        <td className="text-center border-2 border-blue-4">{row.printer_id}</td>
-                        <td className="text-center border-2 border-blue-4">{row.file}</td>
-                        <td className="text-center border-2 border-blue-4">{row.size}</td>
-                        <td className="text-center border-2 border-blue-4">{row.copy}</td>
-                        <td className="text-center border-2 border-blue-4">{row.page}</td>
-                        <td className="text-center border-2 border-blue-4">{row.side}</td>
-                        <td className="text-center border-2 border-blue-4">{row.start}</td>
-                        <td className="text-center border-2 border-blue-4">{row.end}</td>
+                        <td className="text-center border-2 border-blue-4">{row.student.id}</td>
+                        <td className="text-center border-2 border-blue-4">{row.printer.name}</td>
+                        <td className="text-center border-2 border-blue-4">
+                            <a href={"../"+processFilePath(row.document.filePath)} target="_blank" 
+                                download={row.document.fileName}
+                                rel="noopener noreferrer">
+                                    {row.document.fileName}
+                            </a>
+                        </td>
+                        <td className="text-center border-2 border-blue-4">{row.printModification.paperSize}</td>
+                        <td className="text-center border-2 border-blue-4">{row.printModification.copies}</td>
+                        <td className="text-center border-2 border-blue-4">{row.document.numPages}</td>
+                        <td className="text-center border-2 border-blue-4">{row.printModification.doubleSize?"2":"1"}</td>
+                        <td className="text-center border-2 border-blue-4">{row.startTime}</td>
+                        <td className="text-center border-2 border-blue-4">{row.finishedTime}</td>
                     </tr>
                 })}  
             </tbody>

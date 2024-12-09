@@ -2,27 +2,32 @@ import { FaPen } from "react-icons/fa"
 import { UpdateWaitingDoc } from "./UpdateWaitingDoc"
 import { useEffect, useState } from "react"
 import { Notification } from "../Notification";
+import { updatePrintLogByID } from "../../../api/printLogs";
 export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
     const [updateOpen, setUpdateOpen] = useState(false);
     const [notiOpen, setNotiOpen] = useState(false);
     const [currentWaitingDoc, setCurrentWaitingDoc] = useState();
     const [docs,setDocs] = useState(waitingDocs);
     const [filteredDocs, setFilteredDocs] = useState(filteredWaitingDocs);
-    // const [filteredWaitingDocs, setFilteredWaitingDocs] = useState(waitingDocs);
-    const doneWaitingDoc = () => {
+    const doneWaitingDoc = async () => {
         setDocs(docs.filter((doc) => doc.id != currentWaitingDoc.id))
         setFilteredDocs(filteredDocs.filter((doc) => doc.id != currentWaitingDoc.id))
-        // setFilteredWaitingDocs(waitingDocs.filter((waitingDoc) => waitingDoc.id != currentWaitingDoc.id))
-        fetch(`/api/printing-requests/${currentWaitingDoc.id}`, {
-            method: 'PATCH',
-            body: JSON.stringify({status: "done"})
-        })
-        .then((res)=>res.json())
-        .then(json=>console.log(json))
+        const response = await updatePrintLogByID(currentWaitingDoc.id, {status: "Đã in xong"})
+        console.log(response)
     }
-    // useEffect(() => {
-    //      setFilteredWaitingDocs(waitingDocs)
-    // },[waitingDocs])
+    const processFilePath = (filePath) => {
+        // Tìm vị trí đầu tiên của "uploads" trong chuỗi
+        const uploadsIndex = filePath.indexOf('uploads');
+      
+        // Nếu tìm thấy "uploads", cắt chuỗi từ vị trí đó trở đi
+        if (uploadsIndex !== -1) {
+          return filePath.slice(uploadsIndex);
+        } else {
+          // Xử lý trường hợp không tìm thấy "uploads" (có thể báo lỗi hoặc trả về giá trị mặc định)
+          console.error('Không tìm thấy "uploads" trong đường dẫn');
+          return '';
+        }
+    }
     return <div className="w-full">
         {/* Màn hình lớn */}
         <div className="hidden md:flex justify-center">
@@ -43,21 +48,34 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
             <tbody className="text-white">
                 {filteredDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey}>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.student_id}</td>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.printer_id}</td>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.size}</td>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.copy}</td>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.page}</td>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.side}</td>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.file}</td>
-                        <td className="text-center border-2 border-blue-4">{waitingDoc.start}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.student.id}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.printer.name}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.printModification.paperSize}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.printModification.copies}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.document.numPages}</td>
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.printModification.doubleSided?"2":"1"}</td>
+                        <td className="text-center border-2 border-blue-4">
+                            <a href={"../"+processFilePath(waitingDoc.document.filePath)} target="_blank" 
+                                download={waitingDoc.document.fileName}
+                                rel="noopener noreferrer">
+                                    {waitingDoc.document.fileName}
+                            </a>
+                        </td>
+                        {/* <td className="text-center border-2 border-blue-4">
+                            <a href={window.URL.createObjectURL(new Blob([waitingDoc.document.filePath], {type: waitingDoc.document.fileType}))} target="_blank" 
+                                download={waitingDoc.document.fileName}
+                                rel="noopener noreferrer">
+                                    {waitingDoc.document.fileName}
+                            </a>
+                        </td> */}
+                        <td className="text-center border-2 border-blue-4">{waitingDoc.startTime}</td>
                         <td className="text-center border-2 border-blue-4">
                             <span className="flex items-center flex-row-reverse my-1 mx-1 gap-x-3">
                                 <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
                                     onClick={() => {setCurrentWaitingDoc(waitingDoc);setUpdateOpen(true)}}>
                                     <FaPen className="aspect-square text-white w-6"/>
                                 </button>
-                                <p>Đang xử lý</p>
+                                <p>Đang xử lí</p>
                                 {/* <p>{waitingDoc.status}</p> */}
                             </span>
                         </td>
@@ -72,17 +90,23 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
             <tbody className="text-white">
                 {filteredDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey} className={docKey%2?"bg-blue-3":"bg-blue-2"}>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{waitingDoc.student_id}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{waitingDoc.printe_idr}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ">{waitingDoc.size}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{waitingDoc.copy}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang">{waitingDoc.page}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{waitingDoc.side}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="File">{waitingDoc.file}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{waitingDoc.start}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{waitingDoc.student.id}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{waitingDoc.printer.name}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ">{waitingDoc.printModification.paperSize}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{waitingDoc.printModification.copies}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang">{waitingDoc.document.numPages}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{waitingDoc.printModification.doubleSided?"2":"1"}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="File">
+                            <a href={"../"+processFilePath(waitingDoc.document.filePath)} target="_blank" 
+                                download={waitingDoc.document.fileName}
+                                rel="noopener noreferrer">
+                                    {waitingDoc.document.fileName}
+                            </a>
+                        </td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{waitingDoc.startTime}</td>
                         <td className="text-left flex items-center before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Trạng thái">
                             <span className="flex items-center  my-1 mx-1 gap-x-3">
-                                <p>Đang xử lý</p>
+                                <p>Đang xử lí</p>
                                 {/* <p>{waitingDoc.status}</p> */}
                                 <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
                                     onClick={() => {setCurrentWaitingDoc(waitingDoc);setUpdateOpen(true)}}>

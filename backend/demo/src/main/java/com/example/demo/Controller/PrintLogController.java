@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/")
 public class PrintLogController
@@ -73,7 +73,12 @@ public class PrintLogController
     @PostMapping("/printLog")
     public PrintLog createRequest(@RequestBody PrintLog detailPrintRequest) {
         PrintLog printRequest = new PrintLog();
-        printRequest.setStatus(detailPrintRequest.getStatus());
+        if (detailPrintRequest.getStatus() == null) {
+            printRequest.setStatus("Đang xử lí");
+        } 
+        else {
+            printRequest.setStatus(detailPrintRequest.getStatus());
+        }
 
         long documentId = detailPrintRequest.getDocument().getId();
         Document document = documentRepository.findById(documentId)
@@ -105,26 +110,30 @@ public class PrintLogController
                 .orElseThrow(() -> new ResourceNotFoundException("Print Request not exist with id :" + id));
         if(updateRequest.getStatus() != null)
             printRequest.setStatus(updateRequest.getStatus());
-        if(updateRequest.getStudent().getId() != 0)
+        if(updateRequest.getStartTime() != null)
+            printRequest.setStartTime(updateRequest.getStartTime());
+        if(updateRequest.getFinishedTime() != null)
+            printRequest.setFinishedTime(updateRequest.getFinishedTime());
+        if(updateRequest.getStudent() != null && updateRequest.getStudent().getId() != 0)
         {
             long studentId = updateRequest.getStudent().getId();
             Student student = studentRepository.findById(studentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + studentId));
             printRequest.setStudent(student);
         }
-        if(updateRequest.getPrintModification().getId()!= 0){
+        if(updateRequest.getPrintModification() != null && updateRequest.getPrintModification().getId()!= 0){
             long printModificationId = updateRequest.getPrintModification().getId();
             PrintModification printModification = printModificationRepository.findById(printModificationId)
                     .orElseThrow(() -> new ResourceNotFoundException("Print Modification not exist with id :" + printModificationId));
             printRequest.setPrintModification(printModification);
         }
-        if(updateRequest.getDocument().getId() != 0){
+        if(updateRequest.getDocument() != null && updateRequest.getDocument().getId() != 0){
             long documentId = updateRequest.getDocument().getId();
             Document document = documentRepository.findById(documentId)
                     .orElseThrow(() -> new ResourceNotFoundException("Document not exist with id :" + documentId));
             printRequest.setDocument(document);
         }
-        if(updateRequest.getPrinter().getName()!= null)
+        if(updateRequest.getPrinter() != null && updateRequest.getPrinter().getName()!= null)
         {
             String printerName = updateRequest.getPrinter().getName();
             Printer printer = printerRepository.findByName(printerName)

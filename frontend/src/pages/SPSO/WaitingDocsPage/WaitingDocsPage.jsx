@@ -7,6 +7,7 @@ import { WaitingDocsTable } from "./WaitingDocsTable";
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
 import { getAllStudents } from "../../../api/students";
 import { getAllPrinters } from "../../../api/printers";
+import { getAllPrintLogs } from "../../../api/printLogs";
 
 
 export const WaitingDocsPage = () => {
@@ -28,8 +29,8 @@ export const WaitingDocsPage = () => {
         const filterPrinters = (selectedPrinters.length == 0) ? printers : selectedPrinters
         const filterDocs = (waitingDocs, filterStudents, filterPrinters) => {
             return waitingDocs.filter(doc => {
-                return filterStudents.some(student => student.value == doc.student_id) &&
-                    filterPrinters.some(printer => printer.value == doc.printer_id)
+                return filterStudents.some(student => student.value == doc.student.id) &&
+                    filterPrinters.some(printer => printer.value == doc.printer.name)
             })
         }
         const filteredDocs = filterDocs(waitingDocs, filterStudents, filterPrinters);
@@ -47,15 +48,12 @@ export const WaitingDocsPage = () => {
         }
         const fetchPrinterData = async () => {
             const {data} = await getAllPrinters()
-        
             const transformedData = data.map(item => ({value: item.name, label: item.name}))
             setPrinters(transformedData)
         }
         const fetchWaitingDocData = async () => {
-            const response = await fetch("/api/printing-requests")
-            const json = await response.json()
-            const data = json.printingRequests
-            const waitingData = data.filter((item) => item.status == "waiting")
+            const {data} = await getAllPrintLogs()
+            const waitingData = data.filter((item) => item.status == "Đang xử lí")
             setWaitingDocs(waitingData)
             setFilteredWaitingDocs(waitingData)
         }

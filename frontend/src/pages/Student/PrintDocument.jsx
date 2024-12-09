@@ -10,11 +10,24 @@ export const PrintDocument = () => {
 
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState('');
-    const [pageSize, setPageSize] = useState('A4');
-    const [numCopy, setNumCopy] = useState(1);
-    const [printer, setPrinter] = useState('H1-101-1');
 
-    const [printers, setPrinters] = useState([]);
+    const [pageSize, setPageSize] = useState();
+    const [pageSizeList, setPageSizeList] = useState([]);
+
+    const [defaultPage, setDefaultPage] = useState(0);
+    const [remainPage, setRemainPage] = useState(0);
+    const [numPageDocument, setNumPageDocument] = useState(0);
+
+    const [validTypeFile, setValidFileType] = useState("");
+
+    const [numCopy, setNumCopy] = useState(1);
+    const [doubleSide, setDoubleSide] = useState(false);
+
+    const [printer, setPrinter] = useState([]);
+    const [printerList, setPrinterList] = useState([]);
+
+
+
     const [requests, setRequests] = useState([]);
 
     const [confirmPopup, setConfirmPopup] = useState(false);
@@ -31,6 +44,9 @@ export const PrintDocument = () => {
         if (selectedFile) {
             setFile(selectedFile);
             setFileName(selectedFile.name);
+            fetchInfoFile(selectedFile);
+
+
         }
     }
 
@@ -87,28 +103,102 @@ export const PrintDocument = () => {
         setAlertPopup(false);
     }
 
+    const fetchInfoFile = async (file) => {
+        if (file) {
+            const formData = new FormData();
+            formData.append("file", file); // Thêm file vào FormData với key là "file"
+
+            try {
+                const response = await axios.post("http://localhost:8080/api/v1/document/1/2211024", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                console.log("Upload successful:", response.data);
+                setNumPageDocument(response.data.numPages);
+            } catch (error) {
+                console.error("Error uploading file:", error.message);
+            }
+        }
+    }
+
+    const fetchInfoStudent = async (id) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/v1/student/${id}`);
+            console.log("Fetch successful:", response.data);
+            setNumPageDocument(response.data.numPages);
+        } catch (error) {
+            console.error("Error uploading file:", error.message);
+        }
+    }
+
+    const updateStudentBalance = async (id, balance) => {
+        try {
+            const data = { balance }; // Tạo object body chỉ với trường cần cập nhật
+            const response = await axios.put(`http://localhost:8080/api/v1/student/${id}`, data, {
+                headers: {
+                    "Content-Type": "application/json", // Đảm bảo header đúng
+                },
+            });
+            console.log("Update successful:", response.data);
+        } catch (error) {
+            console.error("Error updating student balance:", error.message);
+        }
+    };
+
+    updateStudentBalance("2211024", 80);
+    // fetchInfoStudent("2211024");
+
     useEffect(() => {
 
-        // Lấy danh sách các máy in
+        // Lấy danh sách máy in
         const fetchPrinterList = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/v1/printers');
                 console.log("Check printer:", response.data);
+                const printers = response.data.map((pList) => {
+
+                    return {
+                        Name: pList.name,
+                        State: pList.state
+                    };
+                });
+                setPrinterList([...printers, ...printerList]);
+                console.log("Hello printer", printers);
             } catch (error) {
                 console.error("Error fetching printer list:", error.message);
             }
+
         };
+        fetchPrinterList();
+    }, [])
+
+    useEffect(() => {
 
         // Lấy các cấu hình cho máy in
         const fetchPrinterSetting = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/v1/paperSetting');
                 console.log("Check printer setting:", response.data);
+
+                const validType = response.data.validFileType;
+                const numDefaultPage = response.data.numPage;
+                const paperSize = response.data.paperSize;
+
+                setValidFileType(validType.split(",").map(type => `.${type.trim()}`).join(","));
+                setDefaultPage(numDefaultPage);
+                setPageSizeList(paperSize.split(",").map(item => item.trim()));
+
+                console.log("Check valid type", validType);
+                console.log("Check defaultpage", defaultPage);
+                console.log("Check paperSize:", pageSizeList);
+
+
             } catch (error) {
                 console.error("Error fetching printer list:", error.message);
             }
         };
-
+        console.log("Check default 123:", defaultPage);
         // Lấy các print log
         const fetchPrintLog = async () => {
             try {
@@ -116,33 +206,36 @@ export const PrintDocument = () => {
                 const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
                 console.log("Check print log:", response.data);
                 const data = response.data;
-                
-                data.map((logs) => {
-                    console.log(logs.document.fileName);
-                    console.log(logs.printModification.paperSize);
-                    console.log(logs.printModification.copies);
-                    console.log(logs.printer.name);
-                    console.log(logs.status);
-                    console.log(logs.startTime);
-                    console.log(logs.finishedTime);
-                    const req = {
-                        fileName: logs.document.fileName,
-                        pageSize:logs.printModification.paperSize,
-                        numCopy:logs.printModification.copies,
-                        printer:logs.printer.name,
-                        status:logs.status,
-                        startTime:logs.startTime,
-                        endTime:logs.finishedTime
-                    }
-                    setRequests([req, ...requests]);
-                })
 
+                // Tạo mảng tạm để lưu kết quả
+                const newRequests = data.map((logs) => {
+                    // console.log(logs.document.fileName);
+                    // console.log(logs.printModification.paperSize);
+                    // console.log(logs.printModification.copies);
+                    // console.log(logs.printer.name);
+                    // console.log(logs.status);
+                    // console.log(logs.startTime);
+                    // console.log(logs.finishedTime);
+
+                    return {
+                        fileName: logs.document.fileName,
+                        pageSize: logs.printModification.paperSize,
+                        numCopy: logs.printModification.copies,
+                        printer: logs.printer.name,
+                        status: logs.status,
+                        startTime: logs.startTime,
+                        endTime: logs.finishedTime,
+                    };
+                });
+
+                // Cập nhật trạng thái một lần
+                setRequests([...newRequests, ...requests]);
             } catch (error) {
                 console.error("Error fetching printer list:", error.message);
             }
         };
 
-        fetchPrinterList();
+
         fetchPrinterSetting();
         fetchPrintLog();
     }, []);
@@ -165,7 +258,7 @@ export const PrintDocument = () => {
                         <div className="flex flex-row items-center p-2">
                             <label className="text-white text-2xl mr-6">Tài liệu cần in</label>
                             <input type="file"
-                                accept=".docx, .pdf, .png"
+                                accept={validTypeFile}
                                 onChange={handleFileChange}
                                 className="hidden"
                                 id="fileUpload"
@@ -188,7 +281,7 @@ export const PrintDocument = () => {
                                 </label>
                             )}
                             <div className="text-white ml-auto ">
-                                .docx, .pdf, .png
+                                {validTypeFile}
                             </div>
                         </div>
                         {/* Kích cỡ trang */}
@@ -198,8 +291,12 @@ export const PrintDocument = () => {
                                 onChange={(event) => setPageSize(event.target.value)}
                                 className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
                             >
-                                <option value="A4">A4</option>
-                                <option value="A3">A3</option>
+
+                                {pageSizeList.map((size, index) => (
+                                    <option value={size} key={index}>
+                                        {size}
+                                    </option>
+                                ))}
                             </select>
 
                         </div>
@@ -214,6 +311,25 @@ export const PrintDocument = () => {
                                 className="border-2 border-blue-4 rounded-lg px-2 py-1 w-16 bg-blue-3 text-center text-lg text-white"
                             />
                         </div>
+
+                        {/* Số trang còn lại */}
+                        <div className="flex flex-row items-center p-2 text-white text-2xl">
+                            <label className=" mr-6">Số trang còn lại: </label>
+                            <div>{defaultPage}</div>
+                        </div>
+
+                        {/* In 2 mặt */}
+                        <div className="flex flex-row items-center p-2">
+                            <label className="text-white text-2xl mr-6">In 2 mặt giấy</label>
+                            <input type="checkbox"
+                                value={numCopy}
+                                onChange={(event) => setNumCopy(event.target.value)}
+                                min="1"
+                                className="w-8 h-8"
+                            />
+                        </div>
+
+
                         {/* Máy in */}
                         <div className="flex flex-row items-center p-2">
                             <label className="text-white text-2xl mr-6">Máy in</label>
@@ -221,8 +337,13 @@ export const PrintDocument = () => {
                                 onChange={(event) => setPrinter(event.target.value)}
                                 className="border-2 border-blue-4 bg-blue-3 rounded-lg p-2 textx-lg text-white"
                             >
-                                <option value="H1-101-1">H1-101-1</option>
-                                <option value="H2-102-2">H2-102-2</option>
+                                {printerList.map((item, index) => (
+                                    item.State === "on" && (
+                                        <option value={item.Name} key={index}>
+                                            {item.Name}
+                                        </option>
+                                    )
+                                ))}
                             </select>
                         </div>
 
