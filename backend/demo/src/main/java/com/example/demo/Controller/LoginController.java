@@ -52,7 +52,7 @@ public class LoginController {
     }
 
     @DeleteMapping("/login/{id}")
-    public ResponseEntity<Map<String, Boolean>> deleteLoginById(@PathVariable long id, @RequestBody Login loginInfo){
+    public ResponseEntity<Map<String, Boolean>> deleteLoginById(@PathVariable long id){
         Login login = loginRepository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("login not exist with id: "+ id));
         loginRepository.delete(login);

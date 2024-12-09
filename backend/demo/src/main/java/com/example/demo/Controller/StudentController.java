@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import com.example.demo.Model.Document;
 import com.example.demo.Model.Login;
 import com.example.demo.Model.PrintLog;
+import com.example.demo.Model.SPSO;
 import com.example.demo.Repository.LoginRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,12 @@ public class StudentController {
     }*/
 
 
-
+    @GetMapping("/student/{id}/login")
+    public Login getLogin(@PathVariable long id){
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
+        return student.getLogin();
+    }
 
 
     //create a student
@@ -78,7 +84,7 @@ public class StudentController {
         if(studentInfo.getName() != null) {
             student.setName(studentInfo.getName());
         }
-        if(studentInfo.getLogin().getId()!= 0)
+        if(studentInfo.getLogin() != null)
         {
             Login login = loginRepository.findById(studentInfo.getLogin().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + studentInfo.getLogin().getId()));
