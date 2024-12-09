@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 @Table(name = "document")
 public class Document {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "document_id")
     private long id;
 
@@ -22,6 +23,10 @@ public class Document {
     @Column(name ="num_of_pages")
     private int numPages;
 
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
+
     public Document(){}
 
     public Document(String fileName, String fileType, String filePath) {
@@ -30,17 +35,14 @@ public class Document {
         this.filePath = filePath;
     }
 
-    public Document(long id, String fileName, String fileType, String filePath, Student student) {
+    public Document(long id, String fileName, String fileType, String filePath) {
         this.id = id;
         this.fileName = fileName;
         this.fileType = fileType;
         this.filePath = filePath;
-        this.student = student;
+        // this.student = student;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
 
     //getter
 

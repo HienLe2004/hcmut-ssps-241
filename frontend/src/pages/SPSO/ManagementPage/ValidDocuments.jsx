@@ -10,7 +10,7 @@ export const ValidDocuments = () => {
         const fetchValidDocs = async () => {
             const {data} = await getPaperSetting();
             setPaperSettingID(data.id);
-            setValidDocs(data.validFileType?data.validFileType.split(', '):null);
+            setValidDocs(data.validFileType?data.validFileType.split(','):null);
         }
         fetchValidDocs()
     },[])
@@ -18,7 +18,7 @@ export const ValidDocuments = () => {
         setValidDocs(e.target.value.split(','))
     }
     const updateValidDocs = async () => {
-        const formatedStr = validDocs.join(', ');
+        const formatedStr = validDocs.join(',');
         console.log({validFileType: formatedStr});
         const newSetting = await updatePaperSetting(paperSettingID, {validFileType: formatedStr})
         console.log(newSetting)
