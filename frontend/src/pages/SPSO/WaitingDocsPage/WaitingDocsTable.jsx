@@ -69,17 +69,6 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
         {/* Màn hình nhỏ */}
         <div className="flex md:hidden px-10">
         <table className="bg-blue-2 overflow-x-scroll w-full">
-            {/* <thead className="bg-blue-3">
-                <tr>
-                    <th className="min-w-[100px] py-4">MSSV</th>
-                    <th className="min-w-[80px]">Máy in</th>
-                    <th className="min-w-[100px]">Cỡ</th>
-                    <th className="min-w-[100px]">Số bản</th>
-                    <th className="min-w-[100px]">File</th>
-                    <th className="min-w-[180px]">Thời gian bắt đầu</th>
-                    <th className="min-w-[160px]">Trạng thái</th>
-                </tr>
-            </thead> */}
             <tbody className="text-white">
                 {filteredDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey} className={docKey%2?"bg-blue-3":"bg-blue-2"}>

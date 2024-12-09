@@ -5,6 +5,8 @@ import Select from "react-select"
 import { FaSearch } from "react-icons/fa"
 import { WaitingDocsTable } from "./WaitingDocsTable";
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
+import { getAllStudents } from "../../../api/students";
+import { getAllPrinters } from "../../../api/printers";
 
 
 export const WaitingDocsPage = () => {
@@ -38,17 +40,15 @@ export const WaitingDocsPage = () => {
     }
     useEffect(() => {
         const fetchStudentData = async () => {
-            const response = await fetch('/api/students')
-            const json = await response.json()
-            const data = json.students
-            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            const {data} = await getAllStudents()
+            const filteredData = data.filter(d => {return d.id != 0})
+            const transformedData = filteredData.map(item => ({value: item.id, label: item.id}))
             setStudents(transformedData)
         }
         const fetchPrinterData = async () => {
-            const response = await fetch('/api/printers')
-            const json = await response.json()
-            const data = json.printers
-            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            const {data} = await getAllPrinters()
+        
+            const transformedData = data.map(item => ({value: item.name, label: item.name}))
             setPrinters(transformedData)
         }
         const fetchWaitingDocData = async () => {

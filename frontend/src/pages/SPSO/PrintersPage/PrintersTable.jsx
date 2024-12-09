@@ -35,7 +35,7 @@ export const PrintersTable = ({printers}) => {
                     return <tr key={printerKey}>
                         <td className="text-center border-2 border-blue-4"><NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink></td>
                         <td className="text-center border-2 border-blue-4">{printer.description}</td>
-                        <td className="text-center border-2 border-blue-4">{printer.start}</td>
+                        <td className="text-center border-2 border-blue-4">{printer.startTime}</td>
                         <td className="text-center border-2 border-blue-4">
                             <span className="flex items-center flex-row-reverse my-1 mx-1 gap-x-3">
                                 <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
