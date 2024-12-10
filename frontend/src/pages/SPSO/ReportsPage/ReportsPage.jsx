@@ -3,6 +3,7 @@ import { SPSOHeader } from "../../../components/SPSOHeader"
 import { Footer } from "../../../components/footer";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa"
+import { getAllReports } from "../../../api/reports";
 export const ReportsPage = () => {
     const [reports, setReports] = useState([]);
     const [filteredReports, setFilteredReports] = useState([]);
@@ -28,13 +29,25 @@ export const ReportsPage = () => {
     }
     useEffect(()=>{
         const fetchReports = async () => {
-            const response = await fetch('/api/reports');
-            const json = await response.json();
-            setReports(json.reports)
-            setFilteredReports(json.reports)
+            const {data} = await getAllReports()
+            setReports(data)
+            setFilteredReports(data)
         }
         fetchReports();
     },[])
+    const processFilePath = (filePath) => {
+        // Tìm vị trí đầu tiên của "uploads" trong chuỗi
+        const uploadsIndex = filePath.indexOf('uploads');
+      
+        // Nếu tìm thấy "uploads", cắt chuỗi từ vị trí đó trở đi
+        if (uploadsIndex !== -1) {
+          return filePath.slice(uploadsIndex);
+        } else {
+          // Xử lý trường hợp không tìm thấy "uploads" (có thể báo lỗi hoặc trả về giá trị mặc định)
+          console.error('Không tìm thấy "uploads" trong đường dẫn');
+          return '';
+        }
+    }
     return <div className="flex flex-col min-h-screen">
         <SPSOHeader/>
         {/* Big */}
@@ -69,7 +82,13 @@ export const ReportsPage = () => {
                 {filteredReports.map((row, rowKey) => {
                     return <tr key={rowKey}>
                         <td className="text-center border-2 border-blue-4">{row.name}</td>
-                        <td className="text-center border-2 border-blue-4">{row.link}</td>
+                        <td className="text-center border-2 border-blue-4">
+                            <a href={"../"+processFilePath(row.filePath)} target="_blank" 
+                                download={row.name}
+                                rel="noopener noreferrer">
+                                    Download
+                            </a>
+                        </td>
                         <td className="text-center border-2 border-blue-4">{row.date}</td>
                     </tr>
                 })}  
@@ -96,19 +115,17 @@ export const ReportsPage = () => {
             </button>
         </div>
         <table className="bg-blue-2 overflow-x-scroll w-full">
-            {/* <thead className="bg-blue-3">
-                <tr>
-                    <th className="min-w-[100px] py-4">Tên</th>
-                    <th className="min-w-[80px] w-full">Mô tả</th>
-                    <th className="min-w-[180px]">Bắt đầu sử dụng</th>
-                    <th className="min-w-[180px]">Trạng thái</th>
-                </tr>
-            </thead> */}
             <tbody className="text-white">
                 {filteredReports.map((row, rowKey) => {
                     return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-2"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên báo cáo">{row.name}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Link file">{row.link}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Link file">
+                            <a href={"../"+processFilePath(row.filePath)} target="_blank" 
+                                download={row.name}
+                                rel="noopener noreferrer">
+                                    Download
+                            </a>
+                        </td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian xuất file">{row.date}</td>    
                     </tr>
                 })}  

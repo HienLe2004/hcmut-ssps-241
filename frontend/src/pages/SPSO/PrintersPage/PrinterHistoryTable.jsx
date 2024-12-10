@@ -3,6 +3,8 @@ import { FaSearch } from "react-icons/fa"
 import Select from "react-select"
 import { selectStudentStyles } from "../../../utils/selectStudentStyles";
 import { parse } from "date-fns";
+import { getAllPrintLogsByID } from "../../../api/printLogs";
+import { getAllStudents } from "../../../api/students";
 
 export const PrinterHistoryTable = ({printerID}) => {
     const [students, setStudents] = useState([])
@@ -26,28 +28,41 @@ export const PrinterHistoryTable = ({printerID}) => {
         let numA4 = 0
         let numA5 = 0
         doneData.forEach(data => {
-            if (data.size == "A3") numA3 += Math.round(data.page/data.side) * data.copy
-            if (data.size == "A4") numA4 += Math.round(data.page/data.side) * data.copy
-            if (data.size == "A5") numA5 += Math.round(data.page/data.side) * data.copy
+            if (data.printModification.paperSize == "A3") 
+                numA3 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
+            if (data.printModification.paperSize == "A4") 
+                numA4 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
+            if (data.printModification.paperSize == "A5") 
+                numA5 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
         })
         let str = (numA3 == 0) ? "" : (numA3+" A3 ")
         str += (numA4 == 0) ? "" : (numA4+" A4 ")
         str += (numA5 == 0) ? "" : (numA5+" A5 ")
         setStatistic(str)
     }
+    const processFilePath = (filePath) => {
+        // Tìm vị trí đầu tiên của "uploads" trong chuỗi
+        const uploadsIndex = filePath.indexOf('uploads');
+      
+        // Nếu tìm thấy "uploads", cắt chuỗi từ vị trí đó trở đi
+        if (uploadsIndex !== -1) {
+          return filePath.slice(uploadsIndex);
+        } else {
+          // Xử lý trường hợp không tìm thấy "uploads" (có thể báo lỗi hoặc trả về giá trị mặc định)
+          console.error('Không tìm thấy "uploads" trong đường dẫn');
+          return '';
+        }
+    }
     useEffect(() => {
         const fetchStudentData = async () => {
-            const response = await fetch('/api/students')
-            const json = await response.json()
-            const data = json.students
-            const transformedData = data.map(item => ({value: item.id, label: item.id}))
+            const {data} = await getAllStudents()
+            const filteredData = data.filter(d => {return d.id != 0})
+            const transformedData = filteredData.map(item => ({value: item.id, label: item.id}))
             setStudents(transformedData)
         }
         const fetchHistoryData = async () => {
-            const response = await fetch("/api/printing-requests")
-            const json = await response.json()
-            const data = json.printingRequests
-            const doneData = data.filter((item) => (item.status == "done" && item.printer_id == printerID))
+            const {data} = await getAllPrintLogsByID(printerID)
+            const doneData = data.filter((item) => (item.status == "Đã in xong"))
             setHistory(doneData)
             setFilteredHistory(doneData)
             countPage(doneData)
@@ -59,14 +74,14 @@ export const PrinterHistoryTable = ({printerID}) => {
         const filterStudents = (selectedStudents.length == 0) ? students : selectedStudents
         const filterDocsWithDate = (history, filterStudents) => {
             return history.filter(doc => {
-                return filterStudents.some(student => student.value == doc.student_id) &&
-                    parse(doc.start, 'kk:mm dd/MM/yyyy', new Date()).getTime() >= selectedStart.getTime() &&
-                    parse(doc.start, 'kk:mm dd/MM/yyyy', new Date()).getTime() <= selectedEnd.getTime()
+                return filterStudents.some(student => student.value == doc.student.id) &&
+                    parse(doc.startTime, 'kk:mm dd/MM/yyyy', new Date()).getTime() >= selectedStart.getTime() &&
+                    parse(doc.startTime, 'kk:mm dd/MM/yyyy', new Date()).getTime() <= selectedEnd.getTime()
             })
         }
         const filterDocsWithoutDate = (history, filterStudents) => {
             return history.filter(doc => {
-                return filterStudents.some(student => student.value == doc.student_id)
+                return filterStudents.some(student => student.value == doc.student.id)
             })
         }
         const filteredDocs = (selectedStart != null && selectedEnd != null) ? 
@@ -126,14 +141,20 @@ export const PrinterHistoryTable = ({printerID}) => {
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey}>
-                        <td className="text-center border-2 border-blue-4">{row.file}</td>
-                        <td className="text-center border-2 border-blue-4">{row.size}</td>
-                        <td className="text-center border-2 border-blue-4">{row.copy}</td>
-                        <td className="text-center border-2 border-blue-4">{row.page}</td>
-                        <td className="text-center border-2 border-blue-4">{row.side}</td>
-                        <td className="text-center border-2 border-blue-4">{row.student_id}</td>
-                        <td className="text-center border-2 border-blue-4">{row.start}</td>
-                        <td className="text-center border-2 border-blue-4">{row.end}</td>
+                        <td className="text-center border-2 border-blue-4">
+                            <a href={"../"+processFilePath(row.document.filePath)} target="_blank" 
+                                download={row.document.fileName}
+                                rel="noopener noreferrer">
+                                    {row.document.fileName}
+                            </a>
+                        </td>
+                        <td className="text-center border-2 border-blue-4">{row.printModification.paperSize}</td>
+                        <td className="text-center border-2 border-blue-4">{row.printModification.copies}</td>
+                        <td className="text-center border-2 border-blue-4">{row.document.numPages}</td>
+                        <td className="text-center border-2 border-blue-4">{row.printModification.doubleSize?"2":"1"}</td>
+                        <td className="text-center border-2 border-blue-4">{row.student.id}</td>
+                        <td className="text-center border-2 border-blue-4">{row.startTime}</td>
+                        <td className="text-center border-2 border-blue-4">{row.finishedTime}</td>
                     </tr>
                 })}  
             </tbody>
@@ -144,7 +165,7 @@ export const PrinterHistoryTable = ({printerID}) => {
         <p className="text-xl font-bold">Lịch sử in</p>
         <div className="flex flex-col gap-y-10 text-xl">
             <div className="flex flex-row items-center">
-                <p>Mã số sinh viên:</p>
+                <p>MSSV:</p>
                 <Select 
                 options={students}
                 value={selectedStudents}
@@ -175,30 +196,28 @@ export const PrinterHistoryTable = ({printerID}) => {
             <p>Thống kế: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll w-full">
-            {/* <thead className="bg-blue-3">
-                <tr>
-                    <th className="min-w-[100px] py-4">Tên</th>
-                    <th className="min-w-[80px] w-full">Mô tả</th>
-                    <th className="min-w-[180px]">Bắt đầu sử dụng</th>
-                    <th className="min-w-[180px]">Trạng thái</th>
-                </tr>
-            </thead> */}
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-2"}>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">{row.file}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{row.size}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{row.copy}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang">{row.page}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{row.side}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.student_id}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{row.start}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian kết thúc">{row.end}</td>    
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">
+                            <a href={"../"+processFilePath(row.document.filePath)} target="_blank" 
+                                download={row.document.fileName}
+                                rel="noopener noreferrer">
+                                    {row.document.fileName}
+                            </a>
+                        </td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{row.printModification.paperSize}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{row.printModification.copies}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang">{row.document.numPages}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{row.printModification.doubleSize?"2":"1"}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.student.id}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{row.startTime}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian kết thúc">{row.finishedTime}</td>    
                     </tr>
                 })}  
             </tbody>
         </table>
         </div>
-        {(filteredHistory.length == 0) && <p className="text-center">Không tồn tại</p>}
+        {(filteredHistory.length == 0) && <p className="text-center mb-5 py-5">Không tồn tại</p>}
     </div>
 }
