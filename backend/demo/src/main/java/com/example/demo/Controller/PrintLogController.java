@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,8 +109,12 @@ public class PrintLogController
     {
         PrintLog printRequest = printLogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Print Request not exist with id :" + id));
-        if(updateRequest.getStatus() != null)
+        if(updateRequest.getStatus() != null) {
             printRequest.setStatus(updateRequest.getStatus());
+            if (updateRequest.getStatus() == "Đã in xong") {
+                printRequest.setFinishedTime(LocalDateTime.now());
+            }
+        }
         if(updateRequest.getStartTime() != null)
             printRequest.setStartTime(updateRequest.getStartTime());
         if(updateRequest.getFinishedTime() != null)

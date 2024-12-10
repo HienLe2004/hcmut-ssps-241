@@ -34,10 +34,7 @@ export const WaitingDocsPage = () => {
             })
         }
         const filteredDocs = filterDocs(waitingDocs, filterStudents, filterPrinters);
-        console.log(filteredDocs)
         setFilteredWaitingDocs(filteredDocs)
-        console.log(selectedPrinters)
-        console.log(selectedStudents)
     }
     useEffect(() => {
         const fetchStudentData = async () => {

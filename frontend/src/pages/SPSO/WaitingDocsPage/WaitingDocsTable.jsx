@@ -12,7 +12,7 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
     const doneWaitingDoc = async () => {
         setDocs(docs.filter((doc) => doc.id != currentWaitingDoc.id))
         setFilteredDocs(filteredDocs.filter((doc) => doc.id != currentWaitingDoc.id))
-        const response = await updatePrintLogByID(currentWaitingDoc.id, {status: "Đã in xong"})
+        const response = await updatePrintLogByID(currentWaitingDoc.id, {status: "Đã in xong", finishedTime: new Date()})
         console.log(response)
     }
     const processFilePath = (filePath) => {
