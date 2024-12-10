@@ -2,7 +2,12 @@ package com.example.demo.Model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table (name = "report")
@@ -15,15 +20,17 @@ public class Report {
     @Column(name ="report_name")
     private String name;
 
+    @CreationTimestamp
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     @Column(name = "date")
-    private Date date;
+    private LocalDateTime date;
 
     @Column(name = "file_path")
     private String filePath;
 
     public Report(){}
 
-    public Report(long id, String name, Date date, String filePath) {
+    public Report(long id, String name, LocalDateTime date, String filePath) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -38,11 +45,11 @@ public class Report {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

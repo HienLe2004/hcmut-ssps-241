@@ -38,12 +38,11 @@ public class ReportController {
     }
 
     @PostMapping("/report")
-    public Report createReportByFile(@RequestParam("file") MultipartFile file,@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date){
+    public Report createReportByFile(@RequestParam("file") MultipartFile file){
         String filePath = fileService.saveReport(file);
         Report report = new Report();
         report.setName(file.getOriginalFilename());
 
-        report.setDate(date);
         report.setFilePath(filePath);
         return reportRepository.save(report);
     }

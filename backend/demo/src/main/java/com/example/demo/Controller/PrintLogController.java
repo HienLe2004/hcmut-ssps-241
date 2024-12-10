@@ -65,7 +65,7 @@ public class PrintLogController
     @GetMapping("/printLog/{id}/document")
     public ResponseEntity<Document> getDocument(@PathVariable long id){
         PrintLog printRequest = printLogRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Print Og not exist with id :" + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Print Log not exist with id :" + id));
         Document document = printRequest.getDocument() ;
         return ResponseEntity.ok(document);
     }

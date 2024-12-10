@@ -136,7 +136,7 @@ export const WaitingDocsPage = () => {
                     </button>
                 </div>
                 {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={waitingDocs} filteredWaitingDocs={filteredWaitingDocs}/>}
-                {filteredWaitingDocs.length === 0 && <p>Không tìm thấy</p>}
+                {filteredWaitingDocs.length === 0 && <p className="text-center">Không tìm thấy</p>}
             </div>
             <Footer />
         </div>
