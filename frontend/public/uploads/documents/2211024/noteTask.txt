@@ -1,0 +1,50 @@
+
+TRANG IN TÀI LIỆU
+
+GET: http://localhost:8080/api/v1/student/{student_id}/printLogs (OK)
+(Tài liệu chờ: Lọc status = Đang chờ)
+
+POST: http://localhost:8080/api/v1/printLog (CHƯA XONG) (TẠM OK)
+(GET để lấy lịch sử yêu cầu => POST => GET để lấy lịch sử mới)
+
+POST: http://localhost:8080/api/v1/printModification (OK)
+(Tạo đồng thời với printLog)
+
+GET: http://localhost:8080/api/v1/student/2211024 (OK)
+(Lấy thông tin sinh viên, số trang đang có)
+
+GET: http://localhost:8080/api/v1/printers (OK)
+(Thông tin máy in, nếu trạng thái đang tắt thì không hiển thị)
+
+GET: http://localhost:8080/api/v1/paperSetting (OK)
+(Setting: Số trang mặc định, file cho phép)
+
+TRANG LỊCH SỬ IN
+
+GET: http://localhost:8080/api/v1/student/{student_id}/printLogs (OK)
+(Lịch sử in: Lọc status != Đang chờ)
+
+TRANG MUA TRANG IN
+
+GET: http://localhost:8080/api/v1/student/2211024 (OK)
+(Lấy số trang hiện có)
+
+PUT: http://localhost:8080/api/v1/student/{id} (TEST SAU)
+(Cập nhật số trang A4 sau khi đã mua)
+
+GET: http://localhost:8080/api/v1/student/{id}/buyLogs (OK)
+(Lấy thông tin mua trang in của sinh viên)
+
+POST: http://localhost:8080/api/v1/buyLog (TEST SAU) (TẠM OK)
+(Thêm 1 lịch sử mua trang)
+
+TRANG THÔNG TIN SINH VIÊN
+
+GET: http://localhost:8080/api/v1/student/{id} (OK)
+
+_____________________________________________________________________________________
+
+IN TÀI LIỆU
+fetch printers => hiện ra thông tin
+
+

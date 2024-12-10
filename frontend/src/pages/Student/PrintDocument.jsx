@@ -11,7 +11,7 @@ export const PrintDocument = () => {
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState('');
 
-    const [pageSize, setPageSize] = useState();
+    const [pageSize, setPageSize] = useState('A3');
     const [pageSizeList, setPageSizeList] = useState([]);
 
     const [defaultPage, setDefaultPage] = useState(0);
@@ -26,7 +26,13 @@ export const PrintDocument = () => {
     const [printer, setPrinter] = useState([]);
     const [printerList, setPrinterList] = useState([]);
 
+    const [fileData, setFileData] = useState();
 
+    const [isTwoSide, setIsTwoSide] = useState(false);
+
+    const [printModi, setPrintModi] = useState();
+
+    const [numPageUsed, setNumPageUsed] = useState(0);
 
     const [requests, setRequests] = useState([]);
 
@@ -45,8 +51,6 @@ export const PrintDocument = () => {
             setFile(selectedFile);
             setFileName(selectedFile.name);
             fetchInfoFile(selectedFile);
-
-
         }
     }
 
@@ -64,7 +68,9 @@ export const PrintDocument = () => {
         else {
             // setCanSubmit(true);
             setConfirmPopup(true);
-
+            sendPrintModification();
+            fakeFunc();
+            setNumPageUsed(calculateNumPageUsed());
         }
     }
 
@@ -73,26 +79,36 @@ export const PrintDocument = () => {
 
     }
 
+    const sendPrintModification = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/api/v1/printModification',
+                {
+                    paperSize: pageSize,
+                    copies: numCopy,
+                    doubleSided: isTwoSide
+                }
+            );
+            // console.log("Đã gửi modification", response.data);
+            setPrintModi(response.data);
+        } catch (error) {
+            console.error("Error uploading modification:", error.message);
+        }
+    }
+
     const sendForm = () => {
         setConfirmPopup(false);
         setSuccessPopup(true);
-        const newRequest = {
-            fileName,
-            pageSize,
-            numCopy,
-            printer,
-            status: "Đang xử lí",
-            startTime: new Date().toLocaleString('vi-VN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-            }),
-            endTime: null
-        };
+
+        createPrintLog();
+        updateStudentBalance("2211024", remainPage - numPageUsed);
+        setRemainPage(remainPage - numPageUsed);
+        fakeFunc();
+        console.log("Check remaining page 1:", remainPage);
         handleRemoveFile();
-        setRequests([newRequest, ...requests]);
+    }
+
+    const fakeFunc = () => {
+        console.log("Fake hehehe");
     }
 
     const turnOffAddSuccess = () => {
@@ -109,26 +125,17 @@ export const PrintDocument = () => {
             formData.append("file", file); // Thêm file vào FormData với key là "file"
 
             try {
-                const response = await axios.post("http://localhost:8080/api/v1/document/1/2211024", formData, {
+                const response = await axios.post("http://localhost:8080/api/v1/document/2211024", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
                 });
-                console.log("Upload successful:", response.data);
+                // console.log("Upload successful:", response.data);
                 setNumPageDocument(response.data.numPages);
+                setFileData(response.data);
             } catch (error) {
                 console.error("Error uploading file:", error.message);
             }
-        }
-    }
-
-    const fetchInfoStudent = async (id) => {
-        try {
-            const response = await axios.get(`http://localhost:8080/api/v1/student/${id}`);
-            console.log("Fetch successful:", response.data);
-            setNumPageDocument(response.data.numPages);
-        } catch (error) {
-            console.error("Error uploading file:", error.message);
         }
     }
 
@@ -140,14 +147,58 @@ export const PrintDocument = () => {
                     "Content-Type": "application/json", // Đảm bảo header đúng
                 },
             });
-            console.log("Update successful:", response.data);
+            // console.log("Update successful:", response.data);
         } catch (error) {
             console.error("Error updating student balance:", error.message);
         }
     };
 
-    updateStudentBalance("2211024", 80);
+    // updateStudentBalance("2211024", 80);
     // fetchInfoStudent("2211024");
+
+    const formatDateTime = (date) => {
+        if (!date) return "null";
+        return date.toLocaleString("vi-VN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            // second: "2-digit",
+        });
+    };
+
+    const calculateNumPageUsed = () => {
+        var val = fileData.numPages * printModi.copies;
+        if (printModi.doubleSided === true) { val = val / 2; }
+        if (printModi.paperSize === "A3") { val = val * 2; }
+        else if (printModi.paperSize === "A5") { val = val / 2; }
+        return val;
+    }
+
+
+    const createPrintLog = async () => {
+        console.log("Check file data:", fileData);
+        console.log("Check print modification:", printModi);
+        const formData = {
+            status: "Đang xử lí",
+            startTime: formatDateTime(new Date),
+            finishedTime: null,
+            document: { id: fileData.id },
+            printModification: { id: printModi.id },
+            student: { id: fileData.student.id },
+            printer: { name: printer }
+        }
+
+
+        try {
+            const response = await axios.post('http://localhost:8080/api/v1/printLog', formData);
+            console.log("Gui printLog thanh cong", response.data);
+        } catch (error) {
+            console.error("Error posting printLog:", error.message);
+        }
+    }
+
 
     useEffect(() => {
 
@@ -155,7 +206,7 @@ export const PrintDocument = () => {
         const fetchPrinterList = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/v1/printers');
-                console.log("Check printer:", response.data);
+                // console.log("Check printer:", response.data);
                 const printers = response.data.map((pList) => {
 
                     return {
@@ -164,7 +215,7 @@ export const PrintDocument = () => {
                     };
                 });
                 setPrinterList([...printers, ...printerList]);
-                console.log("Hello printer", printers);
+                // console.log("Hello printer", printers);
             } catch (error) {
                 console.error("Error fetching printer list:", error.message);
             }
@@ -179,7 +230,7 @@ export const PrintDocument = () => {
         const fetchPrinterSetting = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/api/v1/paperSetting');
-                console.log("Check printer setting:", response.data);
+                // console.log("Check printer setting:", response.data);
 
                 const validType = response.data.validFileType;
                 const numDefaultPage = response.data.numPage;
@@ -189,16 +240,16 @@ export const PrintDocument = () => {
                 setDefaultPage(numDefaultPage);
                 setPageSizeList(paperSize.split(",").map(item => item.trim()));
 
-                console.log("Check valid type", validType);
-                console.log("Check defaultpage", defaultPage);
-                console.log("Check paperSize:", pageSizeList);
+                // console.log("Check valid type", validType);
+                // console.log("Check defaultpage", defaultPage);
+                // console.log("Check paperSize:", pageSizeList);
 
 
             } catch (error) {
                 console.error("Error fetching printer list:", error.message);
             }
         };
-        console.log("Check default 123:", defaultPage);
+        // console.log("Check default 123:", defaultPage);
         // Lấy các print log
         const fetchPrintLog = async () => {
             try {
@@ -235,9 +286,23 @@ export const PrintDocument = () => {
             }
         };
 
+        // Lấy thống tin sinh viên
+
+        const fetchInfoStudent = async (id) => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/v1/student/${id}`);
+                // console.log("Fetch successful:", response.data);
+                setRemainPage(response.data.balance);
+                fakeFunc();
+                console.log("Remain page:",remainPage);
+            } catch (error) {
+                console.error("Error fetching student:", error.message);
+            }
+        }
 
         fetchPrinterSetting();
         fetchPrintLog();
+        fetchInfoStudent("2211024");
     }, []);
 
 
@@ -314,21 +379,19 @@ export const PrintDocument = () => {
 
                         {/* Số trang còn lại */}
                         <div className="flex flex-row items-center p-2 text-white text-2xl">
-                            <label className=" mr-6">Số trang còn lại: </label>
-                            <div>{defaultPage}</div>
+                            <label className=" mr-6">Số trang A4 còn lại: </label>
+                            <div>{remainPage}</div>
                         </div>
 
                         {/* In 2 mặt */}
                         <div className="flex flex-row items-center p-2">
                             <label className="text-white text-2xl mr-6">In 2 mặt giấy</label>
                             <input type="checkbox"
-                                value={numCopy}
-                                onChange={(event) => setNumCopy(event.target.value)}
-                                min="1"
+                                onChange={(event) => { setIsTwoSide(event.target.checked) }}
+
                                 className="w-8 h-8"
                             />
                         </div>
-
 
                         {/* Máy in */}
                         <div className="flex flex-row items-center p-2">
@@ -387,7 +450,7 @@ export const PrintDocument = () => {
                                     <td className="p-6 border-2 border-blue-4">{request.printer}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.status}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.startTime}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.endTime || "null"}</td>
+                                    <td className="p-6 border-2 border-blue-4">{request.endTime || null}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -401,7 +464,7 @@ export const PrintDocument = () => {
                     onConfirm={sendForm}
                     message={
                         <>
-                            <p>Yêu cầu này cần sử dụng {numCopy} tờ {pageSize}.</p>
+                            <p>Yêu cầu này cần sử dụng {numPageUsed} tờ {pageSize}.</p>
                             <p>Bạn có chắc chắn yêu cầu này không?</p>
                         </>
                     }
