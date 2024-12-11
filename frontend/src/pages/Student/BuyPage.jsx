@@ -1,7 +1,7 @@
 import { StudentHeader } from "../../components/StudentHeader";
 import { Footer } from "../../components/footer";
 import { AddSuccess } from "./AddSuccess";
-import { AlertAddFile } from "./Alert";
+import { Alert } from "./Alert";
 import { Confirm } from "./Confirm";
 import avatar from '../../images/VitaminMeo.jpg'
 
@@ -57,7 +57,7 @@ export const BuyPage = () => {
         setSuccessPopup(false);
     }
 
-    const turnOffAlertAddFile = () => {
+    const turnOffAlert = () => {
         setAlertPopup(false);
     }
 
@@ -248,7 +248,7 @@ export const BuyPage = () => {
             )}
 
             {alertPopup && (
-                <AlertAddFile onClose={turnOffAlertAddFile} message={"Bạn hãy chọn số trang cần mua!"} />
+                <Alert onClose={turnOffAlert} message={"Bạn hãy chọn số trang cần mua!"} />
             )}
             <Footer />
         </div>

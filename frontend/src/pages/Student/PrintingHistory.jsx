@@ -1,6 +1,7 @@
 import { StudentHeader } from "../../components/StudentHeader";
 import { Footer } from "../../components/footer";
 import avatar from '../../images/VitaminMeo.jpg'
+import { parse, format } from "date-fns";
 import axios from 'axios';
 
 import { useEffect, useState } from "react";
@@ -11,32 +12,26 @@ export const PrintingHistory = () => {
 
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const [history, setHistory] = useState([
-        { fileName: "Hello.docx", pageSize: "A4", numCopy: 5, printer: "H1-101-1", status: "Đã in xong", startTime: "2024-11-24T09:30", endTime: "2024-11-24T10:15" },
-        { fileName: "NguyenQuocDat.pdf", pageSize: "A3", numCopy: 10, printer: "H2-102-1", status: "Đã in xong", startTime: "2024-11-15T15:30", endTime: "2024-11-15T16:00" },
-        { fileName: "Hello2.png", pageSize: "A4", numCopy: 3, printer: "H1-101-1", status: "Đã bị hủy", startTime: "2024-10-29T12:00", endTime: "2024-10-29T13:00" },
-        { fileName: "Hello3.docx", pageSize: "A3", numCopy: 5, printer: "H2-102-1", status: "Đã in xong", startTime: "2024-11-01T00:00", endTime: "2024-11-01T10:15" },
 
-    ]);
+    const [history, setHistory] = useState([]);
 
     const [filteredDate, setFilteredDate] = useState(history);
     const [totalA3page, setTotalA3page] = useState(0);
     const [totalA4page, setTotalA4page] = useState(0);
 
 
-    const normalizeDate = (date) => {
-        
-    };
-
     const searchDate = () => {
         if (startDate && endDate) {
-
+            
             const start = new Date(startDate).setHours(0, 0, 0, 0);
-            const end = new Date(endDate).setHours(0, 0, 0, 0);
+            const end = new Date(endDate).setHours(23, 59, 59, 99);
+            
+            console.log("Check start", start);
+            console.log("Check end", end);
 
             const filtered = history.filter((choice) => {
-                const comparedTime = new Date(choice.startTime).setHours(0, 0, 0, 0);
-
+                const comparedTime = parse(choice.startTime, "HH:mm dd/MM/yyyy", new Date());
+                console.log("Check compare time", choice.startTime, comparedTime);
                 return comparedTime >= start && comparedTime <= end;
             })
             setFilteredDate(filtered);
@@ -58,30 +53,58 @@ export const PrintingHistory = () => {
         });
     };
 
-    useEffect(() => {
-        const calculatedA3 = filteredDate.reduce((sum, choice) => {
-            return (choice.pageSize === "A3" && choice.status === "Đã in xong") ? sum + choice.numCopy : sum;
-        }, 0);
-        const calculatedA4 = filteredDate.reduce((sum, choice) => {
-            return (choice.pageSize === "A4" && choice.status === "Đã in xong") ? sum + choice.numCopy : sum;
-        }, 0);
+    // useEffect(() => {
+    //     const calculatedA3 = filteredDate.reduce((sum, choice) => {
+    //         return (choice.pageSize === "A3" && choice.status === "Đã in xong") ? sum + choice.numCopy : sum;
+    //     }, 0);
+    //     const calculatedA4 = filteredDate.reduce((sum, choice) => {
+    //         return (choice.pageSize === "A4" && choice.status === "Đã in xong") ? sum + choice.numCopy : sum;
+    //     }, 0);
 
-        const fetchStudentPrintLog = async (studentId) => {
-            try{
-                const response = await axios.get(`http://localhost:8080/api/v1/student/${studentId}/printLogs`);
-                setHistory(response.data);
-                console.log(response.data);
+    //     setTotalA3page(calculatedA3);
+    //     setTotalA4page(calculatedA4);
+
+
+    // }, [filteredDate]);
+
+    useEffect(() => {
+        setFilteredDate(history);
+    }, [history])
+
+
+    useEffect(() => {
+        const fetchPrintLog = async () => {
+            try {
+                const student_id = 2211024;
+                const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
+                // console.log("Check print log:", response.data);
+
+                // Tạo mảng tạm để lưu kết quả
+                const newRequests = response.data.map((logs) => {
+
+                    return {
+                        fileName: logs.document.fileName,
+                        pageSize: logs.printModification.paperSize,
+                        numCopy: logs.printModification.copies,
+                        printer: logs.printer.name,
+                        status: logs.status,
+                        startTime: logs.startTime,
+                        endTime: logs.finishedTime,
+                    };
+                });
+
+                // Cập nhật trạng thái một lần
+                console.log("Fetch gòi nè chaaaa:", newRequests);
+                setHistory(newRequests);
+                setFilteredDate(history);
+                console.log("Check history:", history);
+            } catch (error) {
+                console.error("Error fetching printer list:", error.message);
             }
-            catch (error){
-                console.log("Không lấy được printLog của SV", error);
-            }
-        }
-        
-        setTotalA3page(calculatedA3);
-        setTotalA4page(calculatedA4);
-        fetchStudentPrintLog("2210694")
-        
-    }, [filteredDate]);
+        };
+
+        fetchPrintLog();
+    }, [])
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -131,7 +154,7 @@ export const PrintingHistory = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filteredDate.map((hist, index) => (
+                            {filteredDate.filter((hist) => hist.status === "Đã in xong").map((hist, index) => (
                                 <tr key={index}
                                     className="border border-blue-4 text-white font-light text-center text-lg">
                                     <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{hist.fileName}</td>
@@ -139,8 +162,8 @@ export const PrintingHistory = () => {
                                     <td className="p-6 border-2 border-blue-4">{hist.numCopy}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.printer}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.status}</td>
-                                    <td className="p-6 border-2 border-blue-4">{formatDateTime(new Date(hist.startTime))}</td>
-                                    <td className="p-6 border-2 border-blue-4">{formatDateTime(new Date(hist.endTime))}</td>
+                                    <td className="p-6 border-2 border-blue-4">{hist.startTime}</td>
+                                    <td className="p-6 border-2 border-blue-4">{hist.endTime || null}</td>
                                 </tr>
                             ))}
                         </tbody>
