@@ -9,10 +9,20 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
     const [currentWaitingDoc, setCurrentWaitingDoc] = useState();
     const [docs,setDocs] = useState(waitingDocs);
     const [filteredDocs, setFilteredDocs] = useState(filteredWaitingDocs);
+    const formatDateTime = (date) => {
+        if (!date) return "null";
+        return date.toLocaleString("vi-VN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
     const doneWaitingDoc = async () => {
         setDocs(docs.filter((doc) => doc.id != currentWaitingDoc.id))
         setFilteredDocs(filteredDocs.filter((doc) => doc.id != currentWaitingDoc.id))
-        const response = await updatePrintLogByID(currentWaitingDoc.id, {status: "Đã in xong", finishedTime: new Date()})
+        const response = await updatePrintLogByID(currentWaitingDoc.id, {status: "Đã in xong", finishedTime: formatDateTime(new Date)})
         console.log(response)
     }
     const processFilePath = (filePath) => {
