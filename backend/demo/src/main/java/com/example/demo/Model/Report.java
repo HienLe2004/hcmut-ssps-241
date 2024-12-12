@@ -20,10 +20,23 @@ public class Report {
     @Column(name ="report_name")
     private String name;
 
+    @Column(name ="is_month")
+    private Boolean isMonth;
+
     @CreationTimestamp
     @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
     @Column(name = "date")
     private LocalDateTime date;
+
+    @CreationTimestamp
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
+
+    @CreationTimestamp
+    @JsonFormat(pattern = "HH:mm dd/MM/yyyy")
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
 
     @Column(name = "file_path")
     private String filePath;
@@ -67,5 +80,29 @@ public class Report {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    public Boolean isMonth() {
+        return isMonth;
+    }
+
+    public void setMonth(Boolean month) {
+        isMonth = month;
     }
 }

@@ -53,54 +53,20 @@ public class ReportController {
         return ResponseEntity.ok(report);
     }
 
-    @GetMapping("/report/export")
-    public ResponseEntity<byte[]> exportExcel(@RequestParam("startDate") @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy") LocalDateTime startDate,
-                                              @RequestParam("endDate") @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy") LocalDateTime endDate,
-                                              @RequestParam("isMonth") Boolean isMonth) throws IOException {
-
-        byte[] excelFile = reportService.generateExcelReport(startDate, endDate, isMonth);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDisposition(ContentDisposition.attachment().filename("bao_cao.xlsx").build());
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(excelFile);
-    }
-
     @PostMapping("/report")
-    public Report createReportByFile(@RequestParam("file") MultipartFile file){
-        String filePath = fileService.saveReport(file);
-        Report report = new Report();
-        report.setName(file.getOriginalFilename());
+    public Report exportExcel(@RequestBody Report reportDetail) throws IOException {
 
-        report.setFilePath(filePath);
+        Report report = reportService.generateExcelReport(reportDetail.getStartDate(), reportDetail.getEndDate(), reportDetail.isMonth());
+        report.setId(reportDetail.getId());
         return reportRepository.save(report);
     }
 
-    @PutMapping("/report/{id}")
-    public ResponseEntity<Report> updateReport(@PathVariable long id, @RequestBody Report reportInfo) {
-        Report report = reportRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Report not exist with id :" + id));
-
-        if(reportInfo.getDate() != null) {
-            report.setDate(reportInfo.getDate());
-        }
-
-        if(reportInfo.getName() != null)
-        {
-            report.setName(reportInfo.getName());
-        }
-
-        Report updatedReport = reportRepository.save(report);
-        return ResponseEntity.ok(updatedReport);
-    }
 
     @DeleteMapping("/report/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteReportByID(@PathVariable long id){
         Report report = reportRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Report not exist with id :" + id));
-        fileService.deleteFile(report.getFilePath());
+        //fileService.deleteFile(report.getFilePath());
         reportRepository.deleteById(id);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted report with id " + id, Boolean.TRUE);
@@ -109,7 +75,7 @@ public class ReportController {
 
     @DeleteMapping("/reports")
     public ResponseEntity<Map<String, Boolean>> deleteAllReports(){
-        fileService.deleteAllFile("/reports");
+        //fileService.deleteAllFile("/reports");
         reportRepository.deleteAll();
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted all", Boolean.TRUE);

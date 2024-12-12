@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Model.PrintLog;
+import com.example.demo.Model.Report;
 import com.example.demo.Repository.PrintLogRepository;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -8,8 +9,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
+
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -25,13 +30,15 @@ public class ReportService {
     @Autowired
     private final PrintLogRepository printLogRepository;
 
+    FileService fileService = new FileService();
+
 
     // Constructor Injection
     public ReportService(PrintLogRepository printLogRepository) {
         this.printLogRepository = printLogRepository;
     }
 
-    public byte[] generateExcelReport(LocalDateTime startDate, LocalDateTime endDate, boolean isMonth) throws IOException {
+    public Report generateExcelReport(LocalDateTime startDate, LocalDateTime endDate, Boolean isMonth) throws IOException {
         // Tạo workbook và sheet
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet;
@@ -105,9 +112,29 @@ public class ReportService {
         //workbook.write(outputStreamFile);
 
         // Lưu file vào ByteArrayOutputStream
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        workbook.write(outputStream);
+        // Tạo file Excel với tên báo cáo
+        // Lưu workbook vào byte array
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        workbook.write(byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+        // Đóng workbook
         workbook.close();
-        return outputStream.toByteArray();
+
+        // Tạo MultipartFile từ byte array
+        String fileName = (isMonth ? "Báo_cáo_tháng_" : "Báo_cáo_năm_") +
+                (isMonth ? startDate.getMonthValue() : startDate.getYear()) + ".xlsx";
+        MultipartFile multipartFile = new MockMultipartFile("file", fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", byteArray);
+
+        String filepath = fileService.saveReport(multipartFile);
+
+        Report report = new Report();
+        report.setName(fileName);
+        report.setFilePath(filepath);
+        report.setEndDate(endDate);
+        report.setStartDate(startDate);
+        report.setDate(LocalDateTime.now());
+        report.setMonth(isMonth);
+        return report;
     }
 }
