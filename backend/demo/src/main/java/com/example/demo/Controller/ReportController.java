@@ -4,13 +4,23 @@ import com.example.demo.Exception.ResourceNotFoundException;
 import com.example.demo.Model.Report;
 import com.example.demo.Repository.ReportRepository;
 import com.example.demo.Service.FileService;
+
+import com.example.demo.Service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +32,12 @@ import java.util.Map;
 public class ReportController {
     @Autowired
     private ReportRepository reportRepository;
+
+    private final ReportService reportService;
+
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
+    }
 
     private FileService fileService = new FileService();
 
@@ -35,6 +51,21 @@ public class ReportController {
         Report report = reportRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("report not exist with id :" + id));
         return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/report/export")
+    public ResponseEntity<byte[]> exportExcel(@RequestParam("startDate") @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy") LocalDateTime startDate,
+                                              @RequestParam("endDate") @DateTimeFormat(pattern = "HH:mm dd/MM/yyyy") LocalDateTime endDate,
+                                              @RequestParam("isMonth") Boolean isMonth) throws IOException {
+
+        byte[] excelFile = reportService.generateExcelReport(startDate, endDate, isMonth);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDisposition(ContentDisposition.attachment().filename("bao_cao.xlsx").build());
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelFile);
     }
 
     @PostMapping("/report")
