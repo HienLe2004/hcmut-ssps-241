@@ -4,9 +4,12 @@ import { AddSuccess } from "./AddSuccess";
 import { Alert } from "./Alert";
 import { Confirm } from "./Confirm";
 import avatar from '../../images/VitaminMeo.jpg'
+import { format, parseISO } from "date-fns";
+import axios from "axios";
 
 
 import { useEffect, useState } from "react";
+
 
 export const BuyPage = () => {
 
@@ -15,11 +18,11 @@ export const BuyPage = () => {
 
     const [isSearched, setIsSearch] = useState(false);
 
-    const [numA4page, setNumA4page] = useState(0);
-    const [numA3page, setNumA3page] = useState(0);
+    const [remainPage, setRemainPage] = useState(0);
 
-    const [numA4buy, setNumA4buy] = useState(0);
-    const [numA3buy, setNumA3buy] = useState(0);
+    const [numPageBuy, setNumPageBuy] = useState(0);
+    const [pageSize, setPageSize] = useState("");
+
     const [total, setTotal] = useState(0);
 
     const [confirmPopup, setConfirmPopup] = useState(false);
@@ -27,20 +30,20 @@ export const BuyPage = () => {
     const [alertPopup, setAlertPopup] = useState(false);
 
 
-    const [buyHistory, setBuyHistory] = useState([
-        { numA3buy: 1, numA4buy: 2, total: 1000, buyTime: new Date("2024-11-24T09:30") },
-        { numA3buy: 1, numA4buy: 2, total: 1000, buyTime: new Date("2024-11-23T09:30") },
-        { numA3buy: 1, numA4buy: 2, total: 1000, buyTime: new Date("2024-11-22T09:30") },
-        { numA3buy: 1, numA4buy: 2, total: 1000, buyTime: new Date("2024-11-21T09:30") },
-        { numA3buy: 1, numA4buy: 2, total: 1000, buyTime: new Date("2024-11-20T09:30") },
-    ]);
+    const [buyHistory, setBuyHistory] = useState([]);
 
     const [filteredDate, setFilteredDate] = useState(buyHistory);
 
+    const totalPrice = () => {
+        if (pageSize === "A3") { return numPageBuy * 1000 }
+        else if (pageSize === "A4") { return numPageBuy * 500 }
+        else { return numPageBuy * 250 }
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        setTotal(numA4buy * 500 + numA3buy * 1000);
-        if (!numA3buy && !numA4buy) {
+        setTotal(totalPrice());
+        if (!numPageBuy) {
             setAlertPopup(true);
         }
         else {
@@ -61,37 +64,84 @@ export const BuyPage = () => {
         setAlertPopup(false);
     }
 
+    const postBuyLog = async (idStu) => {
+        const buyLog = {
+            paperSize: pageSize,
+            boughtPageNum: numPageBuy,
+            price: total,
+            paymentTime: new Date,
+            student: { id: idStu }
+        }
+        try {
+            const response = await axios.post('http://localhost:8080/api/v1/buyLog', buyLog);
+        } catch (error) {
+
+        }
+    }
     const sendForm = () => {
         setConfirmPopup(false);
         setSuccessPopup(true);
-        setNumA3page(numA3page + numA3buy);
-        setNumA4page(numA4page + numA4buy);
-        setNumA3buy(0);
-        setNumA4buy(0);
+        setRemainPage(remainPage + numPageBuy);
         const newBuy = {
-            numA4buy,
-            numA3buy,
+            numPageBuy,
+            pageSize,
             total,
-            buyTime: new Date()
-            //     .toLocaleString('vi-VN', {
-            //         year: 'numeric',
-            //         month: '2-digit',
-            //         day: '2-digit',
-            //         hour: '2-digit',
-            //         minute: '2-digit',
-            //     }
-            // ),
+            buyTime: new Date
         };
+        postBuyLog("2211024");
         setBuyHistory([newBuy, ...buyHistory]);
         setFilteredDate(buyHistory);
 
     }
 
+    useEffect(() => {
+        const fetchInfoStudent = async (id) => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/v1/student/${id}`);
+
+                setRemainPage(response.data.balance);
+                console.log("Check fetch student", response.data.balance);
+
+                console.log("Remain page:", remainPage);
+            } catch (error) {
+                console.error("Error fetching student:", error.message);
+            }
+        }
+
+        const fetchBuyLog = async (id) => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/v1/student/${id}/buyLogs`);
+
+                const data = response.data;
+
+                const newBuyLog = data.map((logs) => {
+
+                    return {
+                        numPageBuy: logs.boughtPageNum,
+                        pageSize: logs.paperSize,
+                        total: logs.price,
+                        buyTime: logs.paymentTime
+                    };
+                });
+
+                // Cập nhật trạng thái một lần
+                setBuyHistory(newBuyLog);
+                console.log("Check buy log:", newBuyLog)
+            } catch (error) {
+                console.error("Error fetching buy log:", error.message);
+            }
+        }
+
+        fetchInfoStudent("2211024");
+        fetchBuyLog("2211024");
+
+    }, [])
+
     const searchDate = () => {
         if (startDate && endDate) {
 
             const start = new Date(startDate).setHours(0, 0, 0, 0);
-            const end = new Date(endDate).setHours(0, 0, 0, 0);
+            const end = new Date(endDate).setHours(23, 59, 59, 99);
 
             const filtered = buyHistory.filter((choice) => {
                 const comparedTime = new Date(choice.buyTime).setHours(0, 0, 0, 0);
@@ -115,9 +165,26 @@ export const BuyPage = () => {
             day: "2-digit",
             hour: "2-digit",
             minute: "2-digit",
-            // second: "2-digit",
+
         });
     };
+
+    useEffect(() => {
+        const updateStudentBalance = async (id, numPage) => {
+            try {
+
+                const response = await axios.put(`http://localhost:8080/api/v1/student/${id}`,
+                    {
+                        balance: numPage
+                    }
+                );
+            } catch (error) {
+                console.error("Error updating student balance:", error.message);
+            }
+        };
+
+        updateStudentBalance("2211024", remainPage);
+    }, [remainPage])
 
 
     return (
@@ -130,29 +197,34 @@ export const BuyPage = () => {
                     className="flex flex-col w-[40%]  bg-blue-2 rounded-md m-5  text-white text-xl font-normal "
 
                 >
-                    <p className="m-5">Số trang A3 hiện có: {numA3page}</p>
+                    <p className="m-5">Số trang hiện có: {remainPage}</p>
                     <div className="flex flex-row m-5">
-                        <label className="text-white mr-6">Số trang A3 mua thêm</label>
+                        <label className="text-white mr-5">Số trang mua thêm:</label>
                         <input type="number"
-                            value={numA3buy}
-                            onChange={(event) => setNumA3buy(parseInt(event.target.value))}
+                            value={numPageBuy}
+                            onChange={(event) => setNumPageBuy(parseInt(event.target.value))}
                             min="0"
                             className="border-2 border-blue-4 rounded-lg h-9 w-16 bg-blue-2 text-center text-lg text-white -translate-y-1"
                         />
                     </div>
 
-                    <p className="m-5">Số trang A4 hiện có: {numA4page}</p>
                     <div className="flex flex-row m-5">
-                        <label className="text-white mr-6">Số trang A4 mua thêm</label>
-                        <input type="number"
-                            value={numA4buy}
-                            onChange={(event) => setNumA4buy(parseInt(event.target.value))}
-                            min="0"
-                            className="border-2 border-blue-4 rounded-lg h-9 w-16 bg-blue-2 text-center text-lg text-white -translate-y-1"
-                        />
+                        <label className="text-white mr-6">Kích cỡ trang:</label>
+                        <select value={pageSize}
+                            onChange={(event) => setPageSize(event.target.value)}
+                            className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
+                        >
+
+                            {/* {pageSizeList.map((size, index) => (
+                                    <option value={size} key={index}>
+                                        {size}
+                                    </option>
+                                ))} */}
+                            <option value="A3">A3</option>
+                            <option value="A4">A4</option>
+                            <option value="A5">A5</option>
+                        </select>
                     </div>
-
-
                     <button type="submit"
                         className=" w-[150px] self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-blue-5 duration-200"
                     >
@@ -191,8 +263,8 @@ export const BuyPage = () => {
                     <table className="w-full bg-blue-2 border-2 border-blue-4 rounded-none">
                         <thead>
                             <tr className="text-black text-xl">
-                                <th className="border-2 border-blue-4 p-4 w-[20%] ">Số trang A3 đã mua</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số trang A4 đã mua</th>
+                                <th className="border-2 border-blue-4 p-4 w-[20%] ">Số trang đã mua</th>
+                                <th className="border-2 border-blue-4 p-4 ">Kích cỡ trang</th>
                                 <th className="border-2 border-blue-4 p-4 ">Giá tiền (VNĐ)</th>
                                 <th className="border-2 border-blue-4 p-4 ">Thời gian thanh toán</th>
 
@@ -201,11 +273,12 @@ export const BuyPage = () => {
                         <tbody>
                             {!isSearched &&
                                 (buyHistory.map((hist, index) => (
+
                                     <tr key={index}
                                         className="border border-blue-4 text-white font-light text-center text-lg">
-                                        {/* <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{hist.fileName}</td> */}
-                                        <td className="p-6 border-2 border-blue-4">{hist.numA3buy}</td>
-                                        <td className="p-6 border-2 border-blue-4">{hist.numA4buy}</td>
+
+                                        <td className="p-6 border-2 border-blue-4">{hist.numPageBuy}</td>
+                                        <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.total}</td>
                                         <td className="p-6 border-2 border-blue-4">{formatDateTime(hist.buyTime)}</td>
 
@@ -216,9 +289,9 @@ export const BuyPage = () => {
                                 (filteredDate.map((hist, index) => (
                                     <tr key={index}
                                         className="border border-blue-4 text-white font-light text-center text-lg">
-                                        {/* <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{hist.fileName}</td> */}
-                                        <td className="p-6 border-2 border-blue-4">{hist.numA3buy}</td>
-                                        <td className="p-6 border-2 border-blue-4">{hist.numA4buy}</td>
+
+                                        <td className="p-6 border-2 border-blue-4">{hist.numPageBuy}</td>
+                                        <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.total}</td>
                                         <td className="p-6 border-2 border-blue-4">{formatDateTime(hist.buyTime)}</td>
 
@@ -235,9 +308,7 @@ export const BuyPage = () => {
                     onConfirm={sendForm}
                     message={
                         <>
-                            {numA3buy > 0 && numA4buy > 0 && (<p>Bạn có đồng ý mua {numA3buy} trang A3 và {numA4buy} trang A4 với giá {total} VNĐ không ? </p>)}
-                            {numA3buy > 0 && numA4buy == 0 && (<p>Bạn có đồng ý mua {numA3buy} trang A3 với giá {total} VNĐ không ? </p>)}
-                            {numA4buy > 0 && numA3buy == 0 && (<p>Bạn có đồng ý mua {numA4buy} trang A4 với giá {total} VNĐ không ? </p>)}
+                            Bạn có đồng ý mua {numPageBuy} trang {pageSize} với giá {total} VNĐ không?
                         </>
                     }
                 />
