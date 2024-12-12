@@ -43,19 +43,19 @@ public class ReportService {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
+        Month month = startDate.getMonth();
+        int monthValue = month.getValue();
+        Year year = Year.of(startDate.getYear());
+        int yearValue = year.getValue();
         if(isMonth) {
-            Month month = startDate.getMonth();
-            int monthValue = month.getValue();
-            sheet = workbook.createSheet("Báo cáo tháng "+monthValue);
+            sheet = workbook.createSheet("Báo cáo tháng "+monthValue + " năm " + year);
             Row headerRow = sheet.createRow(0);
-            headerRow.createCell(0).setCellValue("Báo cáo tháng " + monthValue);
+            headerRow.createCell(0).setCellValue("Báo cáo tháng " + monthValue + " năm "+ year);
             headerRow.createCell(1).setCellValue("Từ ngày: "+ startDate);
             headerRow.createCell(2).setCellValue("Đến ngày:" + endDate);
         }
         else
         {
-            Year year = Year.of(startDate.getYear());
-            int yearValue = year.getValue();
             sheet = workbook.createSheet("Báo cáo năm " + yearValue);
             Row headerRow = sheet.createRow(0);
             headerRow.createCell(0).setCellValue("Báo cáo năm "+yearValue);
@@ -67,8 +67,6 @@ public class ReportService {
 
         // Điền dữ liệu vào các row
         int rowIndex = 1;
-        Month month = startDate.getMonth();
-        int monthValue = month.getValue();
         Row dataRow = sheet.createRow(rowIndex++);
         dataRow.createCell(0).setCellValue("Tháng: "+ monthValue);
         dataRow = sheet.createRow(rowIndex++);
@@ -122,8 +120,12 @@ public class ReportService {
         workbook.close();
 
         // Tạo MultipartFile từ byte array
-        String fileName = (isMonth ? "Báo_cáo_tháng_" : "Báo_cáo_năm_") +
-                (isMonth ? startDate.getMonthValue() : startDate.getYear()) + ".xlsx";
+        String fileName ="";
+        if(isMonth) {
+            fileName = "Báo_cáo_tháng_"+monthValue+"_năm_"+yearValue+".xlsx";
+        }
+        else fileName = "Báo_cáo_năm_"+yearValue+".xlsx";
+
         MultipartFile multipartFile = new MockMultipartFile("file", fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", byteArray);
 
         String filepath = fileService.saveReport(multipartFile);
