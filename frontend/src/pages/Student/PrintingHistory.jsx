@@ -2,6 +2,7 @@ import { StudentHeader } from "../../components/StudentHeader";
 import { Footer } from "../../components/footer";
 import avatar from '../../images/VitaminMeo.jpg'
 import { parse, format } from "date-fns";
+
 import axios from 'axios';
 
 import { useEffect, useState } from "react";
@@ -86,6 +87,8 @@ export const PrintingHistory = () => {
                         fileName: logs.document.fileName,
                         pageSize: logs.printModification.paperSize,
                         numCopy: logs.printModification.copies,
+                        numPageInFile: logs.document.numPages,
+                        doubleSide: logs.printModification.doubleSided,
                         printer: logs.printer.name,
                         status: logs.status,
                         startTime: logs.startTime,
@@ -147,6 +150,8 @@ export const PrintingHistory = () => {
                                 <th className="border-2 border-blue-4 p-4 w-[20%] ">Tên file</th>
                                 <th className="border-2 border-blue-4 p-4 ">Cỡ giấy</th>
                                 <th className="border-2 border-blue-4 p-4 ">Số bản</th>
+                                <th className="border-2 border-blue-4 p-4 ">Số trang của tài liệu</th>
+                                <th className="border-2 border-blue-4 p-4 ">Số mặt</th>
                                 <th className="border-2 border-blue-4 p-4 ">Máy in</th>
                                 <th className="border-2 border-blue-4 p-4 ">Trạng thái</th>
                                 <th className="border-2 border-blue-4 p-4 ">Thời gian bắt đầu</th>
@@ -160,6 +165,8 @@ export const PrintingHistory = () => {
                                     <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{hist.fileName}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.numCopy}</td>
+                                    <td className="p-6 border-2 border-blue-4">{hist.numPageInFile}</td>
+                                    <td className="p-6 border-2 border-blue-4">{hist.doubleSide === true ? 2 : 1}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.printer}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.status}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.startTime}</td>

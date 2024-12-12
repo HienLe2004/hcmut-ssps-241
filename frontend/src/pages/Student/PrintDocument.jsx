@@ -140,6 +140,7 @@ export const PrintDocument = () => {
         const formData = {
             status: "Đang xử lí",
             startTime: formatDateTime(new Date),
+            // startTime: new Date(),
             finishedTime: null,
             document: { id: fileData.id },
             printModification: { id: printModi.id },
@@ -153,6 +154,37 @@ export const PrintDocument = () => {
             console.error("Error posting printLog:", error.message);
         }
     }
+
+    // Lấy các print log
+    const fetchPrintLog = async () => {
+        try {
+            const student_id = 2211024;
+            const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
+            console.log("Check print log:", response.data);
+            const data = response.data;
+
+            // Tạo mảng tạm để lưu kết quả
+            const newRequests = data.map((logs) => {
+
+                return {
+                    fileName: logs.document.fileName,
+                    pageSize: logs.printModification.paperSize,
+                    numCopy: logs.printModification.copies,
+                    numPageInFile: logs.document.numPages,
+                    doubleSide: logs.printModification.doubleSided,
+                    printer: logs.printer.name,
+                    status: logs.status,
+                    startTime: logs.startTime,
+                    endTime: logs.finishedTime,
+                };
+            });
+
+            // Cập nhật trạng thái một lần
+            setRequests([...requests, ...newRequests]);
+        } catch (error) {
+            console.error("Error fetching printer list:", error.message);
+        }
+    };
 
 
 
@@ -237,34 +269,7 @@ export const PrintDocument = () => {
             }
         };
 
-        // Lấy các print log
-        const fetchPrintLog = async () => {
-            try {
-                const student_id = 2211024;
-                const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
-                console.log("Check print log:", response.data);
-                const data = response.data;
-
-                // Tạo mảng tạm để lưu kết quả
-                const newRequests = data.map((logs) => {
-
-                    return {
-                        fileName: logs.document.fileName,
-                        pageSize: logs.printModification.paperSize,
-                        numCopy: logs.printModification.copies,
-                        printer: logs.printer.name,
-                        status: logs.status,
-                        startTime: logs.startTime,
-                        endTime: logs.finishedTime,
-                    };
-                });
-
-                // Cập nhật trạng thái một lần
-                setRequests([...newRequests, ...requests]);
-            } catch (error) {
-                console.error("Error fetching printer list:", error.message);
-            }
-        };
+        
 
         // Lấy thống tin sinh viên
 
@@ -305,6 +310,10 @@ export const PrintDocument = () => {
         fetchPrintLog();
         fetchInfoStudent("2211024");
     }, []);
+
+    useEffect(() => {
+        fetchPrintLog();
+    }, [requests]);
 
 
     return (
@@ -435,6 +444,8 @@ export const PrintDocument = () => {
                                 <th className="border-2 border-blue-4 p-4 w-[20%] ">Tên file</th>
                                 <th className="border-2 border-blue-4 p-4 ">Cỡ giấy</th>
                                 <th className="border-2 border-blue-4 p-4 ">Số bản</th>
+                                <th className="border-2 border-blue-4 p-4 ">Số trang của tài liệu</th>
+                                <th className="border-2 border-blue-4 p-4 ">Số mặt</th>
                                 <th className="border-2 border-blue-4 p-4 ">Máy in</th>
                                 <th className="border-2 border-blue-4 p-4 ">Trạng thái</th>
                                 <th className="border-2 border-blue-4 p-4 ">Thời gian bắt đầu</th>
@@ -448,6 +459,8 @@ export const PrintDocument = () => {
                                     <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{request.fileName}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.pageSize}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.numCopy}</td>
+                                    <td className="p-6 border-2 border-blue-4">{request.numPageInFile}</td>
+                                    <td className="p-6 border-2 border-blue-4">{request.doubleSide === true ? 2 : 1}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.printer}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.status}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.startTime}</td>
