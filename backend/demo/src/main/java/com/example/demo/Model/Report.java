@@ -28,7 +28,6 @@ public class Report {
     @Column(name = "file_path")
     private String filePath;
 
-
     public Report(){}
 
     public Report(long id, String name, LocalDateTime date, String filePath) {

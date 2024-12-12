@@ -45,9 +45,6 @@ public class PrintModification {
         return doubleSided;
     }
 
-    public PrintRequest getPrintRequest() {
-        return printRequest;
-    }
 
     //setter
 
@@ -67,12 +64,5 @@ public class PrintModification {
         this.doubleSided = doubleSided;
     }
 
-    public void setPrintRequest(PrintRequest printRequest) {
-        this.printRequest = printRequest;
-    }
 
-    //anh xa nguoc den Print Request
-    //khong phai khoa ngoai
-    @OneToOne(mappedBy = "printModification")
-    private PrintRequest printRequest;
 }

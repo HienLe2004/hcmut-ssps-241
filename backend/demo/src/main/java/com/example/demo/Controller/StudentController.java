@@ -1,7 +1,10 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Document;
-import com.example.demo.Model.PrintRequest;
+import com.example.demo.Model.Login;
+import com.example.demo.Model.PrintLog;
+import com.example.demo.Model.SPSO;
+import com.example.demo.Repository.LoginRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,9 @@ public class StudentController {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private LoginRepository loginRepository;
+
     //get all student
     @GetMapping("/students")
     public List<Student> getAllStudent(){
@@ -36,20 +42,21 @@ public class StudentController {
     }
 
     //get all document of student by student id
-    @GetMapping("/{id}/documents")
+    /*@GetMapping("/{id}/documents")
     public List<Document> getDocumentById(@PathVariable Long id){
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
         return student.getDocuments();
-    }
+    }*/
 
-    //get all print request of student by student id
-    @GetMapping("/{id}/printRequests")
-    public List<PrintRequest> getPrintRequestById(@PathVariable Long id){
+
+    @GetMapping("/student/{id}/login")
+    public Login getLogin(@PathVariable long id){
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        return student.getPrintRequests();
+        return student.getLogin();
     }
+
 
     //create a student
     @PostMapping("/student")
@@ -62,7 +69,7 @@ public class StudentController {
     public ResponseEntity<Student> updateStudent(@PathVariable long id, @RequestBody Student studentInfo) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not exist with id :" + id));
-        if( String.valueOf(studentInfo.getBalance())  != null) {
+        if( studentInfo.getBalance()  != 0) {
             student.setBalance(studentInfo.getBalance());
         }
         if (studentInfo.getDoB() != null) {
@@ -76,6 +83,13 @@ public class StudentController {
         }
         if(studentInfo.getName() != null) {
             student.setName(studentInfo.getName());
+        }
+        if(studentInfo.getLogin() != null)
+        {
+            Login login = loginRepository.findById(studentInfo.getLogin().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Login not exist with id :" + studentInfo.getLogin().getId()));
+            student.setLogin(login);
+
         }
         Student updatedStudent = studentRepository.save(student);
         return ResponseEntity.ok(updatedStudent);

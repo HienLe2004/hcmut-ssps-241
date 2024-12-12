@@ -1,5 +1,5 @@
 package com.example.demo.Model;
-import com.example.demo.Model.PrintRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -27,11 +27,9 @@ public class Student {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "student", orphanRemoval = true)
-    private List<PrintRequest> printRequests;
-
-    @OneToMany(mappedBy = "student", orphanRemoval = true)
-    private List<Document> documents;
+    @OneToOne
+    @JoinColumn(name ="login_id")
+    private Login login;
 
     public Student() {
     }
@@ -43,6 +41,16 @@ public class Student {
         this.phoneNum = pnum;
         this.doB = dob;
         this.email = email;
+    }
+
+    public Student(long id, String name, int balance, String phoneNum, Date doB, String email, Login login) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+        this.phoneNum = phoneNum;
+        this.doB = doB;
+        this.email = email;
+        this.login = login;
     }
 
     //getter
@@ -70,15 +78,11 @@ public class Student {
         return name;
     }
 
-    public List<PrintRequest> getPrintRequests() {
-        return printRequests;
+    public Login getLogin() {
+        return login;
     }
 
-    public List<Document> getDocuments() {
-        return documents;
-    }
     //setter
-
 
     public void setId(long id) {
         this.id = id;
@@ -104,14 +108,7 @@ public class Student {
         this.email = email;
     }
 
-    public void setPrintRequests(List<PrintRequest> printRequests) {
-        this.printRequests = printRequests;
+    public void setLogin(Login login) {
+        this.login = login;
     }
-
-    public void setDocuments(List<Document> documents) {
-        this.documents = documents;
-    }
-//Other methods
-//public void requestToPrint(){}
-//public void uploadDocument(){}
 }
