@@ -89,10 +89,10 @@ export const PrinterHistoryTable = ({printerID}) => {
         countPage(filteredDocs)
         setFilteredHistory(filteredDocs)
     }
-    return <div className="w-full">
+    return <div className="w-full text-xl">
         {/* Big */}
         <div className="hidden md:flex justify-center flex-col items-center px-10 gap-y-2 my-10">
-        <p className="text-xl font-bold">Lịch sử in</p>
+        <p className="text-2xl font-bold">Lịch sử in</p>
         <div className="flex flex-row items-center gap-x-10 text-xl">
             <div className="flex flex-row items-center">
                 <p>Mã số sinh viên:</p>
@@ -122,8 +122,8 @@ export const PrinterHistoryTable = ({printerID}) => {
                 <FaSearch id="search-icon" className="text-white"/>
             </button>
         </div>
-        <div className="text-right text-xs">
-            <p>Thống kế: {statistic}</p>
+        <div className="text-right">
+            <p>Thống kê: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
             <thead className="bg-blue-3">

@@ -38,11 +38,11 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
           return '';
         }
     }
-    return <div className="w-full">
+    return <div className="w-full text-xl">
         {/* Màn hình lớn */}
         <div className="hidden md:flex justify-center">
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[800px]">
-            <thead className="bg-blue-3">
+            <thead className="bg-blue-3 text-blue-5">
                 <tr>
                     <th className="min-w-[100px] py-4 border-2 border-blue-4">MSSV</th>
                     <th className="min-w-[80px] border-2 border-blue-4">Máy in</th>

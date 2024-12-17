@@ -1,15 +1,15 @@
 export const selectStudentStyles = {
     dropdownIndicator: (styles) => ({
         ...styles,
-        color:`var(--blue-2)`
+        color:`var(--blue-3)`
     }),
     clearIndicator: (styles) => ({
         ...styles,
-        color: `var(--blue-2)`
+        color: `var(--blue-3)`
     }),
     indicatorSeparator: (styles) => ({
         ...styles,
-        backgroundColor: `var(--blue-2)`
+        backgroundColor: `var(--blue-3)`
     }),
     menuList: (styles) => ({
         ...styles,
@@ -17,7 +17,8 @@ export const selectStudentStyles = {
     }),
     multiValue: (styles) => ({
         ...styles,
-        backgroundColor: `var(--blue-2)`,
+        // backgroundColor: `var(--blue-2)`,
+        backgroundColor: `white`,
         borderRadius:"10px",
         color:'black'
     }),

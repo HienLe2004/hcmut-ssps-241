@@ -23,7 +23,7 @@ export const DefaultA4Pages = () => {
         console.log(dateDefaultPage)
         await updatePaperSetting(paperSettingID, {numPage: pageDefaultPage, settingDate: dateDefaultPage})
     }
-    return <div className="p-4 bg-blue-4 rounded-xl text-white flex flex-col gap-y-2">
+    return <div className="p-4 bg-blue-3 rounded-xl text-white flex flex-col gap-y-2">
         <div className="flex flex-col gap-y-2">
             <p className="font-bold">Số trang A4 mặc định:</p>
             <input type="number" className="pl-1 bg-blue-2 py-2 rounded-xl" readOnly={!editable} 

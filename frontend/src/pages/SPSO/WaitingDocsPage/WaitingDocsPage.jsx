@@ -63,9 +63,9 @@ export const WaitingDocsPage = () => {
             <SPSOHeader />
             {/* Màn hình lớn */}
             <div className="hidden md:flex flex-col flex-grow items-center justify-center w-full my-5 gap-y-10">
-                <div className="flex flex-row items-center gap-x-10 text-xl">
+                <div className="flex flex-row items-center gap-x-10 text-2xl">
                     <div className="flex flex-row items-center">
-                        <p>Mã số sinh viên:</p>
+                        <p className="text-blue-2 font-bold">Mã số sinh viên:</p>
                         <Select 
                         options={students}
                         value={selectedStudents}
@@ -78,7 +78,7 @@ export const WaitingDocsPage = () => {
                         />
                     </div>
                     <div className="flex flex-row items-center">
-                        <p>Máy in:</p>
+                        <p className="text-blue-2 font-bold"> Máy in:</p>
                         <Select 
                         options={printers}
                         value={selectedPrinters}
@@ -96,11 +96,11 @@ export const WaitingDocsPage = () => {
                     </button>
                 </div>
                 {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={waitingDocs} filteredWaitingDocs={filteredWaitingDocs}/>}
-                {filteredWaitingDocs.length === 0 && <p>Không tìm thấy</p>}
+                {filteredWaitingDocs.length === 0 && <p className="text-center text-blue-2 text-2xl font-bold">Không tìm thấy</p>}
             </div>
             {/* Màn hình nhỏ */}
             <div className="md:hidden flex flex-col flex-grow w-full my-5 gap-y-10">
-                <div className="flex flex-col items-start text-xl gap-y-5 px-10">
+                <div className="flex flex-col items-start text-2xl gap-y-5 px-10">
                     <div className="flex flex-col">
                         <p>Mã số sinh viên:</p>
                         <Select 
@@ -133,7 +133,7 @@ export const WaitingDocsPage = () => {
                     </button>
                 </div>
                 {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={waitingDocs} filteredWaitingDocs={filteredWaitingDocs}/>}
-                {filteredWaitingDocs.length === 0 && <p className="text-center">Không tìm thấy</p>}
+                {filteredWaitingDocs.length === 0 && <p className="text-center text-2xl font-bold">Không tìm thấy</p>}
             </div>
             <Footer />
         </div>

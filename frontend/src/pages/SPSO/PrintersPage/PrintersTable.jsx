@@ -18,11 +18,11 @@ export const PrintersTable = ({printers}) => {
         }
         printers.forEach(printer => {if (printer.name == currentPrinter.name) printer.state = printer.state=="on"?"off":"on"})
     }
-    return <div className="w-full">
+    return <div className="w-full text-xl">
         {/* Big */}
         <div className="hidden md:flex justify-center">
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
-            <thead className="bg-blue-3">
+            <thead className="bg-blue-3 text-blue-5">
                 <tr>
                     <th className="min-w-[100px] py-4 border-2 border-blue-4">Tên</th>
                     <th className="min-w-[80px] w-full border-2 border-blue-4">Mô tả</th>

@@ -48,7 +48,7 @@ export const ReportsPage = () => {
           return '';
         }
     }
-    return <div className="flex flex-col min-h-screen">
+    return <div className="flex flex-col min-h-screen text-xl">
         <SPSOHeader/>
         {/* Big */}
         <div className="hidden md:flex justify-center flex-col items-center px-10 gap-y-10 my-10">
