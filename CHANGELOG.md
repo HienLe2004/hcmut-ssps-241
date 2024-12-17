@@ -1,3 +1,5 @@
+- 78b402e 2024-12-17 Update materials
+- cac1e65 2024-12-17 Create CHANGELOG.md
 - 2403ad5 2024-12-17 Update README.md at backend
 - a2e756c 2024-12-17 Create README.md
 - b2ed05d 2024-12-12 Update FileStorageProperties.java
