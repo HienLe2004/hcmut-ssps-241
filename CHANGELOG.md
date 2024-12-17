@@ -1,0 +1,118 @@
+- 2403ad5 2024-12-17 Update README.md at backend
+- a2e756c 2024-12-17 Create README.md
+- b2ed05d 2024-12-12 Update FileStorageProperties.java
+- 686ac44 2024-12-12 Merge branch 'master' of https://github.com/HienLe2004/hcmut-ssps-241
+- a9f351b 2024-12-12 Update report name
+- 9a6d426 2024-12-12 Merge pull request #19 from HienLe2004/front_branch
+- 78980a8 2024-12-12 Merge branch 'front_branch' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- 49032c8 2024-12-12 Update report file
+- 27ff30e 2024-12-12 Update save report
+- 33cdd2e 2024-12-12 Merge pull request #18 from HienLe2004/back_branch
+- d055a5f 2024-12-12 Merge branch 'master' into back_branch
+- 562e400 2024-12-12 Update Report
+- d207048 2024-12-12 Cơ bản là xong gòi, chỉnh thêm vài chỗ chưa hợp lí là xong
+- 13ff503 2024-12-11 Merge pull request #17 from HienLe2004/front_branch
+- 1c96595 2024-12-11 Tạm xong trang in + lịch sử
+- 42da723 2024-12-11 Merge branch 'front_branch' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- 953f866 2024-12-11 Gửi yêu cầu in được gòi, còn phần check số trang
+- 95128f7 2024-12-10 Update finished time for printLog
+- 63e2025 2024-12-10 Merge pull request #16 from HienLe2004/front_branch
+- 526c844 2024-12-10 Update history API, reports API
+- ef1fd8e 2024-12-10 Merge pull request #15 from HienLe2004/front_branch
+- 63dbedd 2024-12-10 Merge branch 'front_branch' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- faa9b73 2024-12-10 Update file upload, download API
+- f6a3a9a 2024-12-10 Sắp xong trang in tài liệu gòi=((
+- 26de640 2024-12-10 Sắp xong trang in tài liệu ròi=((
+- 3801cdd 2024-12-09 Update document API
+- b0a086e 2024-12-09 Merge pull request #14 from HienLe2004/front_branch
+- 0b555df 2024-12-09 Update get students, printers API
+- fe5bf97 2024-12-09 Merge pull request #13 from HienLe2004/front_branch
+- e4fccdf 2024-12-09 Update paperSetting API
+- 0964408 2024-12-09 Merge pull request #12 from HienLe2004/front_branch
+- 2b295aa 2024-12-09 Merge branch 'front_branch' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- b1d904d 2024-12-09 Update locations, printers API
+- 727005f 2024-12-09 Merge branch 'front_branch' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- 6c146f8 2024-12-09 Gắn api trang in tài liệu(Chưa xong)
+- 478d67b 2024-12-09 Update spso auth
+- 3d5c059 2024-12-08 Resolve conflict
+- 595bed8 2024-12-08 Chỉnh controller
+- 3b22aea 2024-12-08 Merge pull request #11 from HienLe2004/front_branch
+- 98c2db2 2024-12-08 Update homepage, logout
+- d54e9d9 2024-12-08 Merge pull request #10 from HienLe2004/front_branch
+- 1671a03 2024-12-08 Update login
+- b0db7c3 2024-12-08 Merge branch 'master' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- 58dfdc6 2024-12-08 Gắn api cho student
+- 84b3e62 2024-12-06 update numpage of document, update put request
+- 51d9b98 2024-12-05 Merge branch 'master' of https://github.com/HienLe2004/hcmut-ssps-241
+- 27fe53d 2024-12-05 Merge pull request #9 from HienLe2004/front_branch
+- 24f74c2 2024-12-05 Update waiting docs page
+- fddadc3 2024-12-05 Merge pull request #8 from HienLe2004/front_branch
+- 7f400c4 2024-12-05 Update page, side of printing request
+- 571a8e1 2024-12-05 Merge branch 'master' of https://github.com/HienLe2004/hcmut-ssps-241
+- 26e0f7c 2024-12-05 Update All backend
+- add25e4 2024-12-05 Merge pull request #7 from HienLe2004/front_branch
+- f2eb845 2024-12-05 Update create new printer exception
+- ef14766 2024-12-05 Merge pull request #6 from HienLe2004/front_branch
+- b9b210e 2024-12-05 Update mock api printer history
+- 66f2d9f 2024-12-05 Update mock api reports page
+- dd12d78 2024-12-05 Update mock api update valid docs, default page
+- 1b420ee 2024-12-04 Update mock api system history page
+- 7833f2f 2024-12-04 Update add, update printer mock api
+- b743574 2024-12-04 Update mock api add new printer
+- 132f9ab 2024-12-04 Update mock api, search in waiting docs page
+- 783af4f 2024-12-04 Update API-list.docx
+- a2557c1 2024-12-04 Create API-list.docx
+- 04c6d87 2024-12-04 Update StudentController.java
+- 4722338 2024-12-04 Merge branch 'master' of https://github.com/HienLe2004/hcmut-ssps-241
+- 3a77c1c 2024-12-04 Update SPSO, Printer, Student, Login, Printer Cofniguration
+- 01bbde1 2024-12-04 Update mock api waiting docs page
+- 16d0229 2024-12-03 Merge branch 'master' of https://github.com/HienLe2004/hcmut-ssps-241
+- 077f4b5 2024-12-03 Update detail + add valid file type class
+- 640a960 2024-12-03 Merge pull request #5 from HienLe2004/front_branch
+- 2527b46 2024-12-03 Update reports page
+- 048b058 2024-12-03 Update management page
+- da483d4 2024-12-03 Update system history page
+- 257e41a 2024-12-03 Merge pull request #4 from HienLe2004/front_branch
+- f9fe91a 2024-12-03 Update printer history draft
+- 604fd84 2024-12-03 Update printer info page draft
+- 06aa886 2024-12-03 Update add new printer form
+- d86851f 2024-12-02 Update printer page draft, mobile
+- 4d6b0eb 2024-12-02 Merge branch 'front_branch' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- 2b3e1d5 2024-12-02 Update waiting docs page for small screen
+- bb88080 2024-12-02 Chỉnh lại student header
+- e2cafea 2024-12-02 Merge branch 'front_branch' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- c9ba4d8 2024-12-02 Cập nhật theo file mới, chứ không có sửa gì hết
+- b37660b 2024-12-02 Update confirm update waiting docs page
+- f80fdff 2024-12-02 remove unnecessary file
+- 60e6224 2024-12-02 Thêm route cho các trang student
+- 3f1cadd 2024-12-02 Update draft table for waiting docs page
+- 1627a81 2024-12-02 Update input for waiting docs page, change role in login page
+- b14dcf7 2024-12-02 Merge branch 'master' of https://github.com/HienLe2004/hcmut-ssps-241
+- a12ba8c 2024-12-02 printing_system
+- d243323 2024-12-02 Add @JsonIgnore and delete printer(Configuration)
+- 47dbfbe 2024-12-02 Merge branch 'master' of https://github.com/HienLe2004/hcmut-ssps-241
+- 9d7e6d0 2024-12-02 Update Printer
+- 0e9e4ef 2024-12-02 buylog + spso
+- 1568301 2024-12-01 add configuration to Printer
+- 81f292e 2024-12-01 Configuration
+- e9399d7 2024-12-01 Chỉnh lại avatar
+- 501c36d 2024-12-01 Update SPSO header
+- 2edf211 2024-12-01 Setup routes
+- 69845a1 2024-12-01 printerlog, priter and report
+- d6430f2 2024-11-29 Merge pull request #3 from HienLe2004/back_branch
+- 28c4a78 2024-11-29 Update application.properties
+- 434484c 2024-11-29 Merge pull request #2 from HienLe2004/back_branch
+- da9559f 2024-11-29 Commit again
+- 7cf8fbd 2024-11-28 Sửa tên file và thuộc tính truyền vào
+- ff09d4d 2024-11-28 Thêm 2 trang lịch sử in + mua trang, sửa lại avatar của studentHeader, đổi giá trị truyền vào của addsuccess và alertaddfile
+- f5c126b 2024-11-25 Thêm 2 trang studentHomepage và printDocument(Và các nút đi kèm)
+- 426d1c9 2024-11-25 Update footer
+- 2fdd136 2024-11-23 Thêm header của student và spso, chỉnh header chung
+- a93f4d2 2024-11-23 Remove wrong folder
+- b2c4f59 2024-11-22 Merge branch 'front_branch' of https://github.com/HienLe2004/hcmut-ssps-241 into front_branch
+- 505b218 2024-11-22 Thêm HomePage và Footer(Cả 2 tạm để trống)
+- 9ae39e3 2024-11-22 Merge pull request #1 from HienLe2004/login-page
+- 182cebf 2024-11-22 Layout login page
+- e94a79f 2024-11-22 Add color palette
+- fad1a90 2024-11-22 tạo react + header
+- d4f028a 2024-11-20 Setup
