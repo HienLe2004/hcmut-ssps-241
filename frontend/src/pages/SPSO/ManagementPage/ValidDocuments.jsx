@@ -23,7 +23,7 @@ export const ValidDocuments = () => {
         const newSetting = await updatePaperSetting(paperSettingID, {validFileType: formatedStr})
         console.log(newSetting)
     }
-    return <div className="p-4 bg-blue-3 rounded-xl text-white flex flex-col gap-y-2">
+    return <div className="p-4 bg-blue-3 rounded-xl text-white flex flex-col gap-y-2 w-full">
         <p className="font-bold">Danh sách các loại tệp được in:</p>
         <input type="text" className="pl-1 bg-blue-2 py-2 rounded-xl" readOnly={!editable} defaultValue={validDocs} 
             onChange={handleChangeValidDocs}></input>
