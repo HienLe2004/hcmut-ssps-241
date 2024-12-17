@@ -1,3 +1,4 @@
+- 61f3bef 2024-12-17 Update CHANGELOG.md
 - 78b402e 2024-12-17 Update materials
 - cac1e65 2024-12-17 Create CHANGELOG.md
 - 2403ad5 2024-12-17 Update README.md at backend
