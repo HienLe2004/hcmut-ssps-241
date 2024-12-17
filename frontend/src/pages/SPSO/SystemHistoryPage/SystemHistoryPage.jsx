@@ -110,11 +110,10 @@ export const SystemHistoryPage = () => {
         <SPSOHeader/>
         {/* Big */}
         <div className="hidden md:flex justify-center flex-col items-center px-10 gap-y-2 my-10">
-        <p className="text-2xl font-bold mb-5">Lịch sử in</p>
         <div className="flex flex-col gap-y-10">
             <div className="flex flex-row items-center gap-x-10 text-xl">
                 <div className="flex flex-row items-center">
-                    <p>MSSV:</p>
+                    <p className="font-bold text-blue-5">MSSV:</p>
                     <Select 
                     options={students}
                     value={selectedStudents}
@@ -127,7 +126,7 @@ export const SystemHistoryPage = () => {
                     />
                 </div>
                 <div className="flex flex-row items-center">
-                    <p>Máy in:</p>
+                    <p className="font-bold text-blue-5">Máy in:</p>
                     <Select 
                     options={printers}
                     value={selectedPrinters}
@@ -142,12 +141,12 @@ export const SystemHistoryPage = () => {
             </div>
             <div className="flex flex-row items-center gap-x-10 text-xl">
                 <div className="flex flex-row items-center">
-                    <p>Từ:</p>
+                    <p className="font-bold text-blue-5">Từ:</p>
                     <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                         onChange={handleChangeStart}></input>
                 </div>
                 <div className="flex flex-row items-center">
-                    <p>Đến:</p>
+                    <p className="font-bold text-blue-5">Đến:</p>
                     <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                         onChange={handleChangeEnd}></input>
                 </div>
@@ -157,11 +156,11 @@ export const SystemHistoryPage = () => {
                 </button>
             </div>
         </div>
-        <div className="text-right text-xs py-5">
+        <div className="text-right py-5">
             <p>Thống kê: {statistic}</p>
         </div>
-        <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
-            <thead className="bg-blue-3">
+        <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px] text-xl">
+            <thead className="bg-blue-3 text-blue-0">
                 <tr>
                     <th className="min-w-[180px] border-2 border-blue-4">MSSV</th>
                     <th className="min-w-[180px] border-2 border-blue-4">Máy in</th>
@@ -174,7 +173,7 @@ export const SystemHistoryPage = () => {
                     <th className="min-w-[180px] border-2 border-blue-4">Thời gian kết thúc</th>
                 </tr>
             </thead>
-            <tbody className="text-white">
+            <tbody className="bg-blue-0 text-blue-5">
                 {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey}>
                         <td className="text-center border-2 border-blue-4">{row.student.id}</td>
@@ -202,7 +201,7 @@ export const SystemHistoryPage = () => {
         <p className="text-xl font-bold">Lịch sử in</p>
         <div className="flex flex-col gap-y-10 text-xl">
             <div className="flex flex-row items-center">
-                <p>MSSV:</p>
+                <p className="font-bold text-blue-5">MSSV:</p>
                 <Select 
                 options={students}
                 value={selectedStudents}
@@ -215,7 +214,7 @@ export const SystemHistoryPage = () => {
                 />
             </div>
             <div className="flex flex-row items-center">
-                <p>Máy in:</p>
+                <p className="font-bold text-blue-5">Máy in:</p>
                 <Select 
                 options={printers}
                 value={selectedPrinters}
@@ -228,12 +227,12 @@ export const SystemHistoryPage = () => {
                 />
             </div>
             <div className="flex flex-row items-center">
-                <p>Từ:</p>
+                <p className="font-bold text-blue-5">Từ:</p>
                 <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                     onChange={handleChangeStart}></input>
             </div>
             <div className="flex flex-row items-center">
-                <p>Đến:</p>
+                <p className="font-bold text-blue-5">Đến:</p>
                 <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                     onChange={handleChangeEnd}></input>
             </div>
@@ -246,17 +245,9 @@ export const SystemHistoryPage = () => {
             <p>Thống kế: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll w-full">
-            {/* <thead className="bg-blue-3">
-                <tr>
-                    <th className="min-w-[100px] py-4">Tên</th>
-                    <th className="min-w-[80px] w-full">Mô tả</th>
-                    <th className="min-w-[180px]">Bắt đầu sử dụng</th>
-                    <th className="min-w-[180px]">Trạng thái</th>
-                </tr>
-            </thead> */}
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
-                    return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-2"}>
+                    return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-4"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{row.student.id}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{row.printer.name}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">

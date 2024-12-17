@@ -32,7 +32,7 @@ export const selectStudentStyles = {
     }),
     control: (styles) => ({
         ...styles, 
-        backgroundColor: `var(--blue-1)`, 
+        backgroundColor: `var(--blue-2)`, 
         borderRadius:"10px", 
         border:"1px solid var(--blue-5)",
         minWidth:"100px",

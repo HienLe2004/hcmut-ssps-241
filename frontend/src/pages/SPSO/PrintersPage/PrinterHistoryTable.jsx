@@ -92,10 +92,10 @@ export const PrinterHistoryTable = ({printerID}) => {
     return <div className="w-full text-xl">
         {/* Big */}
         <div className="hidden md:flex justify-center flex-col items-center px-10 gap-y-2 my-10">
-        <p className="text-2xl font-bold">Lịch sử in</p>
+        <p className="text-2xl font-bold text-blue-5">Lịch sử in</p>
         <div className="flex flex-row items-center gap-x-10 text-xl">
             <div className="flex flex-row items-center">
-                <p>Mã số sinh viên:</p>
+                <p className="text-blue-5 font-bold">Mã số sinh viên:</p>
                 <Select 
                 options={students}
                 value={selectedStudents}
@@ -108,12 +108,12 @@ export const PrinterHistoryTable = ({printerID}) => {
                 />
             </div>
             <div className="flex flex-row items-center">
-                <p>Từ:</p>
+                <p className="text-blue-5 font-bold">Từ:</p>
                 <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                     onChange={handleChangeStart}></input>
             </div>
             <div className="flex flex-row items-center">
-                <p>Đến:</p>
+                <p className="text-blue-5 font-bold">Đến:</p>
                 <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                     onChange={handleChangeEnd}></input>
             </div>
@@ -126,7 +126,7 @@ export const PrinterHistoryTable = ({printerID}) => {
             <p>Thống kê: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
-            <thead className="bg-blue-3">
+            <thead className="bg-blue-3 text-blue-0">
                 <tr>
                     <th className="min-w-[100px] py-4 border-2 border-blue-4">Tên file</th>
                     <th className="min-w-[80px] border-2 border-blue-4">Cỡ giấy</th>
@@ -138,7 +138,7 @@ export const PrinterHistoryTable = ({printerID}) => {
                     <th className="min-w-[180px] border-2 border-blue-4">Thời gian kết thúc</th>
                 </tr>
             </thead>
-            <tbody className="text-white">
+            <tbody className="bg-blue-0 text-blue-5">
                 {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey}>
                         <td className="text-center border-2 border-blue-4">
@@ -162,10 +162,10 @@ export const PrinterHistoryTable = ({printerID}) => {
         </div>
         {/* Small */}
         <div className="flex md:hidden justify-center flex-col items-center px-10 gap-y-2 my-10">
-        <p className="text-xl font-bold">Lịch sử in</p>
+        <p className="text-2xl font-bold">Lịch sử in</p>
         <div className="flex flex-col gap-y-10 text-xl">
             <div className="flex flex-row items-center">
-                <p>MSSV:</p>
+                <p className="text-blue-5 font-bold">MSSV:</p>
                 <Select 
                 options={students}
                 value={selectedStudents}
@@ -178,12 +178,12 @@ export const PrinterHistoryTable = ({printerID}) => {
                 />
             </div>
             <div className="flex flex-row items-center">
-                <p>Từ:</p>
+                <p className="text-blue-5 font-bold">Từ:</p>
                 <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                     onChange={handleChangeStart}></input>
             </div>
             <div className="flex flex-row items-center">
-                <p>Đến:</p>
+                <p className="text-blue-5 font-bold">Đến:</p>
                 <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                     onChange={handleChangeEnd}></input>
             </div>
@@ -192,13 +192,13 @@ export const PrinterHistoryTable = ({printerID}) => {
                 <FaSearch id="search-icon" className="text-white"/>
             </button>
         </div>
-        <div className="text-right text-xs">
-            <p>Thống kế: {statistic}</p>
+        <div className="text-right">
+            <p>Thống kê: {statistic}</p>
         </div>
         <table className="bg-blue-2 overflow-x-scroll w-full">
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
-                    return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-2"}>
+                    return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-4"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">
                             <a href={"../"+processFilePath(row.document.filePath)} target="_blank" 
                                 download={row.document.fileName}

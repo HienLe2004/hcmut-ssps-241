@@ -41,8 +41,8 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
     return <div className="w-full text-xl">
         {/* Màn hình lớn */}
         <div className="hidden md:flex justify-center">
-        <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[800px]">
-            <thead className="bg-blue-3 text-blue-5">
+        <table className="overflow-x-scroll max-w-full min-w-[800px]">
+            <thead className="bg-blue-3 text-blue-0">
                 <tr>
                     <th className="min-w-[100px] py-4 border-2 border-blue-4">MSSV</th>
                     <th className="min-w-[80px] border-2 border-blue-4">Máy in</th>
@@ -55,7 +55,7 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
                     <th className="min-w-[160px] border-2 border-blue-4">Trạng thái</th>
                 </tr>
             </thead>
-            <tbody className="text-white">
+            <tbody className="bg-blue-0 text-blue-5">
                 {filteredDocs.map((waitingDoc, docKey) => {
                     return <tr key={docKey}>
                         <td className="text-center border-2 border-blue-4">{waitingDoc.student.id}</td>
@@ -71,13 +71,6 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
                                     {waitingDoc.document.fileName}
                             </a>
                         </td>
-                        {/* <td className="text-center border-2 border-blue-4">
-                            <a href={window.URL.createObjectURL(new Blob([waitingDoc.document.filePath], {type: waitingDoc.document.fileType}))} target="_blank" 
-                                download={waitingDoc.document.fileName}
-                                rel="noopener noreferrer">
-                                    {waitingDoc.document.fileName}
-                            </a>
-                        </td> */}
                         <td className="text-center border-2 border-blue-4">{waitingDoc.startTime}</td>
                         <td className="text-center border-2 border-blue-4">
                             <span className="flex items-center flex-row-reverse my-1 mx-1 gap-x-3">
@@ -96,10 +89,10 @@ export const WaitingDocsTable = ({waitingDocs, filteredWaitingDocs}) => {
         </div>
         {/* Màn hình nhỏ */}
         <div className="flex md:hidden px-10">
-        <table className="bg-blue-2 overflow-x-scroll w-full">
+        <table className="bg-blue-3 overflow-x-scroll w-full">
             <tbody className="text-white">
                 {filteredDocs.map((waitingDoc, docKey) => {
-                    return <tr key={docKey} className={docKey%2?"bg-blue-3":"bg-blue-2"}>
+                    return <tr key={docKey} className={docKey%2?"bg-blue-3":"bg-blue-4"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="MSSV">{waitingDoc.student.id}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{waitingDoc.printer.name}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ">{waitingDoc.printModification.paperSize}</td>

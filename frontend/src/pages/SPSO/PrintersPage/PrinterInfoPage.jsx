@@ -52,7 +52,7 @@ export const PrinterInfoPage = () => {
             </NavLink>
             {/* Màn hình lớn */}
             <div className="hidden md:flex flex-col flex-grow items-center justify-center w-full my-5">
-                <div className="bg-blue-2 text-white flex flex-col p-5 rounded-xl gap-y-2">
+                <div className="bg-blue-3 text-blue-0 flex flex-col p-5 rounded-xl gap-y-2">
                     <p className="text-center font-bold text-2xl">Máy in {id}</p>
                     <p className="text-xl">Vị trí: {printer?.location}</p>
                     <div className="flex flex-row items-center gap-x-1">
@@ -73,7 +73,7 @@ export const PrinterInfoPage = () => {
             </div>
             {/* Màn hình nhỏ */}
             <div className="flex md:hidden flex-grow justify-center my-5 w-full">
-                <div className="bg-blue-2 text-white flex flex-col p-5 rounded-xl gap-y-2">
+                <div className="bg-blue-3 text-blue-0 flex flex-col p-5 rounded-xl gap-y-2">
                     <p className="text-center font-bold text-2xl">Máy in {id}</p>
                     <p>Vị trí: {printer?.location}</p>
                     <div className="flex flex-row items-center gap-x-1">

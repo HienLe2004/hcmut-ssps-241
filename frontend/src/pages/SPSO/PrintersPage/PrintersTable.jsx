@@ -22,19 +22,19 @@ export const PrintersTable = ({printers}) => {
         {/* Big */}
         <div className="hidden md:flex justify-center">
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
-            <thead className="bg-blue-3 text-blue-5">
+            <thead className="bg-blue-3 text-blue-0">
                 <tr>
                     <th className="min-w-[100px] py-4 border-2 border-blue-4">Tên</th>
-                    <th className="min-w-[80px] w-full border-2 border-blue-4">Mô tả</th>
+                    <th className="min-w-[80px] border-2 border-blue-4">Mô tả</th>
                     <th className="min-w-[180px] border-2 border-blue-4">Bắt đầu sử dụng</th>
                     <th className="min-w-[180px] border-2 border-blue-4">Trạng thái</th>
                 </tr>
             </thead>
-            <tbody className="text-white">
+            <tbody className="bg-blue-0 text-blue-5">
                 {printers.map((printer, printerKey) => {
                     return <tr key={printerKey}>
-                        <td className="text-center border-2 border-blue-4"><NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink></td>
-                        <td className="text-center border-2 border-blue-4">{printer.description}</td>
+                        <td className="text-center border-2 border-blue-4 px-2"><NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink></td>
+                        <td className="text-center border-2 border-blue-4 px-2">{printer.description}</td>
                         <td className="text-center border-2 border-blue-4">{printer.startTime}</td>
                         <td className="text-center border-2 border-blue-4">
                             <span className="flex items-center flex-row-reverse my-1 mx-1 gap-x-3">
@@ -53,17 +53,9 @@ export const PrintersTable = ({printers}) => {
         {/* Small */}
         <div className="flex md:hidden px-10 mt-10">
         <table className="bg-blue-2 overflow-x-scroll w-full">
-            {/* <thead className="bg-blue-3">
-                <tr>
-                    <th className="min-w-[100px] py-4">Tên</th>
-                    <th className="min-w-[80px] w-full">Mô tả</th>
-                    <th className="min-w-[180px]">Bắt đầu sử dụng</th>
-                    <th className="min-w-[180px]">Trạng thái</th>
-                </tr>
-            </thead> */}
             <tbody className="text-white">
                 {printers.map((printer, printerKey) => {
-                    return <tr key={printerKey} className={printerKey%2?"bg-blue-3":"bg-blue-2"}>
+                    return <tr key={printerKey} className={printerKey%2?"bg-blue-3":"bg-blue-4"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên">
                             <NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink>
                         </td>

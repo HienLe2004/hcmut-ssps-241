@@ -65,7 +65,7 @@ export const WaitingDocsPage = () => {
             <div className="hidden md:flex flex-col flex-grow items-center justify-center w-full my-5 gap-y-10">
                 <div className="flex flex-row items-center gap-x-10 text-2xl">
                     <div className="flex flex-row items-center">
-                        <p className="text-blue-2 font-bold">Mã số sinh viên:</p>
+                        <p className="text-blue-5 font-bold">Mã số sinh viên:</p>
                         <Select 
                         options={students}
                         value={selectedStudents}
@@ -78,7 +78,7 @@ export const WaitingDocsPage = () => {
                         />
                     </div>
                     <div className="flex flex-row items-center">
-                        <p className="text-blue-2 font-bold"> Máy in:</p>
+                        <p className="text-blue-5 font-bold"> Máy in:</p>
                         <Select 
                         options={printers}
                         value={selectedPrinters}
@@ -102,7 +102,7 @@ export const WaitingDocsPage = () => {
             <div className="md:hidden flex flex-col flex-grow w-full my-5 gap-y-10">
                 <div className="flex flex-col items-start text-2xl gap-y-5 px-10">
                     <div className="flex flex-col">
-                        <p>Mã số sinh viên:</p>
+                        <p className="text-blue-5 font-bold">Mã số sinh viên:</p>
                         <Select 
                         options={students}
                         value={selectedStudents}
@@ -115,7 +115,7 @@ export const WaitingDocsPage = () => {
                         />
                     </div>
                     <div className="flex flex-col">
-                        <p>Máy in:</p>
+                        <p className="text-blue-5 font-bold">Máy in:</p>
                         <Select 
                         options={printers}
                         value={selectedPrinters}

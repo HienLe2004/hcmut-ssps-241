@@ -18,7 +18,7 @@ export const SPSOHeader = () => {
   }
 
   return <>
-    <header className="flex items-center justify-between px-5 w-full bg-blue-5 text-blue-2 font-bold h-[10vh]">
+    <header className="flex items-center justify-between px-5 w-full bg-blue-5 text-white font-bold h-[10vh]">
 
       <div className="flex flex-row items-center h-full">
         <img

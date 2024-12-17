@@ -29,16 +29,16 @@ export const ValidDocuments = () => {
             onChange={handleChangeValidDocs}></input>
         
         {editable && <div className="flex flex-row justify-around w-full">
-            <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
+            <button className="p-2 bg-blue-4 rounded-xl hover:scale-110 duration-200"
                 onClick={() => {updateValidDocs();setEditable(false);}}>
                 Cập nhật
             </button>
-            <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
+            <button className="p-2 bg-blue-4 rounded-xl hover:scale-110 duration-200"
                 onClick={() => {setEditable(false);}}>
                 Hủy
             </button>
         </div>}
-        {!editable && <div className="aspect-square bg-blue-5 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
+        {!editable && <div className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
             onClick={() => {setEditable(true);}}>
             <FaPen/>
         </div>}
