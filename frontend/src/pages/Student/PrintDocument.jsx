@@ -6,6 +6,7 @@ import { AddSuccess } from "./AddSuccess";
 import { Alert } from './Alert';
 import axios from "axios";
 
+
 export const PrintDocument = () => {
 
     const [file, setFile] = useState(null);
@@ -58,10 +59,6 @@ export const PrintDocument = () => {
         setConfirmPopup(false);
     }
 
-    const fakeFunc = () => {
-        console.log("Fake hehehe");
-    }
-
     const turnOffAddSuccess = () => {
         setSuccessPopup(false);
     }
@@ -102,11 +99,6 @@ export const PrintDocument = () => {
         setRemainPage(remainPage - numPageUsed);
         handleRemoveFile();
     }
-
-
-
-
-
 
     const formatDateTime = (date) => {
         if (!date) return "null";
@@ -180,7 +172,8 @@ export const PrintDocument = () => {
             });
 
             // Cập nhật trạng thái một lần
-            setRequests([...requests, ...newRequests]);
+            // setRequests([...requests, ...newRequests]);
+            setRequests(newRequests);
         } catch (error) {
             console.error("Error fetching printer list:", error.message);
         }
@@ -215,7 +208,7 @@ export const PrintDocument = () => {
                         doubleSided: isTwoSide
                     }
                 );
-                // console.log("Đã gửi modification", response.data);
+                console.log("Đã gửi modification", response.data);
                 setPrintModi(response.data);
             } catch (error) {
                 console.error("Error uploading modification:", error.message);
@@ -326,7 +319,7 @@ export const PrintDocument = () => {
 
                 <div className="  w-[60%] mt-5  ">
 
-                    <form className="flex flex-col bg-blue-2 rounded-xl p-4  "
+                    <form className="flex flex-col bg-blue-3 rounded-xl p-4  "
                         onSubmit={handleSubmit}
                     >
                         {/* Chọn tài liệu */}
@@ -349,7 +342,7 @@ export const PrintDocument = () => {
                             )}
                             {!fileName && (
                                 <label htmlFor="fileUpload"
-                                    className="bg-blue-4 text-white text-md px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-5 duration-200"
+                                    className="bg-blue-4 text-white text-md px-4 py-2 cursor-pointer rounded-lg hover:bg-[#2d66c1] duration-200"
 
                                 >
                                     Tải lên:
@@ -422,7 +415,7 @@ export const PrintDocument = () => {
 
                         {/* Nút gửi yêu cầu in */}
                         <button type="submit"
-                            className=" w-56 self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-blue-5 duration-200"
+                            className=" w-56 self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-[#2d66c1] duration-200"
                         >
                             Yêu cầu in tài liệu
                         </button>
@@ -440,7 +433,7 @@ export const PrintDocument = () => {
                     </h2>
                     <table className="w-full bg-blue-2 border-2 border-blue-4 rounded-none">
                         <thead>
-                            <tr className="text-black text-xl">
+                            <tr className="text-white bg-blue-3 text-xl">
                                 <th className="border-2 border-blue-4 p-4 w-[20%] ">Tên file</th>
                                 <th className="border-2 border-blue-4 p-4 ">Cỡ giấy</th>
                                 <th className="border-2 border-blue-4 p-4 ">Số bản</th>
@@ -449,13 +442,12 @@ export const PrintDocument = () => {
                                 <th className="border-2 border-blue-4 p-4 ">Máy in</th>
                                 <th className="border-2 border-blue-4 p-4 ">Trạng thái</th>
                                 <th className="border-2 border-blue-4 p-4 ">Thời gian bắt đầu</th>
-                                <th className="border-2 border-blue-4 p-4 ">Thời gian kết thúc</th>
                             </tr>
                         </thead>
                         <tbody>
                             {requests.filter((request) => request.status === "Đang xử lí").map((request, index) => (
                                 <tr key={index}
-                                    className="border border-blue-4 text-white font-light text-center text-lg">
+                                    className="border border-blue-4 bg-white text-blue-5 font-normal text-center text-xl">
                                     <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{request.fileName}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.pageSize}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.numCopy}</td>
@@ -464,7 +456,6 @@ export const PrintDocument = () => {
                                     <td className="p-6 border-2 border-blue-4">{request.printer}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.status}</td>
                                     <td className="p-6 border-2 border-blue-4">{request.startTime}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.endTime || null}</td>
                                 </tr>
                             ))}
                         </tbody>

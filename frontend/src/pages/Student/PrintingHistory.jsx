@@ -2,7 +2,7 @@ import { StudentHeader } from "../../components/StudentHeader";
 import { Footer } from "../../components/footer";
 import avatar from '../../images/VitaminMeo.jpg'
 import { parse, format } from "date-fns";
-
+import { FaSearch } from "react-icons/fa"
 import axios from 'axios';
 
 import { useEffect, useState } from "react";
@@ -23,10 +23,10 @@ export const PrintingHistory = () => {
 
     const searchDate = () => {
         if (startDate && endDate) {
-            
+
             const start = new Date(startDate).setHours(0, 0, 0, 0);
             const end = new Date(endDate).setHours(23, 59, 59, 99);
-            
+
             console.log("Check start", start);
             console.log("Check end", end);
 
@@ -53,20 +53,6 @@ export const PrintingHistory = () => {
             // second: "2-digit",
         });
     };
-
-    // useEffect(() => {
-    //     const calculatedA3 = filteredDate.reduce((sum, choice) => {
-    //         return (choice.pageSize === "A3" && choice.status === "Đã in xong") ? sum + choice.numCopy : sum;
-    //     }, 0);
-    //     const calculatedA4 = filteredDate.reduce((sum, choice) => {
-    //         return (choice.pageSize === "A4" && choice.status === "Đã in xong") ? sum + choice.numCopy : sum;
-    //     }, 0);
-
-    //     setTotalA3page(calculatedA3);
-    //     setTotalA4page(calculatedA4);
-
-
-    // }, [filteredDate]);
 
     useEffect(() => {
         setFilteredDate(history);
@@ -131,11 +117,15 @@ export const PrintingHistory = () => {
                         onChange={(event) => setEndDate(event.target.value)}
                         className="appearance-none outline-none border-2 border-blue-4 py-1 px-2 rounded-md bg-blue-2 text-xl text-center translate-y-0.5 "
                     />
-                    <img src={avatar}
+                    {/* <img src={avatar}
                         alt="Không có gì hết á=))"
                         className="w-12 aspect-square mx-6 border-2 border-black rounded-full hover:cursor-pointer "
                         onClick={searchDate}
-                    />
+                    /> */}
+                    <button className="aspect-square rounded-full bg-blue-4 w-8 ml-5 items-center justify-items-center hover:scale-110 duration-200"
+                        onClick={searchDate}>
+                        <FaSearch id="search-icon" className="text-white" />
+                    </button>
 
                 </div>
 
@@ -146,7 +136,7 @@ export const PrintingHistory = () => {
                     </p>
                     <table className="w-full bg-blue-2 border-2 border-blue-4 rounded-none">
                         <thead>
-                            <tr className="text-black text-xl">
+                            <tr className="text-white bg-blue-3 text-xl">
                                 <th className="border-2 border-blue-4 p-4 w-[20%] ">Tên file</th>
                                 <th className="border-2 border-blue-4 p-4 ">Cỡ giấy</th>
                                 <th className="border-2 border-blue-4 p-4 ">Số bản</th>
@@ -161,7 +151,7 @@ export const PrintingHistory = () => {
                         <tbody>
                             {filteredDate.filter((hist) => hist.status === "Đã in xong").map((hist, index) => (
                                 <tr key={index}
-                                    className="border border-blue-4 text-white font-light text-center text-lg">
+                                    className="border border-blue-4 text-blue-5 bg-white font-normal text-center text-xl">
                                     <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{hist.fileName}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                     <td className="p-6 border-2 border-blue-4">{hist.numCopy}</td>
