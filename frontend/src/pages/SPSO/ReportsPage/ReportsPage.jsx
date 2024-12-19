@@ -48,19 +48,19 @@ export const ReportsPage = () => {
           return '';
         }
     }
-    return <div className="flex flex-col min-h-screen">
+    return <div className="flex flex-col min-h-screen text-xl">
         <SPSOHeader/>
         {/* Big */}
         <div className="hidden md:flex justify-center flex-col items-center px-10 gap-y-10 my-10">
         <div className="flex flex-col gap-y-10">
             <div className="flex flex-row items-center gap-x-10 text-xl">
                 <div className="flex flex-row items-center">
-                    <p>Từ:</p>
+                    <p className="font-bold text-blue-5">Từ:</p>
                     <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                         onChange={handleChangeStart}></input>
                 </div>
                 <div className="flex flex-row items-center">
-                    <p>Đến:</p>
+                    <p className="font-bold text-blue-5">Đến:</p>
                     <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                         onChange={handleChangeEnd}></input>
                 </div>
@@ -71,18 +71,18 @@ export const ReportsPage = () => {
             </div>
         </div>
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
-            <thead className="bg-blue-3">
+            <thead className="bg-blue-3 text-blue-0">
                 <tr>
                     <th className="min-w-[100px] py-4 border-2 border-blue-4">Tên báo cáo</th>
                     <th className="min-w-[80px] border-2 border-blue-4">Link file</th>
-                    <th className="min-w-[180px] border-2 border-blue-4">Thời gian xuất file</th>
+                    <th className="min-w-[180px] border-2 border-blue-4 px-2">Thời gian xuất file</th>
                 </tr>
             </thead>
-            <tbody className="text-white">
+            <tbody className="bg-blue-0 text-blue-5">
                 {filteredReports.map((row, rowKey) => {
                     return <tr key={rowKey}>
-                        <td className="text-center border-2 border-blue-4">{row.name}</td>
-                        <td className="text-center border-2 border-blue-4">
+                        <td className="text-center border-2 border-blue-4 px-2">{row.name}</td>
+                        <td className="text-center border-2 border-blue-4 px-2">
                             <a href={"../"+processFilePath(row.filePath)} target="_blank" 
                                 download={row.name}
                                 rel="noopener noreferrer">
@@ -100,12 +100,12 @@ export const ReportsPage = () => {
         <p className="text-xl font-bold">Lịch sử in</p>
         <div className="flex flex-col gap-y-10 text-xl">
             <div className="flex flex-row items-center">
-                <p>Từ:</p>
+                <p className="font-bold text-blue-5">Từ:</p>
                 <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                     onChange={handleChangeStart}></input>
             </div>
             <div className="flex flex-row items-center">
-                <p>Đến:</p>
+                <p className="font-bold text-blue-5">Đến:</p>
                 <input type="date" className="bg-blue-1 px-2 py-1 ml-1 rounded-xl border-blue-2 border-2 border-solid"
                     onChange={handleChangeEnd}></input>
             </div>

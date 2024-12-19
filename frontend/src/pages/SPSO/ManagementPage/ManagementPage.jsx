@@ -7,9 +7,17 @@ export const ManagementPage = () => {
     return <>
         <div className="flex flex-col min-h-screen">
             <SPSOHeader />
-            <div className="flex flex-col flex-grow items-center justify-center w-full my-5 gap-y-10">
-                <ValidDocuments/>
-                <DefaultA4Pages/>
+            <div className="justify-center flex">
+                {/* Big */}
+                <div className="hidden md:flex justify-center my-5 gap-x-10 bg-blue-3 min-w-[50%] p-2 rounded-xl text-xl">
+                    <ValidDocuments className="bg-black"/>
+                    <DefaultA4Pages/>
+                </div>
+                {/* Big */}
+                <div className="flex flex-col md:hidden justify-center my-5 gap-x-10 bg-blue-3 min-w-[50%] p-2 rounded-xl text-xl">
+                    <ValidDocuments className="bg-black"/>
+                    <DefaultA4Pages/>
+                </div>
             </div>
             <Footer />
         </div>
