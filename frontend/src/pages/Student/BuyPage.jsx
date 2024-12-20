@@ -214,6 +214,7 @@ export const BuyPage = () => {
                         <select value={pageSize}
                             onChange={(event) => setPageSize(event.target.value)}
                             className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
+
                         >
 
                             {/* {pageSizeList.map((size, index) => (
@@ -221,6 +222,7 @@ export const BuyPage = () => {
                                         {size}
                                     </option>
                                 ))} */}
+                            <option value="" disabled hidden>Chọn cỡ giấy</option>
                             <option value="A3">A3</option>
                             <option value="A4">A4</option>
                             <option value="A5">A5</option>
@@ -285,7 +287,7 @@ export const BuyPage = () => {
                                         <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.total}</td>
                                         <td className="p-6 border-2 border-blue-4">{formatDateTime(hist.buyTime)}</td>
-                                    {console.log("Check buy time:", formatDateTime(hist.buyTime))}
+                                        {console.log("Check buy time:", formatDateTime(hist.buyTime))}
                                     </tr>
                                 )))
                             }

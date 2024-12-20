@@ -37,11 +37,11 @@ export const SystemHistoryPage = () => {
         let numA5 = 0
         doneData.forEach(data => {
             if (data.printModification.paperSize == "A3") 
-                numA3 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
+                numA3 += Math.round(data.document.numPages/(data.printModification.doubleSided?2:1)) * data.printModification.copies
             if (data.printModification.paperSize == "A4") 
-                numA4 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
+                numA4 += Math.round(data.document.numPages/(data.printModification.doubleSided?2:1)) * data.printModification.copies
             if (data.printModification.paperSize == "A5") 
-                numA5 += Math.round(data.document.numPages/(data.printModification.doubleSize?2:1)) * data.printModification.copies
+                numA5 += Math.round(data.document.numPages/(data.printModification.doubleSided?2:1)) * data.printModification.copies
         })
         let str = (numA3 == 0) ? "" : (numA3+" A3 ")
         str += (numA4 == 0) ? "" : (numA4+" A4 ")
@@ -109,7 +109,7 @@ export const SystemHistoryPage = () => {
     return <div className="flex flex-col min-h-screen">
         <SPSOHeader/>
         {/* Big */}
-        <div className="hidden md:flex justify-center flex-col items-center px-10 gap-y-2 my-10">
+        <div className="hidden md:flex justify-center flex-grow flex-col items-center px-10 gap-y-2 my-10">
         <div className="flex flex-col gap-y-10">
             <div className="flex flex-row items-center gap-x-10 text-xl">
                 <div className="flex flex-row items-center">
@@ -188,7 +188,7 @@ export const SystemHistoryPage = () => {
                         <td className="text-center border-2 border-blue-4">{row.printModification.paperSize}</td>
                         <td className="text-center border-2 border-blue-4">{row.printModification.copies}</td>
                         <td className="text-center border-2 border-blue-4">{row.document.numPages}</td>
-                        <td className="text-center border-2 border-blue-4">{row.printModification.doubleSize?"2":"1"}</td>
+                        <td className="text-center border-2 border-blue-4">{row.printModification.doubleSided?"2":"1"}</td>
                         <td className="text-center border-2 border-blue-4">{row.startTime}</td>
                         <td className="text-center border-2 border-blue-4">{row.finishedTime}</td>
                     </tr>
@@ -260,7 +260,7 @@ export const SystemHistoryPage = () => {
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{row.printModification.paperSize}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{row.printModification.copies}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang">{row.document.numPages}</td>
-                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{row.printModification.doubleSize?"2":"1"}</td>
+                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{row.printModification.doubleSided?"2":"1"}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{row.startTime}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian kết thúc">{row.finishedTime}</td>    
                     </tr>

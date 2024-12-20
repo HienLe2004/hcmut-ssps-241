@@ -12,7 +12,7 @@ export const PrintDocument = () => {
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState('');
 
-    const [pageSize, setPageSize] = useState('A3');
+    const [pageSize, setPageSize] = useState("");
     const [pageSizeList, setPageSizeList] = useState([]);
 
     const [defaultPage, setDefaultPage] = useState(0);
@@ -114,14 +114,15 @@ export const PrintDocument = () => {
 
     const calculateNumPageUsed = () => {
         var val = fileData.numPages;
-
+        console.log("Check 1:",printModi.doubleSided)
+        console.log("Check 2:",printModi.paperSize)
         if (printModi.doubleSided === true) { val = val / 2; }
         if (printModi.paperSize === "A3") { val = val * 2; }
         else if (printModi.paperSize === "A5") { val = val / 2; }
         
         val = Math.ceil(val) * printModi.copies;
         console.log("Check val:", val);
-        setNumPageUsed(val);
+        setNumPageUsed(prev => val);
         return val;
     }
 
@@ -215,7 +216,7 @@ export const PrintDocument = () => {
             }
         }
         sendPrintModification();
-    }, [pageSize, numCopy, doubleSide])
+    }, [pageSize, numCopy, isTwoSide])
 
     useEffect(() => {
         const fetchInfoFile = async (file) => {
@@ -290,7 +291,7 @@ export const PrintDocument = () => {
                         State: pList.state
                     };
                 });
-                setPrinterList([...printers, ...printerList]);
+                setPrinterList(printers);
 
             } catch (error) {
                 console.error("Error fetching printer list:", error.message);
@@ -359,7 +360,7 @@ export const PrintDocument = () => {
                                 onChange={(event) => setPageSize(event.target.value)}
                                 className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
                             >
-
+                                <option value="" disabled hidden>Chọn cỡ trang</option>
                                 {pageSizeList.map((size, index) => (
                                     <option value={size} key={index}>
                                         {size}
@@ -403,6 +404,7 @@ export const PrintDocument = () => {
                                 onChange={(event) => setPrinter(event.target.value)}
                                 className="border-2 border-blue-4 bg-blue-3 rounded-lg p-2 textx-lg text-white"
                             >
+                                <option value="" disabled hidden>Chọn máy in</option>
                                 {printerList.map((item, index) => (
                                     item.State === "on" && (
                                         <option value={item.Name} key={index}>
@@ -427,35 +429,35 @@ export const PrintDocument = () => {
                 </div>
 
                 {/* Lịch sử in */}
-                <div className="w-[70%] my-8 ">
+                <div className="w-[80%] my-8 ">
                     <h2 className="text-4xl text-center text-black mb-4">
                         Danh sách yêu cầu đang chờ
                     </h2>
                     <table className="w-full bg-blue-2 border-2 border-blue-4 rounded-none">
                         <thead>
                             <tr className="text-white bg-blue-3 text-xl">
-                                <th className="border-2 border-blue-4 p-4 w-[20%] ">Tên file</th>
-                                <th className="border-2 border-blue-4 p-4 ">Cỡ giấy</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số bản</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số trang của tài liệu</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số mặt</th>
-                                <th className="border-2 border-blue-4 p-4 ">Máy in</th>
-                                <th className="border-2 border-blue-4 p-4 ">Trạng thái</th>
-                                <th className="border-2 border-blue-4 p-4 ">Thời gian bắt đầu</th>
+                                <th className="border-2 border-blue-4 p-2 w-[20%] ">Tên file</th>
+                                <th className="border-2 border-blue-4 p-2 ">Cỡ giấy</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số bản</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số trang của tài liệu</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số mặt</th>
+                                <th className="border-2 border-blue-4 p-2 ">Máy in</th>
+                                <th className="border-2 border-blue-4 p-2 ">Trạng thái</th>
+                                <th className="border-2 border-blue-4 p-2 ">Thời gian bắt đầu</th>
                             </tr>
                         </thead>
                         <tbody>
                             {requests.filter((request) => request.status === "Đang xử lí").map((request, index) => (
                                 <tr key={index}
                                     className="border border-blue-4 bg-white text-blue-5 font-normal text-center text-xl">
-                                    <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{request.fileName}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.pageSize}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.numCopy}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.numPageInFile}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.doubleSide === true ? 2 : 1}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.printer}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.status}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.startTime}</td>
+                                    <td className="p-2 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{request.fileName}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.pageSize}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.numCopy}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.numPageInFile}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.doubleSide === true ? 2 : 1}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.printer}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.status}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.startTime}</td>
                                 </tr>
                             ))}
                         </tbody>

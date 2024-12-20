@@ -17,9 +17,26 @@ export const PrintingHistory = () => {
     const [history, setHistory] = useState([]);
 
     const [filteredDate, setFilteredDate] = useState(history);
-    const [totalA3page, setTotalA3page] = useState(0);
-    const [totalA4page, setTotalA4page] = useState(0);
 
+    const [statistic, setStatistic] = useState();
+
+    const countPage = (doneData) => {
+        let numA3 = 0
+        let numA4 = 0
+        let numA5 = 0
+        doneData.forEach(data => {
+            if (data.pageSize == "A3") 
+                numA3 += Math.round(data.numPageInFile/(data.doubleSide?2:1)) * data.numCopy
+            if (data.pageSize == "A4") 
+                numA4 += Math.round(data.numPageInFile/(data.doubleSide?2:1)) * data.numCopy
+            if (data.pageSize == "A5") 
+                numA5 += Math.round(data.numPageInFile/(data.doubleSide?2:1)) * data.numCopy
+        })
+        let str = (numA3 == 0) ? "" : (numA3+" trang A3 ")
+        str += (numA4 == 0) ? "" : (numA4+" trang A4 ")
+        str += (numA5 == 0) ? "" : (numA5+" trang A5 ")
+        setStatistic(str)
+    }
 
     const searchDate = () => {
         if (startDate && endDate) {
@@ -36,10 +53,13 @@ export const PrintingHistory = () => {
                 return comparedTime >= start && comparedTime <= end;
             })
             setFilteredDate(filtered);
+            countPage(filtered);
         }
         else {
             setFilteredDate(history);
+            countPage(history);
         }
+        
     }
 
     const formatDateTime = (date) => {
@@ -64,7 +84,7 @@ export const PrintingHistory = () => {
             try {
                 const student_id = 2211024;
                 const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
-                // console.log("Check print log:", response.data);
+
 
                 // Tạo mảng tạm để lưu kết quả
                 const newRequests = response.data.map((logs) => {
@@ -86,6 +106,7 @@ export const PrintingHistory = () => {
                 console.log("Fetch gòi nè chaaaa:", newRequests);
                 setHistory(newRequests);
                 setFilteredDate(history);
+                countPage(newRequests);
                 console.log("Check history:", history);
             } catch (error) {
                 console.error("Error fetching printer list:", error.message);
@@ -117,11 +138,6 @@ export const PrintingHistory = () => {
                         onChange={(event) => setEndDate(event.target.value)}
                         className="appearance-none outline-none border-2 border-blue-4 py-1 px-2 rounded-md bg-blue-2 text-xl text-center translate-y-0.5 "
                     />
-                    {/* <img src={avatar}
-                        alt="Không có gì hết á=))"
-                        className="w-12 aspect-square mx-6 border-2 border-black rounded-full hover:cursor-pointer "
-                        onClick={searchDate}
-                    /> */}
                     <button className="aspect-square rounded-full bg-blue-4 w-8 ml-5 items-center justify-items-center hover:scale-110 duration-200"
                         onClick={searchDate}>
                         <FaSearch id="search-icon" className="text-white" />
@@ -130,37 +146,38 @@ export const PrintingHistory = () => {
                 </div>
 
                 {/* Hiển thị lịch sử in */}
-                <div className="w-[70%] my-8 flex flex-col ">
+                <div className="w-[80%] my-8 flex flex-col ">
                     <p className="self-end text-lg mb-5">
-                        Tổng số trang đã sử dụng: {totalA3page} trang A3, {totalA4page} trang A4.
+                        {/* Tổng số trang đã sử dụng: {totalA3page} trang A3, {totalA4page} trang A4, {totalA5page} trang A5. */}
+                        Thống kê sử dụng: {statistic}
                     </p>
                     <table className="w-full bg-blue-2 border-2 border-blue-4 rounded-none">
                         <thead>
                             <tr className="text-white bg-blue-3 text-xl">
-                                <th className="border-2 border-blue-4 p-4 w-[20%] ">Tên file</th>
-                                <th className="border-2 border-blue-4 p-4 ">Cỡ giấy</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số bản</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số trang của tài liệu</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số mặt</th>
-                                <th className="border-2 border-blue-4 p-4 ">Máy in</th>
-                                <th className="border-2 border-blue-4 p-4 ">Trạng thái</th>
-                                <th className="border-2 border-blue-4 p-4 ">Thời gian bắt đầu</th>
-                                <th className="border-2 border-blue-4 p-4 ">Thời gian kết thúc</th>
+                                <th className="border-2 border-blue-4 p-2 w-[20%] ">Tên file</th>
+                                <th className="border-2 border-blue-4 p-2 ">Cỡ giấy</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số bản</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số trang của tài liệu</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số mặt</th>
+                                <th className="border-2 border-blue-4 p-2 ">Máy in</th>
+                                <th className="border-2 border-blue-4 p-2 ">Trạng thái</th>
+                                <th className="border-2 border-blue-4 p-2 ">Thời gian bắt đầu</th>
+                                <th className="border-2 border-blue-4 p-2 ">Thời gian kết thúc</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredDate.filter((hist) => hist.status === "Đã in xong").map((hist, index) => (
                                 <tr key={index}
                                     className="border border-blue-4 text-blue-5 bg-white font-normal text-center text-xl">
-                                    <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{hist.fileName}</td>
-                                    <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
-                                    <td className="p-6 border-2 border-blue-4">{hist.numCopy}</td>
-                                    <td className="p-6 border-2 border-blue-4">{hist.numPageInFile}</td>
-                                    <td className="p-6 border-2 border-blue-4">{hist.doubleSide === true ? 2 : 1}</td>
-                                    <td className="p-6 border-2 border-blue-4">{hist.printer}</td>
-                                    <td className="p-6 border-2 border-blue-4">{hist.status}</td>
-                                    <td className="p-6 border-2 border-blue-4">{hist.startTime}</td>
-                                    <td className="p-6 border-2 border-blue-4">{hist.endTime || null}</td>
+                                    <td className="p-2 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{hist.fileName}</td>
+                                    <td className="p-2 border-2 border-blue-4">{hist.pageSize}</td>
+                                    <td className="p-2 border-2 border-blue-4">{hist.numCopy}</td>
+                                    <td className="p-2 border-2 border-blue-4">{hist.numPageInFile}</td>
+                                    <td className="p-2 border-2 border-blue-4">{hist.doubleSide === true ? 2 : 1}</td>
+                                    <td className="p-2 border-2 border-blue-4">{hist.printer}</td>
+                                    <td className="p-2 border-2 border-blue-4">{hist.status}</td>
+                                    <td className="p-2 border-2 border-blue-4">{hist.startTime}</td>
+                                    <td className="p-2 border-2 border-blue-4">{hist.endTime || null}</td>
                                 </tr>
                             ))}
                         </tbody>

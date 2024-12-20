@@ -51,7 +51,7 @@ export const ReportsPage = () => {
     return <div className="flex flex-col min-h-screen text-xl">
         <SPSOHeader/>
         {/* Big */}
-        <div className="hidden md:flex justify-center flex-col items-center px-10 gap-y-10 my-10">
+        <div className="hidden md:flex flex-grow justify-center flex-col items-center px-10 gap-y-10 my-10">
         <div className="flex flex-col gap-y-10">
             <div className="flex flex-row items-center gap-x-10 text-xl">
                 <div className="flex flex-row items-center">
