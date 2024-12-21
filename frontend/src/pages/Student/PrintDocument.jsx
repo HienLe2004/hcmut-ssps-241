@@ -85,7 +85,7 @@ export const PrintDocument = () => {
 
     const sendForm = () => {
 
-        if(remainPage < numPageUsed){
+        if (remainPage < numPageUsed) {
             setConfirmPopup(false);
             setIsEnough(false);
             return;
@@ -94,7 +94,7 @@ export const PrintDocument = () => {
         setSuccessPopup(true);
 
         createPrintLog();
-        
+
 
         setRemainPage(remainPage - numPageUsed);
         handleRemoveFile();
@@ -114,12 +114,12 @@ export const PrintDocument = () => {
 
     const calculateNumPageUsed = () => {
         var val = fileData.numPages;
-        console.log("Check 1:",printModi.doubleSided)
-        console.log("Check 2:",printModi.paperSize)
+        console.log("Check 1:", printModi.doubleSided)
+        console.log("Check 2:", printModi.paperSize)
         if (printModi.doubleSided === true) { val = val / 2; }
         if (printModi.paperSize === "A3") { val = val * 2; }
         else if (printModi.paperSize === "A5") { val = val / 2; }
-        
+
         val = Math.ceil(val) * printModi.copies;
         console.log("Check val:", val);
         setNumPageUsed(prev => val);
@@ -151,7 +151,8 @@ export const PrintDocument = () => {
     // Lấy các print log
     const fetchPrintLog = async () => {
         try {
-            const student_id = 2211024;
+            const user = JSON.parse(localStorage.getItem('user'));
+            const student_id = user.id;
             const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
             console.log("Check print log:", response.data);
             const data = response.data;
@@ -180,8 +181,6 @@ export const PrintDocument = () => {
         }
     };
 
-
-
     useEffect(() => {
         const updateStudentBalance = async (id, numPage) => {
             try {
@@ -194,9 +193,10 @@ export const PrintDocument = () => {
             } catch (error) {
                 console.error("Error updating student balance:", error.message);
             }
-        };                                                                                                                      
+        };
+        const user = JSON.parse(localStorage.getItem('user'));
 
-        updateStudentBalance("2211024", remainPage);
+        updateStudentBalance(user.id, remainPage);
     }, [remainPage])
 
     useEffect(() => {
@@ -223,9 +223,10 @@ export const PrintDocument = () => {
             if (file) {
                 const formData = new FormData();
                 formData.append("file", file); // Thêm file vào FormData với key là "file"
-
+                const user = JSON.parse(localStorage.getItem('user'));
+                const student_id = user.id;
                 try {
-                    const response = await axios.post("http://localhost:8080/api/v1/document/2211024", formData, {
+                    const response = await axios.post(`http://localhost:8080/api/v1/document/${student_id}`, formData, {
                         headers: {
                             "Content-Type": "multipart/form-data",
                         },
@@ -263,7 +264,7 @@ export const PrintDocument = () => {
             }
         };
 
-        
+
 
         // Lấy thống tin sinh viên
 
@@ -298,11 +299,11 @@ export const PrintDocument = () => {
             }
 
         };
-
+        const user = JSON.parse(localStorage.getItem('user'));
         fetchPrinterList();
         fetchPrinterSetting();
         fetchPrintLog();
-        fetchInfoStudent("2211024");
+        fetchInfoStudent(user.id);
     }, []);
 
     useEffect(() => {
@@ -479,7 +480,7 @@ export const PrintDocument = () => {
             )}
 
             {!isEnough && (
-                <Alert onClose={() => {setIsEnough(true)}} message={"Số trang của bạn không đủ, hãy mua thêm"}/>
+                <Alert onClose={() => { setIsEnough(true) }} message={"Số trang của bạn không đủ, hãy mua thêm"} />
             )}
 
             {successPopup && (

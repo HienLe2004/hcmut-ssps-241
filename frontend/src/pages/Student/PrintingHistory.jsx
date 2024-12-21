@@ -25,16 +25,16 @@ export const PrintingHistory = () => {
         let numA4 = 0
         let numA5 = 0
         doneData.forEach(data => {
-            if (data.pageSize == "A3") 
-                numA3 += Math.round(data.numPageInFile/(data.doubleSide?2:1)) * data.numCopy
-            if (data.pageSize == "A4") 
-                numA4 += Math.round(data.numPageInFile/(data.doubleSide?2:1)) * data.numCopy
-            if (data.pageSize == "A5") 
-                numA5 += Math.round(data.numPageInFile/(data.doubleSide?2:1)) * data.numCopy
+            if (data.pageSize == "A3")
+                numA3 += Math.round(data.numPageInFile / (data.doubleSide ? 2 : 1)) * data.numCopy
+            if (data.pageSize == "A4")
+                numA4 += Math.round(data.numPageInFile / (data.doubleSide ? 2 : 1)) * data.numCopy
+            if (data.pageSize == "A5")
+                numA5 += Math.round(data.numPageInFile / (data.doubleSide ? 2 : 1)) * data.numCopy
         })
-        let str = (numA3 == 0) ? "" : (numA3+" trang A3 ")
-        str += (numA4 == 0) ? "" : (numA4+" trang A4 ")
-        str += (numA5 == 0) ? "" : (numA5+" trang A5 ")
+        let str = (numA3 == 0) ? "" : (numA3 + " trang A3 ")
+        str += (numA4 == 0) ? "" : (numA4 + " trang A4 ")
+        str += (numA5 == 0) ? "" : (numA5 + " trang A5 ")
         setStatistic(str)
     }
 
@@ -59,7 +59,7 @@ export const PrintingHistory = () => {
             setFilteredDate(history);
             countPage(history);
         }
-        
+
     }
 
     const formatDateTime = (date) => {
@@ -82,7 +82,10 @@ export const PrintingHistory = () => {
     useEffect(() => {
         const fetchPrintLog = async () => {
             try {
-                const student_id = 2211024;
+                const user = JSON.parse(localStorage.getItem('user'));
+                const student_id = user.id;
+                console.log("Check 1:",user.id); // In ra username
+
                 const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
 
 

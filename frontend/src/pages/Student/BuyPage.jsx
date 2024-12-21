@@ -4,7 +4,7 @@ import { AddSuccess } from "./AddSuccess";
 import { Alert } from "./Alert";
 import { Confirm } from "./Confirm";
 import avatar from '../../images/VitaminMeo.jpg'
-import { format, parseISO } from "date-fns";
+
 import axios from "axios";
 import { FaSearch } from "react-icons/fa"
 
@@ -65,6 +65,19 @@ export const BuyPage = () => {
         setAlertPopup(false);
     }
 
+    const convertToVietnamTime = (utcDate) => {
+        const date = new Date(utcDate);
+        // Cộng thêm 7 giờ để chuyển đổi sang múi giờ UTC+7
+        return new Date(date.getTime() + 7 * 60 * 60 * 1000);
+    };
+
+    const formatDateTime = (date) => {
+        console.log("Check formatDT:", date);
+        if (!date) return "null";
+        console.log("Is Date Instance:", date instanceof Date);
+        return date.toLocaleString("vi-VN", { timeZone: "Asia/Bangkok" });
+    };
+
     const postBuyLog = async (idStu) => {
         const buyLog = {
             paperSize: pageSize,
@@ -73,6 +86,7 @@ export const BuyPage = () => {
             paymentTime: new Date,
             student: { id: idStu }
         }
+        console.log("Check buy log:", buyLog.paymentTime)
         try {
             const response = await axios.post('http://localhost:8080/api/v1/buyLog', buyLog);
         } catch (error) {
@@ -89,7 +103,9 @@ export const BuyPage = () => {
             total,
             buyTime: new Date
         };
-        postBuyLog("2211024");
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        postBuyLog(user.id);
         setBuyHistory([newBuy, ...buyHistory]);
         setFilteredDate(buyHistory);
 
@@ -107,6 +123,7 @@ export const BuyPage = () => {
             } catch (error) {
                 console.error("Error fetching student:", error.message);
             }
+
         }
 
         const fetchBuyLog = async (id) => {
@@ -121,7 +138,8 @@ export const BuyPage = () => {
                         numPageBuy: logs.boughtPageNum,
                         pageSize: logs.paperSize,
                         total: logs.price,
-                        buyTime: logs.paymentTime
+                        // buyTime: logs.paymentTime
+                        buyTime: convertToVietnamTime(logs.paymentTime),
                     };
                 });
 
@@ -132,9 +150,10 @@ export const BuyPage = () => {
                 console.error("Error fetching buy log:", error.message);
             }
         }
+        const user = JSON.parse(localStorage.getItem('user'));
 
-        fetchInfoStudent("2211024");
-        fetchBuyLog("2211024");
+        fetchInfoStudent(user.id);
+        fetchBuyLog(user.id);
 
     }, [])
 
@@ -158,18 +177,6 @@ export const BuyPage = () => {
         }
     }
 
-    const formatDateTime = (date) => {
-        if (!date) return "null";
-        return date.toLocaleString("vi-VN", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            // second: "2-digit",
-        });
-    };
-
     useEffect(() => {
         const updateStudentBalance = async (id, numPage) => {
             try {
@@ -183,8 +190,9 @@ export const BuyPage = () => {
                 console.error("Error updating student balance:", error.message);
             }
         };
+        const user = JSON.parse(localStorage.getItem('user'));
 
-        updateStudentBalance("2211024", remainPage);
+        updateStudentBalance(user.id, remainPage);
     }, [remainPage])
 
 
@@ -216,12 +224,6 @@ export const BuyPage = () => {
                             className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
 
                         >
-
-                            {/* {pageSizeList.map((size, index) => (
-                                    <option value={size} key={index}>
-                                        {size}
-                                    </option>
-                                ))} */}
                             <option value="" disabled hidden>Chọn cỡ giấy</option>
                             <option value="A3">A3</option>
                             <option value="A4">A4</option>
@@ -253,11 +255,7 @@ export const BuyPage = () => {
                         onChange={(event) => setEndDate(event.target.value)}
                         className="appearance-none outline-none border-2 border-blue-4 py-1 px-2 rounded-md bg-blue-2 text-xl text-center translate-y-0.5 "
                     />
-                    {/* <img src={avatar}
-                        alt="Không có gì hết á=))"
-                        className="w-12 aspect-square mx-6 border-2 border-black rounded-full hover:cursor-pointer "
-                        onClick={searchDate}
-                    /> */}
+
                     <button className="aspect-square rounded-full bg-blue-4 w-8 ml-5 items-center justify-items-center hover:scale-110 duration-200"
                         onClick={searchDate}>
                         <FaSearch id="search-icon" className="text-white" />
@@ -286,8 +284,8 @@ export const BuyPage = () => {
                                         <td className="p-6 border-2 border-blue-4">{hist.numPageBuy}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.total}</td>
-                                        <td className="p-6 border-2 border-blue-4">{formatDateTime(hist.buyTime)}</td>
-                                        {console.log("Check buy time:", formatDateTime(hist.buyTime))}
+                                        <td className="p-6 border-2 border-blue-4">{formatDateTime(new Date(hist.buyTime))}</td>
+                                        {console.log("Check buy time:", formatDateTime(new Date(hist.buyTime)))}
                                     </tr>
                                 )))
                             }
@@ -299,7 +297,7 @@ export const BuyPage = () => {
                                         <td className="p-6 border-2 border-blue-4">{hist.numPageBuy}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.total}</td>
-                                        <td className="p-6 border-2 border-blue-4">{formatDateTime(hist.buyTime)}</td>
+                                        <td className="p-6 border-2 border-blue-4">{formatDateTime(new Date(hist.buyTime))}</td>
 
                                     </tr>
                                 )))
