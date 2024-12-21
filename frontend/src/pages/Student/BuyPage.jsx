@@ -4,8 +4,9 @@ import { AddSuccess } from "./AddSuccess";
 import { Alert } from "./Alert";
 import { Confirm } from "./Confirm";
 import avatar from '../../images/VitaminMeo.jpg'
-import { format, parseISO } from "date-fns";
+
 import axios from "axios";
+import { FaSearch } from "react-icons/fa"
 
 
 import { useEffect, useState } from "react";
@@ -64,6 +65,19 @@ export const BuyPage = () => {
         setAlertPopup(false);
     }
 
+    const convertToVietnamTime = (utcDate) => {
+        const date = new Date(utcDate);
+        // Cộng thêm 7 giờ để chuyển đổi sang múi giờ UTC+7
+        return new Date(date.getTime() + 7 * 60 * 60 * 1000);
+    };
+
+    const formatDateTime = (date) => {
+        console.log("Check formatDT:", date);
+        if (!date) return "null";
+        console.log("Is Date Instance:", date instanceof Date);
+        return date.toLocaleString("vi-VN", { timeZone: "Asia/Bangkok" });
+    };
+
     const postBuyLog = async (idStu) => {
         const buyLog = {
             paperSize: pageSize,
@@ -72,6 +86,7 @@ export const BuyPage = () => {
             paymentTime: new Date,
             student: { id: idStu }
         }
+        console.log("Check buy log:", buyLog.paymentTime)
         try {
             const response = await axios.post('http://localhost:8080/api/v1/buyLog', buyLog);
         } catch (error) {
@@ -88,7 +103,9 @@ export const BuyPage = () => {
             total,
             buyTime: new Date
         };
-        postBuyLog("2211024");
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        postBuyLog(user.id);
         setBuyHistory([newBuy, ...buyHistory]);
         setFilteredDate(buyHistory);
 
@@ -106,6 +123,7 @@ export const BuyPage = () => {
             } catch (error) {
                 console.error("Error fetching student:", error.message);
             }
+
         }
 
         const fetchBuyLog = async (id) => {
@@ -120,7 +138,8 @@ export const BuyPage = () => {
                         numPageBuy: logs.boughtPageNum,
                         pageSize: logs.paperSize,
                         total: logs.price,
-                        buyTime: logs.paymentTime
+                        // buyTime: logs.paymentTime
+                        buyTime: convertToVietnamTime(logs.paymentTime),
                     };
                 });
 
@@ -131,9 +150,10 @@ export const BuyPage = () => {
                 console.error("Error fetching buy log:", error.message);
             }
         }
+        const user = JSON.parse(localStorage.getItem('user'));
 
-        fetchInfoStudent("2211024");
-        fetchBuyLog("2211024");
+        fetchInfoStudent(user.id);
+        fetchBuyLog(user.id);
 
     }, [])
 
@@ -157,18 +177,6 @@ export const BuyPage = () => {
         }
     }
 
-    const formatDateTime = (date) => {
-        if (!date) return "null";
-        return date.toLocaleString("vi-VN", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-
-        });
-    };
-
     useEffect(() => {
         const updateStudentBalance = async (id, numPage) => {
             try {
@@ -182,8 +190,9 @@ export const BuyPage = () => {
                 console.error("Error updating student balance:", error.message);
             }
         };
+        const user = JSON.parse(localStorage.getItem('user'));
 
-        updateStudentBalance("2211024", remainPage);
+        updateStudentBalance(user.id, remainPage);
     }, [remainPage])
 
 
@@ -194,7 +203,7 @@ export const BuyPage = () => {
                 {/* Form mua trang in + Bảng số trang hiện có */}
 
                 <form onSubmit={handleSubmit}
-                    className="flex flex-col w-[40%]  bg-blue-2 rounded-md m-5  text-white text-xl font-normal "
+                    className="flex flex-col w-[40%]  bg-blue-3 rounded-md m-5  text-white text-xl font-normal "
 
                 >
                     <p className="m-5">Số trang hiện có: {remainPage}</p>
@@ -213,20 +222,16 @@ export const BuyPage = () => {
                         <select value={pageSize}
                             onChange={(event) => setPageSize(event.target.value)}
                             className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
-                        >
 
-                            {/* {pageSizeList.map((size, index) => (
-                                    <option value={size} key={index}>
-                                        {size}
-                                    </option>
-                                ))} */}
+                        >
+                            <option value="" disabled hidden>Chọn cỡ giấy</option>
                             <option value="A3">A3</option>
                             <option value="A4">A4</option>
                             <option value="A5">A5</option>
                         </select>
                     </div>
                     <button type="submit"
-                        className=" w-[150px] self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-blue-5 duration-200"
+                        className=" w-[150px] self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-[#2d66c1] duration-200"
                     >
                         Mua
                     </button>
@@ -250,19 +255,18 @@ export const BuyPage = () => {
                         onChange={(event) => setEndDate(event.target.value)}
                         className="appearance-none outline-none border-2 border-blue-4 py-1 px-2 rounded-md bg-blue-2 text-xl text-center translate-y-0.5 "
                     />
-                    <img src={avatar}
-                        alt="Không có gì hết á=))"
-                        className="w-12 aspect-square mx-6 border-2 border-black rounded-full hover:cursor-pointer "
-                        onClick={searchDate}
-                    />
 
+                    <button className="aspect-square rounded-full bg-blue-4 w-8 ml-5 items-center justify-items-center hover:scale-110 duration-200"
+                        onClick={searchDate}>
+                        <FaSearch id="search-icon" className="text-white" />
+                    </button>
                 </div>
 
                 {/* Hiển thị lịch sử mua */}
                 <div className="w-[70%] my-8 flex flex-col ">
                     <table className="w-full bg-blue-2 border-2 border-blue-4 rounded-none">
                         <thead>
-                            <tr className="text-black text-xl">
+                            <tr className="text-white bg-blue-3 text-xl">
                                 <th className="border-2 border-blue-4 p-4 w-[20%] ">Số trang đã mua</th>
                                 <th className="border-2 border-blue-4 p-4 ">Kích cỡ trang</th>
                                 <th className="border-2 border-blue-4 p-4 ">Giá tiền (VNĐ)</th>
@@ -275,25 +279,25 @@ export const BuyPage = () => {
                                 (buyHistory.map((hist, index) => (
 
                                     <tr key={index}
-                                        className="border border-blue-4 text-white font-light text-center text-lg">
+                                        className="border border-blue-4 text-blue-5 bg-white font-normal text-center text-xl">
 
                                         <td className="p-6 border-2 border-blue-4">{hist.numPageBuy}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.total}</td>
-                                        <td className="p-6 border-2 border-blue-4">{formatDateTime(hist.buyTime)}</td>
-
+                                        <td className="p-6 border-2 border-blue-4">{formatDateTime(new Date(hist.buyTime))}</td>
+                                        {console.log("Check buy time:", formatDateTime(new Date(hist.buyTime)))}
                                     </tr>
                                 )))
                             }
                             {isSearched &&
                                 (filteredDate.map((hist, index) => (
                                     <tr key={index}
-                                        className="border border-blue-4 text-white font-light text-center text-lg">
+                                        className="border border-blue-4 text-blue-5 bg-white font-normal text-center text-xl">
 
                                         <td className="p-6 border-2 border-blue-4">{hist.numPageBuy}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.pageSize}</td>
                                         <td className="p-6 border-2 border-blue-4">{hist.total}</td>
-                                        <td className="p-6 border-2 border-blue-4">{formatDateTime(hist.buyTime)}</td>
+                                        <td className="p-6 border-2 border-blue-4">{formatDateTime(new Date(hist.buyTime))}</td>
 
                                     </tr>
                                 )))

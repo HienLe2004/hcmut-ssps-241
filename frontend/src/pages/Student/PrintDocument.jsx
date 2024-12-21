@@ -6,12 +6,13 @@ import { AddSuccess } from "./AddSuccess";
 import { Alert } from './Alert';
 import axios from "axios";
 
+
 export const PrintDocument = () => {
 
     const [file, setFile] = useState(null);
     const [fileName, setFileName] = useState('');
 
-    const [pageSize, setPageSize] = useState('A3');
+    const [pageSize, setPageSize] = useState("");
     const [pageSizeList, setPageSizeList] = useState([]);
 
     const [defaultPage, setDefaultPage] = useState(0);
@@ -58,10 +59,6 @@ export const PrintDocument = () => {
         setConfirmPopup(false);
     }
 
-    const fakeFunc = () => {
-        console.log("Fake hehehe");
-    }
-
     const turnOffAddSuccess = () => {
         setSuccessPopup(false);
     }
@@ -88,7 +85,7 @@ export const PrintDocument = () => {
 
     const sendForm = () => {
 
-        if(remainPage < numPageUsed){
+        if (remainPage < numPageUsed) {
             setConfirmPopup(false);
             setIsEnough(false);
             return;
@@ -97,16 +94,11 @@ export const PrintDocument = () => {
         setSuccessPopup(true);
 
         createPrintLog();
-        
+
 
         setRemainPage(remainPage - numPageUsed);
         handleRemoveFile();
     }
-
-
-
-
-
 
     const formatDateTime = (date) => {
         if (!date) return "null";
@@ -122,14 +114,15 @@ export const PrintDocument = () => {
 
     const calculateNumPageUsed = () => {
         var val = fileData.numPages;
-
+        console.log("Check 1:", printModi.doubleSided)
+        console.log("Check 2:", printModi.paperSize)
         if (printModi.doubleSided === true) { val = val / 2; }
         if (printModi.paperSize === "A3") { val = val * 2; }
         else if (printModi.paperSize === "A5") { val = val / 2; }
-        
+
         val = Math.ceil(val) * printModi.copies;
         console.log("Check val:", val);
-        setNumPageUsed(val);
+        setNumPageUsed(prev => val);
         return val;
     }
 
@@ -158,7 +151,8 @@ export const PrintDocument = () => {
     // Lấy các print log
     const fetchPrintLog = async () => {
         try {
-            const student_id = 2211024;
+            const user = JSON.parse(localStorage.getItem('user'));
+            const student_id = user.id;
             const response = await axios.get(`http://localhost:8080/api/v1/student/${student_id}/printLogs`);
             console.log("Check print log:", response.data);
             const data = response.data;
@@ -180,13 +174,12 @@ export const PrintDocument = () => {
             });
 
             // Cập nhật trạng thái một lần
-            setRequests([...requests, ...newRequests]);
+            // setRequests([...requests, ...newRequests]);
+            setRequests(newRequests);
         } catch (error) {
             console.error("Error fetching printer list:", error.message);
         }
     };
-
-
 
     useEffect(() => {
         const updateStudentBalance = async (id, numPage) => {
@@ -200,9 +193,10 @@ export const PrintDocument = () => {
             } catch (error) {
                 console.error("Error updating student balance:", error.message);
             }
-        };                                                                                                                      
+        };
+        const user = JSON.parse(localStorage.getItem('user'));
 
-        updateStudentBalance("2211024", remainPage);
+        updateStudentBalance(user.id, remainPage);
     }, [remainPage])
 
     useEffect(() => {
@@ -215,23 +209,24 @@ export const PrintDocument = () => {
                         doubleSided: isTwoSide
                     }
                 );
-                // console.log("Đã gửi modification", response.data);
+                console.log("Đã gửi modification", response.data);
                 setPrintModi(response.data);
             } catch (error) {
                 console.error("Error uploading modification:", error.message);
             }
         }
         sendPrintModification();
-    }, [pageSize, numCopy, doubleSide])
+    }, [pageSize, numCopy, isTwoSide])
 
     useEffect(() => {
         const fetchInfoFile = async (file) => {
             if (file) {
                 const formData = new FormData();
                 formData.append("file", file); // Thêm file vào FormData với key là "file"
-
+                const user = JSON.parse(localStorage.getItem('user'));
+                const student_id = user.id;
                 try {
-                    const response = await axios.post("http://localhost:8080/api/v1/document/2211024", formData, {
+                    const response = await axios.post(`http://localhost:8080/api/v1/document/${student_id}`, formData, {
                         headers: {
                             "Content-Type": "multipart/form-data",
                         },
@@ -269,7 +264,7 @@ export const PrintDocument = () => {
             }
         };
 
-        
+
 
         // Lấy thống tin sinh viên
 
@@ -297,18 +292,18 @@ export const PrintDocument = () => {
                         State: pList.state
                     };
                 });
-                setPrinterList([...printers, ...printerList]);
+                setPrinterList(printers);
 
             } catch (error) {
                 console.error("Error fetching printer list:", error.message);
             }
 
         };
-
+        const user = JSON.parse(localStorage.getItem('user'));
         fetchPrinterList();
         fetchPrinterSetting();
         fetchPrintLog();
-        fetchInfoStudent("2211024");
+        fetchInfoStudent(user.id);
     }, []);
 
     useEffect(() => {
@@ -326,7 +321,7 @@ export const PrintDocument = () => {
 
                 <div className="  w-[60%] mt-5  ">
 
-                    <form className="flex flex-col bg-blue-2 rounded-xl p-4  "
+                    <form className="flex flex-col bg-blue-3 rounded-xl p-4  "
                         onSubmit={handleSubmit}
                     >
                         {/* Chọn tài liệu */}
@@ -349,7 +344,7 @@ export const PrintDocument = () => {
                             )}
                             {!fileName && (
                                 <label htmlFor="fileUpload"
-                                    className="bg-blue-4 text-white text-md px-4 py-2 cursor-pointer rounded-lg hover:bg-blue-5 duration-200"
+                                    className="bg-blue-4 text-white text-md px-4 py-2 cursor-pointer rounded-lg hover:bg-[#2d66c1] duration-200"
 
                                 >
                                     Tải lên:
@@ -366,7 +361,7 @@ export const PrintDocument = () => {
                                 onChange={(event) => setPageSize(event.target.value)}
                                 className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
                             >
-
+                                <option value="" disabled hidden>Chọn cỡ trang</option>
                                 {pageSizeList.map((size, index) => (
                                     <option value={size} key={index}>
                                         {size}
@@ -410,6 +405,7 @@ export const PrintDocument = () => {
                                 onChange={(event) => setPrinter(event.target.value)}
                                 className="border-2 border-blue-4 bg-blue-3 rounded-lg p-2 textx-lg text-white"
                             >
+                                <option value="" disabled hidden>Chọn máy in</option>
                                 {printerList.map((item, index) => (
                                     item.State === "on" && (
                                         <option value={item.Name} key={index}>
@@ -422,7 +418,7 @@ export const PrintDocument = () => {
 
                         {/* Nút gửi yêu cầu in */}
                         <button type="submit"
-                            className=" w-56 self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-blue-5 duration-200"
+                            className=" w-56 self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-[#2d66c1] duration-200"
                         >
                             Yêu cầu in tài liệu
                         </button>
@@ -434,37 +430,35 @@ export const PrintDocument = () => {
                 </div>
 
                 {/* Lịch sử in */}
-                <div className="w-[70%] my-8 ">
+                <div className="w-[80%] my-8 ">
                     <h2 className="text-4xl text-center text-black mb-4">
                         Danh sách yêu cầu đang chờ
                     </h2>
                     <table className="w-full bg-blue-2 border-2 border-blue-4 rounded-none">
                         <thead>
-                            <tr className="text-black text-xl">
-                                <th className="border-2 border-blue-4 p-4 w-[20%] ">Tên file</th>
-                                <th className="border-2 border-blue-4 p-4 ">Cỡ giấy</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số bản</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số trang của tài liệu</th>
-                                <th className="border-2 border-blue-4 p-4 ">Số mặt</th>
-                                <th className="border-2 border-blue-4 p-4 ">Máy in</th>
-                                <th className="border-2 border-blue-4 p-4 ">Trạng thái</th>
-                                <th className="border-2 border-blue-4 p-4 ">Thời gian bắt đầu</th>
-                                <th className="border-2 border-blue-4 p-4 ">Thời gian kết thúc</th>
+                            <tr className="text-white bg-blue-3 text-xl">
+                                <th className="border-2 border-blue-4 p-2 w-[20%] ">Tên file</th>
+                                <th className="border-2 border-blue-4 p-2 ">Cỡ giấy</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số bản</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số trang của tài liệu</th>
+                                <th className="border-2 border-blue-4 p-2 ">Số mặt</th>
+                                <th className="border-2 border-blue-4 p-2 ">Máy in</th>
+                                <th className="border-2 border-blue-4 p-2 ">Trạng thái</th>
+                                <th className="border-2 border-blue-4 p-2 ">Thời gian bắt đầu</th>
                             </tr>
                         </thead>
                         <tbody>
                             {requests.filter((request) => request.status === "Đang xử lí").map((request, index) => (
                                 <tr key={index}
-                                    className="border border-blue-4 text-white font-light text-center text-lg">
-                                    <td className="p-6 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{request.fileName}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.pageSize}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.numCopy}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.numPageInFile}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.doubleSide === true ? 2 : 1}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.printer}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.status}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.startTime}</td>
-                                    <td className="p-6 border-2 border-blue-4">{request.endTime || null}</td>
+                                    className="border border-blue-4 bg-white text-blue-5 font-normal text-center text-xl">
+                                    <td className="p-2 border-2 border-blue-4 max-w-[96px] overflow-hidden whitespace-nowrap text-ellipsis">{request.fileName}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.pageSize}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.numCopy}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.numPageInFile}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.doubleSide === true ? 2 : 1}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.printer}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.status}</td>
+                                    <td className="p-2 border-2 border-blue-4">{request.startTime}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -486,7 +480,7 @@ export const PrintDocument = () => {
             )}
 
             {!isEnough && (
-                <Alert onClose={() => {setIsEnough(true)}} message={"Số trang của bạn không đủ, hãy mua thêm"}/>
+                <Alert onClose={() => { setIsEnough(true) }} message={"Số trang của bạn không đủ, hãy mua thêm"} />
             )}
 
             {successPopup && (

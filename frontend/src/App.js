@@ -14,7 +14,7 @@ import { ReportsPage } from "./pages/SPSO/ReportsPage/ReportsPage";
 import { PrintingHistory } from "./pages/Student/PrintingHistory";
 import { BuyPage } from "./pages/Student/BuyPage";
 import { PrinterInfoPage } from "./pages/SPSO/PrintersPage/PrinterInfoPage";
-import { students, rooms, printingRequests, printers, validDocs, defaultPage, reports} from "./utils/mock-data";
+import { students, rooms, printingRequests, printers, validDocs, defaultPage, reports } from "./utils/mock-data";
 import { createServer, Model } from "miragejs";
 // createServer({
 //   models: {
@@ -137,23 +137,28 @@ function App() {
   }, []);
   return (
     <div className="app">
-    <Routes>
-      <Route path="/" element={<HomePage/>} />
-      <Route path="/login" element={<LoginPage login={setUser}/>} />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage login={setUser} />} />
 
-      <Route path="/student/homepage" element={<StudentHomePage />} />
-      <Route path="/student/printDoc" element={<PrintDocument />} />
-      <Route path="/student/printHistory" element={<PrintingHistory />} />
-      <Route path="/student/buyPage" element={<BuyPage />} />
+        {/* <Route path="/student/homepage" element={<StudentHomePage />} />
+        <Route path="/student/printDoc" element={<PrintDocument />} />
+        <Route path="/student/printHistory" element={<PrintingHistory />} />
+        <Route path="/student/buyPage" element={<BuyPage />} /> */}
 
-      <Route path="/spso/homepage" element={(user?.role!="spso")?<Navigate to="/login"/>:<SPSOHomePage/>}/>
-      <Route path="/spso/waiting-docs" element={(user?.role!="spso")?<Navigate to="/login"/>:<WaitingDocsPage/>}/>
-      <Route path="/spso/printers" element={(user?.role!="spso")?<Navigate to="/login"/>:<PrintersPage/>}/>
-      <Route path="/spso/printers/:id" element={(user?.role!="spso")?<Navigate to="/login"/>:<PrinterInfoPage/>}/>
-      <Route path="/spso/history" element={(user?.role!="spso")?<Navigate to="/login"/>:<SystemHistoryPage/>}/>
-      <Route path="/spso/management" element={(user?.role!="spso")?<Navigate to="/login"/>:<ManagementPage/>}/>
-      <Route path="/spso/reports" element={(user?.role!="spso")?<Navigate to="/login"/>:<ReportsPage/>}/>    
-    </Routes>    
+        <Route path="/student/homepage" element={(user?.role != "student") ? <Navigate to="/login" /> : <StudentHomePage />} />
+        <Route path="/student/printDoc" element={(user?.role != "student") ? <Navigate to="/login" /> : <PrintDocument />} />
+        <Route path="/student/printHistory" element={(user?.role != "student") ? <Navigate to="/login" /> : <PrintingHistory />} />
+        <Route path="/student/buyPage" element={(user?.role != "student") ? <Navigate to="/login" /> : <BuyPage />} />
+
+        <Route path="/spso/homepage" element={(user?.role != "spso") ? <Navigate to="/login" /> : <SPSOHomePage />} />
+        <Route path="/spso/waiting-docs" element={(user?.role != "spso") ? <Navigate to="/login" /> : <WaitingDocsPage />} />
+        <Route path="/spso/printers" element={(user?.role != "spso") ? <Navigate to="/login" /> : <PrintersPage />} />
+        <Route path="/spso/printers/:id" element={(user?.role != "spso") ? <Navigate to="/login" /> : <PrinterInfoPage />} />
+        <Route path="/spso/history" element={(user?.role != "spso") ? <Navigate to="/login" /> : <SystemHistoryPage />} />
+        <Route path="/spso/management" element={(user?.role != "spso") ? <Navigate to="/login" /> : <ManagementPage />} />
+        <Route path="/spso/reports" element={(user?.role != "spso") ? <Navigate to="/login" /> : <ReportsPage />} />
+      </Routes>
     </div>
   );
 }

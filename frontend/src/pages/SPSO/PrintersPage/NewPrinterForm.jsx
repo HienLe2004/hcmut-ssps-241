@@ -76,7 +76,7 @@ export const NewPrinterForm = ({closeForm, submitForm}) => {
         setDescription(e.target.value)
     }
     return <div className="fixed bg-black/50 left-0 top-0 z-1 w-full h-full flex items-center justify-center">
-        <div className="p-5 bg-blue-4 text-white rounded-xl flex flex-col gap-y-5 w-max-[300px]">
+        <div className="p-5 bg-blue-3 text-white rounded-xl flex flex-col gap-y-5 w-max-[300px]">
             <p className="font-bold text-center text-xl">Thêm máy in mới</p>
             <div className="flex items-center">
                 <p>Vị trí</p>
@@ -95,11 +95,11 @@ export const NewPrinterForm = ({closeForm, submitForm}) => {
                 <input className="pl-1 bg-blue-2 py-2 rounded-xl" type="text" onChange={handleChangeDescription}/>
             </div>
             <div className="flex flex-row justify-around w-full">
-                <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
+                <button className="p-2 bg-blue-4 rounded-xl hover:scale-110 duration-200"
                     onClick={() => {submitForm((selectedLocation==null)?null:selectedLocation.value, description); closeForm();}}>
                     Đồng ý
                 </button>
-                <button className="p-2 bg-blue-5 rounded-xl hover:scale-110 duration-200"
+                <button className="p-2 bg-blue-4 rounded-xl hover:scale-110 duration-200"
                     onClick={() => {closeForm();}}>
                     Hủy
                 </button>
