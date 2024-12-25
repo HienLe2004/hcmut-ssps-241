@@ -33,7 +33,7 @@ export const PrintersTable = ({printers}) => {
             <tbody className="bg-blue-0 text-blue-5">
                 {printers.map((printer, printerKey) => {
                     return <tr key={printerKey}>
-                        <td className="text-center border-2 border-blue-4 px-2"><NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink></td>
+                        <td className="text-center border-2 border-blue-4 px-2 font-medium"><NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink></td>
                         <td className="text-center border-2 border-blue-4 px-2">{printer.description}</td>
                         <td className="text-center border-2 border-blue-4">{printer.startTime}</td>
                         <td className="text-center border-2 border-blue-4">
@@ -57,13 +57,13 @@ export const PrintersTable = ({printers}) => {
                 {printers.map((printer, printerKey) => {
                     return <tr key={printerKey} className={printerKey%2?"bg-blue-3":"bg-blue-4"}>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên">
-                            <NavLink to={`/spso/printers/${printer.name}`}>{printer.name}</NavLink>
+                            <NavLink to={`/spso/printers/${printer.name}`} className="italic font-medium">{printer.name}</NavLink>
                         </td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Mô tả">{printer.description}</td>
                         <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Bắt đầu sử dụng">{printer.startTime}</td>
                         <td className="text-left flex items-center before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Trạng thái">
                             <span className="flex items-center flex-row-reverse my-1 mx-1 gap-x-3">
-                                <button className="aspect-square bg-blue-4 rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200"
+                                <button className={`${(printerKey%2?"bg-blue-4":"bg-blue-3")} aspect-square rounded-full w-8 justify-center items-center flex hover:scale-110 duration-200`}
                                     onClick={() => {setCurrentPrinter(printer);setUpdateOpen(true)}}>
                                     <FaPen className="aspect-square text-white w-6"/>
                                 </button>

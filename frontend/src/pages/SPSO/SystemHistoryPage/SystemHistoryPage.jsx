@@ -198,7 +198,7 @@ export const SystemHistoryPage = () => {
         </table>
         </div>
         {/* Small */}
-        <div className="flex md:hidden justify-center flex-col items-center px-10 gap-y-2 my-10">
+        <div className="flex md:hidden justify-center flex-col px-10 gap-y-2 my-10 overflow-x-scroll">
         <p className="text-xl font-bold">Lịch sử in</p>
         <div className="flex flex-col gap-y-10 text-xl">
             <div className="flex flex-row items-center">
@@ -242,9 +242,10 @@ export const SystemHistoryPage = () => {
                 <FaSearch id="search-icon" className="text-white"/>
             </button>
         </div>
-        <div className="text-right text-xs py-5">
-            <p>Thống kế: {statistic}</p>
-        </div>
+        {filteredHistory.length != 0 &&
+        <div className="text-right">
+            <p>Thống kê: {statistic}</p>
+        </div>}
         <table className="bg-blue-2 overflow-x-scroll w-full">
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
