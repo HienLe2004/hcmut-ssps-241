@@ -159,10 +159,10 @@ export const SystemHistoryPage = () => {
         <div className="text-right py-5">
             <p>Thống kê: {statistic}</p>
         </div>
-        <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px] text-xl">
+        <table className="bg-blue-2 max-w-full min-w-[600px] text-xl">
             <thead className="bg-blue-3 text-blue-0">
                 <tr>
-                    <th className="min-w-[180px] border-2 border-blue-4">MSSV</th>
+                    <th className="min-w-[120px] border-2 border-blue-4">MSSV</th>
                     <th className="min-w-[180px] border-2 border-blue-4">Máy in</th>
                     <th className="min-w-[100px] py-4 border-2 border-blue-4">Tên file</th>
                     <th className="min-w-[80px] border-2 border-blue-4">Cỡ giấy</th>
@@ -178,10 +178,11 @@ export const SystemHistoryPage = () => {
                     return <tr key={rowKey}>
                         <td className="text-center border-2 border-blue-4">{row.student.id}</td>
                         <td className="text-center border-2 border-blue-4">{row.printer.name}</td>
-                        <td className="text-center border-2 border-blue-4">
+                        <td className="text-center border-2 border-blue-4 text-wrap">
                             <a href={"../"+processFilePath(row.document.filePath)} target="_blank" 
                                 download={row.document.fileName}
-                                rel="noopener noreferrer">
+                                rel="noopener noreferrer"
+                                className="text-wrap">
                                     {row.document.fileName}
                             </a>
                         </td>
@@ -197,7 +198,7 @@ export const SystemHistoryPage = () => {
         </table>
         </div>
         {/* Small */}
-        <div className="flex md:hidden justify-center flex-col items-center px-10 gap-y-2 my-10">
+        <div className="flex md:hidden justify-center flex-col px-10 gap-y-2 my-10 overflow-x-scroll">
         <p className="text-xl font-bold">Lịch sử in</p>
         <div className="flex flex-col gap-y-10 text-xl">
             <div className="flex flex-row items-center">
@@ -241,9 +242,10 @@ export const SystemHistoryPage = () => {
                 <FaSearch id="search-icon" className="text-white"/>
             </button>
         </div>
-        <div className="text-right text-xs py-5">
-            <p>Thống kế: {statistic}</p>
-        </div>
+        {filteredHistory.length != 0 &&
+        <div className="text-right">
+            <p>Thống kê: {statistic}</p>
+        </div>}
         <table className="bg-blue-2 overflow-x-scroll w-full">
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {

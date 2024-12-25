@@ -24,7 +24,6 @@ export const WaitingDocsPage = () => {
         setSelectedStudents(selectedStudents);
     }
     const handleSearch = () => {
-        console.log(filteredWaitingDocs)
         const filterStudents = (selectedStudents.length == 0) ? students : selectedStudents
         const filterPrinters = (selectedPrinters.length == 0) ? printers : selectedPrinters
         const filterDocs = (waitingDocs, filterStudents, filterPrinters) => {
@@ -96,7 +95,7 @@ export const WaitingDocsPage = () => {
                     </button>
                 </div>
                 {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={waitingDocs} filteredWaitingDocs={filteredWaitingDocs}/>}
-                {filteredWaitingDocs.length === 0 && <p className="text-center text-blue-2 text-2xl font-bold">Không tìm thấy</p>}
+                {filteredWaitingDocs.length === 0 && <p className="text-center text-blue-5 text-2xl font-bold">Không tìm thấy</p>}
             </div>
             {/* Màn hình nhỏ */}
             <div className="md:hidden flex flex-col flex-grow w-full my-5 gap-y-10">
@@ -133,7 +132,7 @@ export const WaitingDocsPage = () => {
                     </button>
                 </div>
                 {filteredWaitingDocs.length !== 0 && <WaitingDocsTable waitingDocs={waitingDocs} filteredWaitingDocs={filteredWaitingDocs}/>}
-                {filteredWaitingDocs.length === 0 && <p className="text-center text-2xl font-bold">Không tìm thấy</p>}
+                {filteredWaitingDocs.length === 0 && <p className="text-center text-blue-5 text-2xl font-bold">Không tìm thấy</p>}
             </div>
             <Footer />
         </div>
