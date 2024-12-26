@@ -430,7 +430,7 @@ export const PrintDocument = () => {
                 </div>
 
                 {/* Lịch sử in */}
-                <div className="w-[80%] my-8 ">
+                <div className="hidden md:flex flex-col w-[80%] my-8 ">
                     <h2 className="text-4xl text-center text-black mb-4">
                         Danh sách yêu cầu đang chờ
                     </h2>
@@ -461,6 +461,30 @@ export const PrintDocument = () => {
                                     <td className="p-2 border-2 border-blue-4">{request.startTime}</td>
                                 </tr>
                             ))}
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div className=" flex md:hidden w-[80%] my-2  flex-col text-xl ">
+                    <h2 className="text-3xl text-center text-black mb-4">
+                        Danh sách yêu cầu đang chờ
+                    </h2>
+                    <table className="bg-blue-3 overflow-x-scroll w-full">
+                        <tbody className="text-white">
+                            {requests.map((request, docKey) => {
+                                return <tr key={docKey} className={docKey % 2 ? "bg-blue-3" : "bg-blue-4"}>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">{request.fileName}</td>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{request.pageSize}</td>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{request.numCopy}</td>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang của tài liệu">{request.numPageInFile}</td>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{request.doubleSide === true ? 2 : 1}</td>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{request.printer}</td>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Trạng thái">{request.status}</td>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{request.startTime}</td>
+
+                                </tr>
+                            })}
                         </tbody>
                     </table>
                 </div>

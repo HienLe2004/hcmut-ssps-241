@@ -199,7 +199,7 @@ export const BuyPage = () => {
     return (
         <div className="flex flex-col min-h-screen">
             <StudentHeader />
-            <div className="flex flex-col flex-grow items-center w-full ">
+            <div className="hidden md:flex flex-col flex-grow items-center w-full ">
                 {/* Form mua trang in + Bảng số trang hiện có */}
 
                 <form onSubmit={handleSubmit}
@@ -262,8 +262,8 @@ export const BuyPage = () => {
                     </button>
                 </div>
 
-                {/* Hiển thị lịch sử mua */}
-                <div className="w-[70%] my-8 flex flex-col ">
+                {/* Hiển thị lịch sử mua - Màn hình lớn */}
+                <div className="flex :w-[70%] my-8 flex-col ">
                     <table className="w-full bg-blue-2 border-2 border-blue-4 rounded-none">
                         <thead>
                             <tr className="text-white bg-blue-3 text-xl">
@@ -304,6 +304,110 @@ export const BuyPage = () => {
                             }
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {/* Màn hình nhỏ */}
+            <div className="flex md:hidden flex-col flex-grow items-center w-full ">
+                {/* Form mua trang in + Bảng số trang hiện có */}
+
+                <form onSubmit={handleSubmit}
+                    className="flex flex-col w-[65%]  bg-blue-3 rounded-md m-5  text-white text-xl font-normal "
+
+                >
+                    <p className="m-5">Số trang hiện có: {remainPage}</p>
+                    <div className="flex flex-row m-5">
+                        <label className="text-white mr-5">Số trang mua thêm:</label>
+                        <input type="number"
+                            value={numPageBuy}
+                            onChange={(event) => setNumPageBuy(parseInt(event.target.value))}
+                            min="0"
+                            className="border-2 border-blue-4 rounded-lg h-9 w-16 bg-blue-2 text-center text-lg text-white -translate-y-1"
+                        />
+                    </div>
+
+                    <div className="flex flex-row m-5">
+                        <label className="text-white mr-6">Kích cỡ trang:</label>
+                        <select value={pageSize}
+                            onChange={(event) => setPageSize(event.target.value)}
+                            className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
+
+                        >
+                            <option value="" disabled hidden>Chọn cỡ giấy</option>
+                            <option value="A3">A3</option>
+                            <option value="A4">A4</option>
+                            <option value="A5">A5</option>
+                        </select>
+                    </div>
+                    <button type="submit"
+                        className=" w-[150px] self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-[#2d66c1] duration-200"
+                    >
+                        Mua
+                    </button>
+                </form>
+
+                {/* Lọc lịch sử mua */}
+                <div className="flex flex-col items-center justify-center my-5">
+                    <div className="flex flex-row mb-5">
+                    <p className="mx-6 text-3xl font-normal">Từ</p>
+                    <input type="date"
+                        min="2024-01-01"
+                        max="2030-12-31"
+                        value={startDate}
+                        onChange={(event) => setStartDate(event.target.value)}
+                        className="appearance-none outline-none border-2 border-blue-4 py-1 px-2 rounded-md bg-blue-2 text-xl text-center translate-y-0.5  "
+                    />
+                    </div>
+                    <div className="flex flex-row mb-5">
+                    <p className="mx-6 text-3xl font-normal">Đến</p>
+                    <input type="date"
+                        min="2024-01-01"
+                        max="2030-12-31"
+                        value={endDate}
+                        onChange={(event) => setEndDate(event.target.value)}
+                        className="appearance-none outline-none border-2 border-blue-4 py-1 px-2 rounded-md bg-blue-2 text-xl text-center translate-y-0.5 "
+                    />
+                    </div>
+                    <button className="aspect-square rounded-full bg-blue-4 w-8 ml-5 items-center justify-items-center hover:scale-110 duration-200"
+                        onClick={searchDate}>
+                        <FaSearch id="search-icon" className="text-white" />
+                    </button>
+                </div>
+
+                {/* Hiển thị lịch sử mua*/}
+                <div className=" px-10 py-2 text-xl">
+                    {!isSearched && (
+                        <table className="bg-blue-3 overflow-x-scroll w-full">
+                            <tbody className="text-white">
+                                {buyHistory.map((hist, docKey) => {
+                                    return <tr key={docKey} className={docKey % 2 ? "bg-blue-3" : "bg-blue-4"}>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang đã mua">{hist.numPageBuy}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Kích cỡ trang">{hist.pageSize}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Giá tiền">{hist.total}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian thanh toán">{formatDateTime(new Date(hist.buyTime))}</td>
+
+                                    </tr>
+                                })}
+                            </tbody>
+                        </table>
+                    )}
+
+                    {isSearched && (
+                        <table className="bg-blue-3 overflow-x-scroll w-full">
+                            <tbody className="text-white">
+                                {filteredDate.map((hist, docKey) => {
+                                    return <tr key={docKey} className={docKey % 2 ? "bg-blue-3" : "bg-blue-4"}>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang đã mua">{hist.numPageBuy}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Kích cỡ trang">{hist.pageSize}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Giá tiền">{hist.total}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian thanh toán">{formatDateTime(new Date(hist.buyTime))}</td>
+
+                                    </tr>
+                                })}
+                            </tbody>
+                        </table>
+                    )}
+
                 </div>
             </div>
 

@@ -122,7 +122,8 @@ export const PrintingHistory = () => {
     return (
         <div className="flex flex-col min-h-screen">
             <StudentHeader />
-            <div className="flex flex-col flex-grow items-center w-full ">
+            {/* Màn hình lớn */}
+            <div className="hidden md:flex flex-col flex-grow items-center w-full ">
                 {/* Lọc lịch sử in */}
                 <div className="flex flex-row items-center justify-center mx-5 mt-5">
                     <p className="mx-6 text-3xl font-normal">Từ</p>
@@ -185,6 +186,63 @@ export const PrintingHistory = () => {
                             ))}
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            {/* Màn hình nhỏ */}
+            <div className="flex md:hidden flex-col flex-grow items-center w-full ">
+                {/* Lọc lịch sử in */}
+                <div className="flex flex-col items-center justify-center mt-5">
+                    <div className="flex flex-row mb-5">
+                    <p className="mx-6 text-3xl font-normal">Từ</p>
+                    <input type="date"
+                        min="2024-01-01"
+                        max="2030-12-31"
+                        value={startDate}
+                        onChange={(event) => setStartDate(event.target.value)}
+                        className="appearance-none outline-none border-2 border-blue-4 py-1 px-2 rounded-md bg-blue-2 text-xl text-center translate-y-0.5  "
+                    />
+                    </div>
+                    <div className="flex flex-row mb-5">
+                    <p className="mx-6 text-3xl font-normal">Đến</p>
+                    <input type="date"
+                        min="2024-01-01"
+                        max="2030-12-31"
+                        value={endDate}
+                        onChange={(event) => setEndDate(event.target.value)}
+                        className="appearance-none outline-none border-2 border-blue-4 py-1 px-2 rounded-md bg-blue-2 text-xl text-center translate-y-0.5 "
+                    />
+                    </div>
+                    <button className="aspect-square rounded-full bg-blue-4 w-8 ml-5 items-center justify-items-center hover:scale-110 duration-200"
+                        onClick={searchDate}>
+                        <FaSearch id="search-icon" className="text-white" />
+                    </button>
+                </div>
+
+                {/* Hiển thị lịch sử in */}
+                <div className="w-[80%] my-2 flex flex-col text-xl ">
+                    <p className="self-end text-lg mb-5">
+                        {/* Tổng số trang đã sử dụng: {totalA3page} trang A3, {totalA4page} trang A4, {totalA5page} trang A5. */}
+                        Thống kê sử dụng: {statistic}
+                    </p>
+                    <table className="bg-blue-3 overflow-x-scroll w-full">
+                            <tbody className="text-white">
+                                {filteredDate.map((hist, docKey) => {
+                                    return <tr key={docKey} className={docKey % 2 ? "bg-blue-3" : "bg-blue-4"}>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">{hist.fileName}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{hist.pageSize}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{hist.numCopy}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang của tài liệu">{hist.numPageInFile}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số mặt">{hist.doubleSide === true ? 2 : 1}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Máy in">{hist.printer}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Trạng thái">{hist.status}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian bắt đầu">{hist.startTime}</td>
+                                        <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Thời gian kết thúc">{hist.endTime || null}</td>
+
+                                    </tr>
+                                })}
+                            </tbody>
+                        </table>
                 </div>
             </div>
             <Footer />
