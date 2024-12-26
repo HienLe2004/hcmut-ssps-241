@@ -315,13 +315,13 @@ export const PrintDocument = () => {
         <div className="flex flex-col min-h-screen">
             <StudentHeader />
 
-            <div className="flex flex-col flex-grow items-center w-full mt-5 " >
+            <div className="hidden md:flex flex-col flex-grow items-center w-full mt-5 " >
 
                 {/* Form  */}
 
                 <div className="  w-[60%] mt-5  ">
 
-                    <form className="flex flex-col bg-blue-3 rounded-xl p-4  "
+                    <form className="flex flex-col bg-blue-3 rounded-xl p-4 text-lg  "
                         onSubmit={handleSubmit}
                     >
                         {/* Chọn tài liệu */}
@@ -430,7 +430,7 @@ export const PrintDocument = () => {
                 </div>
 
                 {/* Lịch sử in */}
-                <div className="hidden md:flex flex-col w-[80%] my-8 ">
+                <div className="flex flex-col w-[80%] my-8 ">
                     <h2 className="text-4xl text-center text-black mb-4">
                         Danh sách yêu cầu đang chờ
                     </h2>
@@ -466,15 +466,131 @@ export const PrintDocument = () => {
 
                 </div>
 
-                <div className=" flex md:hidden w-[80%] my-2  flex-col text-xl ">
+            </div>
+
+            <div className="flex md:hidden flex-col flex-grow items-center w-full mt-5 " >
+
+                {/* Form  */}
+
+                <div className="  w-[80%] mt-5  ">
+
+                    <form className="flex flex-col bg-blue-3 rounded-xl p-4 text-lg  "
+                        onSubmit={handleSubmit}
+                    >
+                        {/* Chọn tài liệu */}
+                        <div className="flex flex-row items-center p-2">
+                            <label className="text-white text-2xl mr-6">Tài liệu cần in:</label>
+                            <input type="file"
+                                accept={validTypeFile}
+                                onChange={handleFileChange}
+                                className="hidden"
+                                id="fileUpload"
+                            />
+                            {fileName && (
+                                <div className="flex flex-row w-[50%] ">
+                                    <span className="text-white text-md rounded-lg bg-blue-3 px-3 py-2 mr-4 inline-block max-w-auto overflow-hidden whitespace-nowrap text-ellipsis ">{fileName}</span>
+                                    <label className="bg-blue-4 text-white text-md px-4 py-2 cursor-pointer rounded-lg"
+                                        onClick={handleRemoveFile}>
+                                        Xóa
+                                    </label>
+                                </div>
+                            )}
+                            {!fileName && (
+                                <label htmlFor="fileUpload"
+                                    className="bg-blue-4 text-white text-md px-4 py-2 cursor-pointer rounded-lg hover:bg-[#2d66c1] duration-200"
+
+                                >
+                                    Tải lên:
+                                </label>
+                            )}
+                            <div className="text-white ml-auto ">
+                                {validTypeFile}
+                            </div>
+                        </div>
+                        {/* Kích cỡ trang */}
+                        <div className="flex flex-row items-center p-2">
+                            <label className="text-white text-2xl mr-6">Kích cỡ trang in:</label>
+                            <select value={pageSize}
+                                onChange={(event) => setPageSize(event.target.value)}
+                                className="border-2 border-blue-4 rounded-lg px-2 py-1.5 bg-blue-3 text-white text-lg"
+                            >
+                                <option value="" disabled hidden>Chọn cỡ trang</option>
+                                {pageSizeList.map((size, index) => (
+                                    <option value={size} key={index}>
+                                        {size}
+                                    </option>
+                                ))}
+                            </select>
+
+                        </div>
+
+                        {/* Số bản in */}
+                        <div className="flex flex-row items-center p-2">
+                            <label className="text-white text-2xl mr-6">Số bản cần in:</label>
+                            <input type="number"
+                                value={numCopy}
+                                onChange={(event) => setNumCopy(event.target.value)}
+                                min="1"
+                                className="border-2 border-blue-4 rounded-lg px-2 py-1 w-16 bg-blue-3 text-center text-lg text-white"
+                            />
+                        </div>
+
+                        {/* Số trang còn lại */}
+                        <div className="flex flex-row items-center p-2 text-white text-2xl">
+                            <label className=" mr-6">Số trang còn lại: </label>
+                            <div>{remainPage}</div>
+                        </div>
+
+                        {/* In 2 mặt */}
+                        <div className="flex flex-row items-center p-2">
+                            <label className="text-white text-2xl mr-6">In 2 mặt giấy:</label>
+                            <input type="checkbox"
+                                onChange={(event) => { setIsTwoSide(event.target.checked) }}
+
+                                className="w-8 h-8"
+                            />
+                        </div>
+
+                        {/* Máy in */}
+                        <div className="flex flex-row items-center p-2">
+                            <label className="text-white text-2xl mr-6">Máy in:</label>
+                            <select value={printer}
+                                onChange={(event) => setPrinter(event.target.value)}
+                                className="border-2 border-blue-4 bg-blue-3 rounded-lg p-2 textx-lg text-white"
+                            >
+                                <option value="" disabled hidden>Chọn máy in</option>
+                                {printerList.map((item, index) => (
+                                    item.State === "on" && (
+                                        <option value={item.Name} key={index}>
+                                            {item.Name}
+                                        </option>
+                                    )
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Nút gửi yêu cầu in */}
+                        <button type="submit"
+                            className=" w-56 self-center bg-blue-4 text-white text-2xl p-3 m-4 rounded-full hover:bg-[#2d66c1] duration-200"
+                        >
+                            Yêu cầu in tài liệu
+                        </button>
+
+
+                    </form>
+
+                </div>
+
+                {/* Lịch sử in */}
+                <div className=" flex w-[90%] my-2  flex-col text-xl ">
                     <h2 className="text-3xl text-center text-black mb-4">
                         Danh sách yêu cầu đang chờ
                     </h2>
-                    <table className="bg-blue-3 overflow-x-scroll w-full">
+                    <table className="bg-blue-3  ">
                         <tbody className="text-white">
                             {requests.map((request, docKey) => {
                                 return <tr key={docKey} className={docKey % 2 ? "bg-blue-3" : "bg-blue-4"}>
-                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Tên file">{request.fileName}</td>
+                                    <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2 overflow-hidden whitespace-nowrap text-ellipsis" name="Tên file">{request.fileName}</td>
                                     <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Cỡ giấy">{request.pageSize}</td>
                                     <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số bản">{request.numCopy}</td>
                                     <td className="text-left block before:content-[attr(name)':'] before:mr-2 before:font-bold p-2" name="Số trang của tài liệu">{request.numPageInFile}</td>
@@ -490,6 +606,8 @@ export const PrintDocument = () => {
                 </div>
 
             </div>
+
+
 
             {confirmPopup && (
                 <Confirm onClose={turnOffConfirm}
