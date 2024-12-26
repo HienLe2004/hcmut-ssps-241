@@ -7,7 +7,7 @@ export const HomePage = () => {
         <>
             <Header/>
             <div className="h-[75vh] justify-center items-center flex">
-                <img src={background} className="w-[70%]"></img>
+                <img src={background} className="w-[70%] rounded-xl"></img>
             </div>
             <Footer/>
         </>

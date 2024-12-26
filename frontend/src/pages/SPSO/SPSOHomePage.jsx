@@ -8,7 +8,7 @@ export const SPSOHomePage = () => {
             <SPSOHeader />
             <div className="flex flex-col flex-grow items-center justify-center w-full my-5">
                 <img src={test} alt="Không có hình đâu hehehe"
-                    className="w-[70%] "
+                    className="w-[70%] rounded-xl"
                 />
                 <div className="w-[70%]   ">
                     <h1 className="text-2xl  font-semibold my-5" >

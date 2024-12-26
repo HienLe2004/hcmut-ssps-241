@@ -5,7 +5,7 @@ const Header = () => {
 
     const navigate = useNavigate();
     return (
-        <header className="flex items-center justify-between px-5 py-3 w-full min-h-[10vh] bg-blue-2 text-blue-900 font-bold">
+        <header className="flex items-center justify-between px-5 py-3 w-full min-h-[10vh] bg-blue-3 text-blue-900 font-bold">
         {/* Logo */}
         <div className="flex items-center gap-3.5 px-4 py-2 text-xs text-blue-900 bg-white rounded-2xl max-md:px-5">
           <img

@@ -122,9 +122,11 @@ export const PrinterHistoryTable = ({printerID}) => {
                 <FaSearch id="search-icon" className="text-white"/>
             </button>
         </div>
+        {filteredHistory.length != 0 &&
         <div className="text-right">
             <p>Thống kê: {statistic}</p>
-        </div>
+        </div>}
+        {filteredHistory.length != 0 &&
         <table className="bg-blue-2 overflow-x-scroll max-w-full min-w-[600px]">
             <thead className="bg-blue-3 text-blue-0">
                 <tr>
@@ -158,10 +160,10 @@ export const PrinterHistoryTable = ({printerID}) => {
                     </tr>
                 })}  
             </tbody>
-        </table>
+        </table>}
         </div>
         {/* Small */}
-        <div className="flex md:hidden justify-center flex-col items-center px-10 gap-y-2 my-10">
+        <div className="flex md:hidden justify-center flex-col px-10 gap-y-2 my-10 overflow-x-scroll">
         <p className="text-2xl font-bold">Lịch sử in</p>
         <div className="flex flex-col gap-y-10 text-xl">
             <div className="flex flex-row items-center">
@@ -192,10 +194,11 @@ export const PrinterHistoryTable = ({printerID}) => {
                 <FaSearch id="search-icon" className="text-white"/>
             </button>
         </div>
+        {filteredHistory.length != 0 &&
         <div className="text-right">
             <p>Thống kê: {statistic}</p>
-        </div>
-        <table className="bg-blue-2 overflow-x-scroll w-full">
+        </div>}
+        <table className="bg-blue-2 w-full">
             <tbody className="text-white">
                 {filteredHistory.map((row, rowKey) => {
                     return <tr key={rowKey} className={rowKey%2?"bg-blue-3":"bg-blue-4"}>
